@@ -37,10 +37,10 @@ class Connection:
         self.password = None
         self.cursor = None
 
-    def _connect(self):
+    def connect(self):
         pass
 
-    def _close(self):
+    def close(self):
         pass
 
 # endregion
