@@ -22,3 +22,25 @@
 
 """Contains all input management."""
 
+
+# region Classes
+class Connection:
+    """Connection base class"""
+
+    def __init__(self):
+        """Connection base object"""
+        self.connection = None
+        self.host = None
+        self.port = None
+        self.database = None
+        self.username = None
+        self.password = None
+        self.cursor = None
+
+    def _connect(self):
+        pass
+
+    def _close(self):
+        pass
+
+# endregion
