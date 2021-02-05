@@ -22,6 +22,12 @@
 
 """Contains all input management."""
 
+# region Imports
+import sqlite3
+
+
+# endregion
+
 
 # region Classes
 class Connection:
@@ -37,10 +43,22 @@ class Connection:
         self.password = None
         self.cursor = None
 
-    def connect(self):
+    def connect(self, **kwargs):
         pass
 
     def close(self):
         pass
+
+
+class SQLliteConnection(Connection):
+    """Connection sqlite class"""
+
+    def connect(self, database):
+        self.host = database
+        self.connection = sqlite3.connect(database=self.host)
+        self.cursor = self.connection.cursor()
+
+    def close(self):
+        self.connection.close()
 
 # endregion
