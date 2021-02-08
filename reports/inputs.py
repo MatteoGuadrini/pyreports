@@ -35,17 +35,17 @@ import mysql.connector
 class Connection:
     """Connection base class"""
 
-    def __init__(self):
+    def __init__(self, host=None, port=None, database=None, username=None, password=None):
         """Connection base object"""
         self.connection = None
-        self.host = None
-        self.port = None
-        self.database = None
-        self.username = None
-        self.password = None
+        self.host = host
+        self.port = port
+        self.database = database
+        self.username = username
+        self.password = password
         self.cursor = None
 
-    def connect(self, **kwargs):
+    def connect(self):
         pass
 
     def close(self):
@@ -55,8 +55,7 @@ class Connection:
 class SQLliteConnection(Connection):
     """Connection sqlite class"""
 
-    def connect(self, database):
-        self.host = database
+    def connect(self):
         self.connection = sqlite3.connect(database=self.host)
         self.cursor = self.connection.cursor()
 
@@ -67,11 +66,7 @@ class SQLliteConnection(Connection):
 class MSSQLConnection(Connection):
     """Connection microsoft sql class"""
 
-    def connect(self, host, username, password, database=None):
-        self.host = host
-        self.username = username
-        self.password = password
-        self.database = database
+    def connect(self):
         self.connection = pymssql.connect(self.host, self.username, self.password, self.database)
         self.cursor = self.connection.cursor()
 
@@ -82,11 +77,7 @@ class MSSQLConnection(Connection):
 class MySQLConnection(Connection):
     """Connection mysql class"""
 
-    def connect(self, host, username, password, database=None):
-        self.host = host
-        self.username = username
-        self.password = password
-        self.database = database
+    def connect(self):
         self.connection = mysql.connector.connect(self.host, self.username, self.password, self.database)
         self.cursor = self.connection.cursor()
 
