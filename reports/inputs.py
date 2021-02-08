@@ -24,6 +24,7 @@
 
 # region Imports
 import sqlite3
+import pymssql
 
 
 # endregion
@@ -56,6 +57,21 @@ class SQLliteConnection(Connection):
     def connect(self, database):
         self.host = database
         self.connection = sqlite3.connect(database=self.host)
+        self.cursor = self.connection.cursor()
+
+    def close(self):
+        self.connection.close()
+
+
+class MSSQLConnection(Connection):
+    """Connection microsoft sql class"""
+
+    def connect(self, host, username, password, database):
+        self.host = host
+        self.username = username
+        self.password = password
+        self.database = database
+        self.connection = pymssql.connect(self.host, self.username, self.password, self.database)
         self.cursor = self.connection.cursor()
 
     def close(self):
