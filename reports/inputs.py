@@ -26,7 +26,7 @@
 import sqlite3
 import pymssql
 import mysql.connector as mdb
-
+import psycopg2
 
 # endregion
 
@@ -79,6 +79,23 @@ class MySQLConnection(Connection):
 
     def connect(self):
         self.connection = mdb.connect(self.host, self.username, self.password, self.database, port=self.port)
+        self.cursor = self.connection.cursor()
+
+    def close(self):
+        self.connection.close()
+
+
+class PostgreSQLConnection(Connection):
+    """Connection mysql class"""
+
+    def connect(self):
+        self.connection = psycopg2.connect(
+            self.host,
+            self.username,
+            self.password,
+            database=self.database,
+            port=self.port
+        )
         self.cursor = self.connection.cursor()
 
     def close(self):
