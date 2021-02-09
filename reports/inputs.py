@@ -28,6 +28,7 @@ import pymssql
 import mysql.connector as mdb
 import psycopg2
 import pymongo
+import cloudant
 
 # endregion
 
@@ -87,7 +88,7 @@ class MySQLConnection(Connection):
 
 
 class PostgreSQLConnection(Connection):
-    """Connection mysql class"""
+    """Connection postgresql class"""
 
     def connect(self):
         self.connection = psycopg2.connect(
@@ -104,7 +105,7 @@ class PostgreSQLConnection(Connection):
 
 
 class MongoDBConnection(Connection):
-    """Connection mysql class"""
+    """Connection mongodb class"""
 
     def connect(self):
         self.connection = pymongo.MongoClient(
@@ -113,6 +114,24 @@ class MongoDBConnection(Connection):
             password=self.password,
             authSource=self.database,
             authMechanism='SCRAM-SHA-1',
+            port=self.port
+        )
+        self.cursor = self.connection
+
+    def close(self):
+        self.connection = None
+
+
+class CouchDBConnection(Connection):
+    """Connection couchdb class"""
+
+    def connect(self):
+        self.connection = cloudant.CouchDB(
+            self.username,
+            self.password,
+            url=self.host,
+            connect=True,
+            auto_renew=True,
             port=self.port
         )
         self.cursor = self.connection
