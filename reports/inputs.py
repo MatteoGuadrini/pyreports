@@ -27,6 +27,7 @@ import sqlite3
 import pymssql
 import mysql.connector as mdb
 import psycopg2
+import pymongo
 
 # endregion
 
@@ -100,5 +101,23 @@ class PostgreSQLConnection(Connection):
 
     def close(self):
         self.connection.close()
+
+
+class MongoDBConnection(Connection):
+    """Connection mysql class"""
+
+    def connect(self):
+        self.connection = pymongo.MongoClient(
+            self.host,
+            username=self.username,
+            password=self.password,
+            authSource=self.database,
+            authMechanism='SCRAM-SHA-1',
+            port=self.port
+        )
+        self.cursor = self.connection
+
+    def close(self):
+        self.connection = None
 
 # endregion
