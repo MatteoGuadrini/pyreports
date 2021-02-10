@@ -21,3 +21,20 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Contains all business logic and data processing."""
+
+# region Imports
+from .inputs import Connection
+
+
+# endregion
+
+class SQLDatabaseManager:
+    """Database manager class for SQL connection"""
+
+    def __init__(self, connection: Connection):
+        """
+        Database manager object for SQL connection
+
+        :param connection: Connection based object
+        """
+        connection.connect()
