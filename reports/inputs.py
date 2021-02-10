@@ -30,6 +30,7 @@ import psycopg2
 import pymongo
 import cloudant
 
+
 # endregion
 
 
@@ -63,6 +64,7 @@ class SQLliteConnection(Connection):
 
     def close(self):
         self.connection.close()
+        self.cursor.close()
 
 
 class MSSQLConnection(Connection):
@@ -74,6 +76,7 @@ class MSSQLConnection(Connection):
 
     def close(self):
         self.connection.close()
+        self.cursor.close()
 
 
 class MySQLConnection(Connection):
@@ -85,6 +88,7 @@ class MySQLConnection(Connection):
 
     def close(self):
         self.connection.close()
+        self.cursor.close()
 
 
 class PostgreSQLConnection(Connection):
@@ -102,6 +106,7 @@ class PostgreSQLConnection(Connection):
 
     def close(self):
         self.connection.close()
+        self.cursor.close()
 
 
 class MongoDBConnection(Connection):
