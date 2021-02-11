@@ -59,7 +59,18 @@ class SQLDatabaseManager:
 
         :param query: SQL query language
         :param params: parameters of the query
-        :return: data
+        :return: None
         """
         # See if query was cached
         self.connector.cursor.execute(query, params)
+
+    def executemany(self, query, params):
+        """
+        Execute query on database cursor with many parameters
+
+        :param query: SQL query language
+        :param params: list of parameters of the query
+        :return: None
+        """
+        # See if query was cached
+        self.connector.cursor.executemany(query, params)
