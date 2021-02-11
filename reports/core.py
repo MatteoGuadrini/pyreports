@@ -52,3 +52,14 @@ class SQLDatabaseManager:
         self.connector.close()
         # Start connection, again
         self.connector.connect()
+
+    def execute(self, query, params=None):
+        """
+        Execute query on database cursor
+
+        :param query: SQL query language
+        :param params: parameters of the query
+        :return: data
+        """
+        # See if query was cached
+        self.connector.cursor.execute(query, params)
