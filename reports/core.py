@@ -74,3 +74,12 @@ class SQLDatabaseManager:
         """
         # See if query was cached
         self.connector.cursor.executemany(query, params)
+
+    def fetchall(self):
+        """
+        The method fetches all (or all remaining) rows of a query result set
+
+        :return: list of tuples
+        """
+        return self.connector.cursor.fetchall()
+
