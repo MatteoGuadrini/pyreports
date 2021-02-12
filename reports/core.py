@@ -77,7 +77,7 @@ class SQLDatabaseManager:
 
     def fetchall(self):
         """
-        The method fetches all (or all remaining) rows of a query result set
+        Fetches all (or all remaining) rows of a query result set
 
         :return: list of tuples
         """
@@ -89,5 +89,13 @@ class SQLDatabaseManager:
 
         :return: list
         """
-        return self.connector.cursor.fetchall()
+        return self.connector.cursor.fetchone()
 
+    def fetchmany(self, size=1):
+        """
+        Fetches the next set of rows of a query result
+
+        :param size: the number of rows returned
+        :return: list of tuples
+        """
+        return self.connector.cursor.fetchmany(size)
