@@ -83,3 +83,11 @@ class SQLDatabaseManager:
         """
         return self.connector.cursor.fetchall()
 
+    def fetchone(self):
+        """
+        Retrieves the next row of a query result set
+
+        :return: list
+        """
+        return self.connector.cursor.fetchall()
+
