@@ -24,6 +24,11 @@
 
 # region Imports
 import sqlite3
+import pymssql
+import mysql.connector as mdb
+import psycopg2
+import pymongo
+import cloudant
 
 
 # endregion
@@ -33,17 +38,17 @@ import sqlite3
 class Connection:
     """Connection base class"""
 
-    def __init__(self):
+    def __init__(self, host=None, port=None, database=None, username=None, password=None):
         """Connection base object"""
         self.connection = None
-        self.host = None
-        self.port = None
-        self.database = None
-        self.username = None
-        self.password = None
+        self.host = host
+        self.port = port
+        self.database = database
+        self.username = username
+        self.password = password
         self.cursor = None
 
-    def connect(self, **kwargs):
+    def connect(self):
         pass
 
     def close(self):
@@ -53,12 +58,90 @@ class Connection:
 class SQLliteConnection(Connection):
     """Connection sqlite class"""
 
-    def connect(self, database):
-        self.host = database
+    def connect(self):
         self.connection = sqlite3.connect(database=self.host)
         self.cursor = self.connection.cursor()
 
     def close(self):
         self.connection.close()
+        self.cursor.close()
+
+
+class MSSQLConnection(Connection):
+    """Connection microsoft sql class"""
+
+    def connect(self):
+        self.connection = pymssql.connect(self.host, self.username, self.password, self.database, port=self.port)
+        self.cursor = self.connection.cursor()
+
+    def close(self):
+        self.connection.close()
+        self.cursor.close()
+
+
+class MySQLConnection(Connection):
+    """Connection mysql class"""
+
+    def connect(self):
+        self.connection = mdb.connect(self.host, self.username, self.password, self.database, port=self.port)
+        self.cursor = self.connection.cursor()
+
+    def close(self):
+        self.connection.close()
+        self.cursor.close()
+
+
+class PostgreSQLConnection(Connection):
+    """Connection postgresql class"""
+
+    def connect(self):
+        self.connection = psycopg2.connect(
+            self.host,
+            self.username,
+            self.password,
+            database=self.database,
+            port=self.port
+        )
+        self.cursor = self.connection.cursor()
+
+    def close(self):
+        self.connection.close()
+        self.cursor.close()
+
+
+class MongoDBConnection(Connection):
+    """Connection mongodb class"""
+
+    def connect(self):
+        self.connection = pymongo.MongoClient(
+            self.host,
+            username=self.username,
+            password=self.password,
+            authSource=self.database,
+            authMechanism='SCRAM-SHA-1',
+            port=self.port
+        )
+        self.cursor = self.connection
+
+    def close(self):
+        self.connection = None
+
+
+class CouchDBConnection(Connection):
+    """Connection couchdb class"""
+
+    def connect(self):
+        self.connection = cloudant.CouchDB(
+            self.username,
+            self.password,
+            url=self.host,
+            connect=True,
+            auto_renew=True,
+            port=self.port
+        )
+        self.cursor = self.connection
+
+    def close(self):
+        self.connection = None
 
 # endregion
