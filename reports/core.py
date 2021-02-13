@@ -99,3 +99,13 @@ class SQLDatabaseManager:
         :return: list of tuples
         """
         return self.connector.cursor.fetchmany(size)
+
+    def callproc(self, proc_name, params=None):
+        """
+        Calls the stored procedure named
+
+        :param proc_name: name of store procedure
+        :param params: sequence of parameters must contain one entry for each argument that the procedure expects
+        :return: sequence of parameters with modified output and input/output parameters
+        """
+        return self.connector.cursor.callproc(proc_name, params)
