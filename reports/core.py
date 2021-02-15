@@ -39,6 +39,7 @@ class SQLDatabaseManager:
         :return None
         """
         self.connector = connection
+        self.description = self.connector.cursor.description
         # Connect database
         self.connector.connect()
 
