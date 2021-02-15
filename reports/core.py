@@ -39,9 +39,12 @@ class SQLDatabaseManager:
         :return None
         """
         self.connector = connection
-        self.description = self.connector.cursor.description
         # Connect database
         self.connector.connect()
+        # Set description
+        self.description = self.connector.cursor.description
+        # Set last row id
+        self.lastrowid = None
 
     def reconnect(self):
         """
@@ -64,6 +67,8 @@ class SQLDatabaseManager:
         """
         # See if query was cached
         self.connector.cursor.execute(query, params)
+        # Set last row id
+        self.lastrowid = self.connector.cursor.lastrowid
 
     def executemany(self, query, params):
         """
@@ -75,6 +80,8 @@ class SQLDatabaseManager:
         """
         # See if query was cached
         self.connector.cursor.executemany(query, params)
+        # Set last row id
+        self.lastrowid = self.connector.cursor.lastrowid
 
     def fetchall(self):
         """
