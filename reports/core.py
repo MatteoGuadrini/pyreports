@@ -43,8 +43,9 @@ class SQLDatabaseManager:
         self.connector.connect()
         # Set description
         self.description = self.connector.cursor.description
-        # Set last row id
+        # Row properties
         self.lastrowid = None
+        self.rowcount = 0
 
     def reconnect(self):
         """
@@ -69,6 +70,8 @@ class SQLDatabaseManager:
         self.connector.cursor.execute(query, params)
         # Set last row id
         self.lastrowid = self.connector.cursor.lastrowid
+        # Set row cont
+        self.rowcount = self.connector.cursor.rowcount
 
     def executemany(self, query, params):
         """
@@ -82,6 +85,8 @@ class SQLDatabaseManager:
         self.connector.cursor.executemany(query, params)
         # Set last row id
         self.lastrowid = self.connector.cursor.lastrowid
+        # Set row cont
+        self.rowcount = self.connector.cursor.rowcount
 
     def fetchall(self):
         """
