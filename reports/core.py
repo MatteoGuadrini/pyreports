@@ -23,7 +23,7 @@
 """Contains all business logic and data processing."""
 
 # region Imports
-from .inputs import Connection
+from .io import Connection
 
 
 # endregion
