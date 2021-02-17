@@ -137,3 +137,14 @@ class NoSQLDatabaseManager:
         self.connector = connection
         # Connect database
         self.connector.connect()
+
+    def reconnect(self):
+        """
+        Close and start connection
+
+        :return: None
+        """
+        # Close connection
+        self.connector.close()
+        # Start connection, again
+        self.connector.connect()
