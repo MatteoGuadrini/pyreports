@@ -66,7 +66,6 @@ class SQLDatabaseManager:
         :param params: parameters of the query
         :return: None
         """
-        # See if query was cached
         self.connector.cursor.execute(query, params)
         # Set last row id
         self.lastrowid = self.connector.cursor.lastrowid
@@ -122,29 +121,3 @@ class SQLDatabaseManager:
         :return: sequence of parameters with modified output and input/output parameters
         """
         return self.connector.cursor.callproc(proc_name, params)
-
-
-class NoSQLDatabaseManager:
-    """Database manager class for NO-SQL connection"""
-
-    def __init__(self, connection: Connection):
-        """
-        Database manager object for NO-SQL connection
-
-        :param connection: Connection based object
-        :return None
-        """
-        self.connector = connection
-        # Connect database
-        self.connector.connect()
-
-    def reconnect(self):
-        """
-        Close and start connection
-
-        :return: None
-        """
-        # Close connection
-        self.connector.close()
-        # Start connection, again
-        self.connector.connect()

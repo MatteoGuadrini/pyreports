@@ -27,8 +27,6 @@ import sqlite3
 import pymssql
 import mysql.connector as mdb
 import psycopg2
-import pymongo
-import cloudant
 
 
 # endregion
@@ -107,45 +105,5 @@ class PostgreSQLConnection(Connection):
     def close(self):
         self.connection.close()
         self.cursor.close()
-
-
-class MongoDBConnection(Connection):
-    """Connection mongodb class"""
-
-    def connect(self):
-        self.connection = pymongo.MongoClient(
-            self.host,
-            username=self.username,
-            password=self.password,
-            authSource=self.database,
-            authMechanism='SCRAM-SHA-1',
-            port=self.port
-        )
-        self.cursor = self.connection
-        # Set database
-        self.database = self.cursor[self.database]
-
-    def close(self):
-        self.connection = None
-
-
-class CouchDBConnection(Connection):
-    """Connection couchdb class"""
-
-    def connect(self):
-        self.connection = cloudant.CouchDB(
-            self.username,
-            self.password,
-            url=self.host,
-            connect=True,
-            auto_renew=True,
-            port=self.port
-        )
-        self.cursor = self.connection
-        # Set database
-        self.database = self.cursor[self.database]
-
-    def close(self):
-        self.connection = None
 
 # endregion
