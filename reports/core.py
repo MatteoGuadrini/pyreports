@@ -122,3 +122,18 @@ class SQLDatabaseManager:
         :return: sequence of parameters with modified output and input/output parameters
         """
         return self.connector.cursor.callproc(proc_name, params)
+
+
+class NoSQLDatabaseManager:
+    """Database manager class for NO-SQL connection"""
+
+    def __init__(self, connection: Connection):
+        """
+        Database manager object for NO-SQL connection
+
+        :param connection: Connection based object
+        :return None
+        """
+        self.connector = connection
+        # Connect database
+        self.connector.connect()
