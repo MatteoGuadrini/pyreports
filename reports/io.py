@@ -122,6 +122,8 @@ class MongoDBConnection(Connection):
             port=self.port
         )
         self.cursor = self.connection
+        # Set database
+        self.database = self.cursor[self.database]
 
     def close(self):
         self.connection = None
@@ -140,6 +142,8 @@ class CouchDBConnection(Connection):
             port=self.port
         )
         self.cursor = self.connection
+        # Set database
+        self.database = self.cursor[self.database]
 
     def close(self):
         self.connection = None
