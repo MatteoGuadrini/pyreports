@@ -202,6 +202,24 @@ class DatabaseManager:
         return self.connector.cursor.callproc(proc_name, params)
 
 
+class FileManager:
+    """File manager class for various readable file format"""
+
+    def __init__(self, filename, mode='r'):
+        """
+        File manager object for various readable file format
+
+        :param filename: file path
+        :param mode: mode of open file. Default is 'r'
+        """
+        # Open file
+        with open(filename, mode=mode) as f:
+            self.raw_data = f
+            self.read_data = f.read()
+            self.lines = f.readlines()
+            self.fields = None
+
+
 # endregion
 
 # region Variables
