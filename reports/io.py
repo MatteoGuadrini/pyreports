@@ -57,11 +57,36 @@ class File:
     """File base class"""
 
     def __init__(self, filename, mode='r'):
+        """
+        File base object
+
+        :param filename: file path
+        :param mode: mode of open file. Default is read.
+        """
         with open(filename, mode=mode) as f:
+            self.file = filename
             self.raw_data = f
             self.read_data = f.read()
             self.lines = f.readlines()
             self.fields = None
+
+    def write(self, data):
+        """
+        Write data on file
+
+        :param data: data to write on file
+        :return: None
+        """
+        with self.raw_data as file:
+            file.write(data)
+
+    def read(self):
+        """
+        Read with format
+
+        :return: file
+        """
+        return self.raw_data
 
 
 class SQLliteConnection(Connection):
