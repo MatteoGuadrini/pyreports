@@ -53,6 +53,17 @@ class Connection:
         pass
 
 
+class File:
+    """File base class"""
+
+    def __init__(self, filename, mode='r'):
+        with open(filename, mode=mode) as f:
+            self.raw_data = f
+            self.read_data = f.read()
+            self.lines = f.readlines()
+            self.fields = None
+
+
 class SQLliteConnection(Connection):
     """Connection sqlite class"""
 
@@ -115,7 +126,6 @@ class DatabaseManager:
         Database manager object for SQL connection
 
         :param connection: Connection based object
-        :return None
         """
         self.connector = connection
         # Connect database
@@ -205,19 +215,13 @@ class DatabaseManager:
 class FileManager:
     """File manager class for various readable file format"""
 
-    def __init__(self, filename, mode='r'):
+    def __init__(self, file):
         """
         File manager object for various readable file format
 
-        :param filename: file path
-        :param mode: mode of open file. Default is 'r'
+        :param file: file object
         """
-        # Open file
-        with open(filename, mode=mode) as f:
-            self.raw_data = f
-            self.read_data = f.read()
-            self.lines = f.readlines()
-            self.fields = None
+        self.data = file
 
 
 # endregion
