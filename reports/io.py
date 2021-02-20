@@ -27,6 +27,7 @@ import sqlite3
 import pymssql
 import mysql.connector as mdb
 import psycopg2
+import csv
 
 
 # endregion
@@ -66,9 +67,6 @@ class File:
         with open(filename, mode=mode) as f:
             self.file = filename
             self.raw_data = f
-            self.read_data = f.read()
-            self.lines = f.readlines()
-            self.fields = None
 
     def write(self, data):
         """
@@ -80,13 +78,38 @@ class File:
         with self.raw_data as file:
             file.write(data)
 
-    def read(self):
+    def read(self, **kargs):
         """
         Read with format
 
         :return: file
         """
         return self.raw_data
+
+
+class CsvFile(File):
+    """CSV file class"""
+
+    def write(self, data):
+        """
+        Write data on csv file
+
+        :param data: data to write on csv file
+        :return: None
+        """
+        with self.raw_data as file:
+            writer = csv.writer(file)
+            writer.writerow(data)
+
+    def read(self, **kargs):
+        """
+        Read csv format
+
+        :return: csv file
+        """
+        with self.raw_data as file:
+            reader = csv.reader(file, **kargs)
+            return reader
 
 
 class SQLliteConnection(Connection):
@@ -240,7 +263,7 @@ class DatabaseManager:
 class FileManager:
     """File manager class for various readable file format"""
 
-    def __init__(self, file):
+    def __init__(self, file: File):
         """
         File manager object for various readable file format
 
