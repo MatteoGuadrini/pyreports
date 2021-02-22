@@ -29,6 +29,7 @@ import mysql.connector as mdb
 import psycopg2
 import csv
 import json
+import yaml
 
 
 # endregion
@@ -134,6 +135,29 @@ class JsonFile(File):
         """
         with self.raw_data as file:
             return json.load(file, **kwargs)
+
+
+class YamlFile(File):
+    """YAML file class"""
+
+    def write(self, data):
+        """
+        Write data on yaml file
+
+        :param data: data to write on yaml file
+        :return: None
+        """
+        with self.raw_data as file:
+            yaml.dump(data, file)
+
+    def read(self, **kargs):
+        """
+        Read yaml format
+
+        :return: yaml file
+        """
+        with self.raw_data as file:
+            return yaml.full_load(file)
 
 
 class SQLliteConnection(Connection):
