@@ -319,6 +319,24 @@ class FileManager:
         """
         self.data = file
 
+    def write(self, data):
+        """
+        Write data on file
+
+        :param data: data to write on file
+        :return: None
+        """
+        with self.data as file:
+            file.write(data)
+
+    def read(self, **kwargs):
+        """
+        Read file
+
+        :return: file
+        """
+        with self.data as file:
+            file.read(**kwargs)
 
 # endregion
 
