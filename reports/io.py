@@ -28,6 +28,7 @@ import pymssql
 import mysql.connector as mdb
 import psycopg2
 import csv
+import json
 
 
 # endregion
@@ -110,6 +111,29 @@ class CsvFile(File):
         with self.raw_data as file:
             reader = csv.reader(file, **kargs)
             return reader
+
+
+class JsonFile(File):
+    """JSON file class"""
+
+    def write(self, data):
+        """
+        Write data on json file
+
+        :param data: data to write on json file
+        :return: None
+        """
+        with self.raw_data as file:
+            json.dump(data, file, indent=4)
+
+    def read(self, **kwargs):
+        """
+        Read json format
+
+        :return: json file
+        """
+        with self.raw_data as file:
+            return json.load(file, **kwargs)
 
 
 class SQLliteConnection(Connection):
