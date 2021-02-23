@@ -376,4 +376,17 @@ def create_database_manager(dbtype, host=None, port=None, database=None, usernam
     connection = DBTYPE[dbtype](host=host, port=port, database=database, username=username, password=password)
     return DatabaseManager(connection=connection)
 
+
+def create_file_manager(filetype, filename, mode='r'):
+    """
+    Creates a FileManager object
+
+    :param filetype: type of file
+    :param filename: path of file
+    :param mode: mode of open file. Default is read.
+    :return: FileManager
+    """
+    file = FILETYPE[filetype](filename=filename, mode=mode)
+    return FileManager(file=file)
+
 # endregion
