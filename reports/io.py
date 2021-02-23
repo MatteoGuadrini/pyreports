@@ -338,6 +338,7 @@ class FileManager:
         with self.data as file:
             file.read(**kwargs)
 
+
 # endregion
 
 # region Variables
@@ -348,6 +349,12 @@ DBTYPE = {
     'postgresql': PostgreSQLConnection
 }
 
+FILETYPE = {
+    'file': File,
+    'csv': CsvFile,
+    'json': JsonFile,
+    'yaml': YamlFile
+}
 
 # endregion
 
