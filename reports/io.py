@@ -343,16 +343,24 @@ class FileManager:
 class LdapManager:
     """LDAP manager class"""
 
-    def __init__(self, server, ssl=False):
+    def __init__(self, server, username, password, ssl=False, tls=True):
         """
         LDAP manager object
 
         :param server: fqdn server name or ip address
-        :param ssl: SSL connection
+        :param username: username for bind operation
+        :param password: password of the username used for bind operation
+        :param ssl: disable or enable SSL. Default is False.
+        :param tls: disable or enable TLS. Default is True.
         """
         # Check ssl connection
         port = 636 if ssl else 389
         self.connector = ldap3.Server(server, get_info=ldap3.ALL, port=port, use_ssl=ssl)
+        # Check tls connection
+        auto_bind = ldap3.AUTO_BIND_TLS_BEFORE_BIND if tls else ldap3.AUTO_BIND_NONE
+        # Create a bind connection with user and password
+        self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}', auto_bind=auto_bind,
+                                     raise_exceptions=True)
 
 
 # endregion
