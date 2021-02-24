@@ -357,10 +357,21 @@ class LdapManager:
         port = 636 if ssl else 389
         self.connector = ldap3.Server(server, get_info=ldap3.ALL, port=port, use_ssl=ssl)
         # Check tls connection
-        auto_bind = ldap3.AUTO_BIND_TLS_BEFORE_BIND if tls else ldap3.AUTO_BIND_NONE
+        self.auto_bind = ldap3.AUTO_BIND_TLS_BEFORE_BIND if tls else ldap3.AUTO_BIND_NONE
         # Create a bind connection with user and password
-        self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}', auto_bind=auto_bind,
-                                     raise_exceptions=True)
+        self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
+                                     auto_bind=self.auto_bind, raise_exceptions=True)
+
+    def rebind(self, username, password):
+        """
+        Re-bind with specified username and password
+
+        :param username: username for bind operation
+        :param password: password of the username used for bind operation
+        :return:
+        """
+        self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
+                                     auto_bind=self.auto_bind, raise_exceptions=True)
 
 
 # endregion
