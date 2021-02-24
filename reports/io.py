@@ -30,6 +30,7 @@ import psycopg2
 import csv
 import json
 import yaml
+import ldap3
 
 
 # endregion
@@ -337,6 +338,21 @@ class FileManager:
         """
         with self.data as file:
             file.read(**kwargs)
+
+
+class LdapManager:
+    """LDAP manager class"""
+
+    def __init__(self, server, ssl=False):
+        """
+        LDAP manager object
+
+        :param server: fqdn server name or ip address
+        :param ssl: SSL connection
+        """
+        # Check ssl connection
+        port = 636 if ssl else 389
+        self.connector = ldap3.Server(server, get_info=ldap3.ALL, port=port, use_ssl=ssl)
 
 
 # endregion
