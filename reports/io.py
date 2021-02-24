@@ -368,10 +368,25 @@ class LdapManager:
 
         :param username: username for bind operation
         :param password: password of the username used for bind operation
-        :return:
+        :return: None
         """
+        # Disconnect LDAP server
+        self.bind.unbind()
         self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
                                      auto_bind=self.auto_bind, raise_exceptions=True)
+
+    def query(self, base_search, search_filter, attributes):
+        """
+        Search LDAP element on subtree base search directory
+
+        :param base_search: distinguishedName of LDAP base search
+        :param search_filter: LDAP query language
+        :param attributes: list of returning LDAP attributes
+        :return: LDAP query result
+        """
+        if self.bind.search(search_base=base_search, search_filter=f'{search_filter}', attributes=attributes,
+                            search_scope=ldap3.SUBTREE):
+            return self.bind.response
 
 
 # endregion
@@ -390,6 +405,7 @@ FILETYPE = {
     'json': JsonFile,
     'yaml': YamlFile
 }
+
 
 # endregion
 
