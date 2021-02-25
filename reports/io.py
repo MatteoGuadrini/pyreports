@@ -391,6 +391,7 @@ class LdapManager:
 
 # endregion
 
+
 # region Variables
 DBTYPE = {
     'sqlite': SQLliteConnection,
@@ -439,5 +440,18 @@ def create_file_manager(filetype, filename, mode='r'):
     """
     file = FILETYPE[filetype](filename=filename, mode=mode)
     return FileManager(file=file)
+
+
+def create_ldap_manager(server, username, password, ssl=False, tls=True):
+    """
+    Creates a LdapManager object
+
+    :param server: fqdn server name or ip address
+    :param username: username for bind operation
+    :param password: password of the username used for bind operation
+    :param ssl: disable or enable SSL. Default is False.
+    :param tls: disable or enable TLS. Default is True.
+    """
+    return LdapManager(server, username, password, ssl=ssl, tls=tls)
 
 # endregion
