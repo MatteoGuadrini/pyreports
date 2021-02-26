@@ -454,4 +454,24 @@ def create_ldap_manager(server, username, password, ssl=False, tls=True):
     """
     return LdapManager(server, username, password, ssl=ssl, tls=tls)
 
+
+def manager(datatype, *args, **kwargs):
+    """
+    Creates manager object based on datatype
+
+    :param datatype: type of manager
+    :param args: various positional arguments
+    :param kwargs: various keyword arguments
+    :return:
+    """
+    # Choose manager type
+    if datatype in DBTYPE:
+        return create_database_manager(datatype, *args, **kwargs)
+    elif datatype in FILETYPE:
+        return create_file_manager(datatype, *args, **kwargs)
+    elif datatype is 'ldap':
+        return create_ldap_manager(*args, **kwargs)
+    else:
+        raise ValueError(f"data type {datatype} doesn't exists!")
+
 # endregion
