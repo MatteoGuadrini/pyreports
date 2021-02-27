@@ -28,6 +28,9 @@ import pymssql
 import mysql.connector as mdb
 import psycopg2
 import csv
+import json
+import yaml
+import ldap3
 
 
 # endregion
@@ -110,6 +113,52 @@ class CsvFile(File):
         with self.raw_data as file:
             reader = csv.reader(file, **kargs)
             return reader
+
+
+class JsonFile(File):
+    """JSON file class"""
+
+    def write(self, data):
+        """
+        Write data on json file
+
+        :param data: data to write on json file
+        :return: None
+        """
+        with self.raw_data as file:
+            json.dump(data, file, indent=4)
+
+    def read(self, **kwargs):
+        """
+        Read json format
+
+        :return: json file
+        """
+        with self.raw_data as file:
+            return json.load(file, **kwargs)
+
+
+class YamlFile(File):
+    """YAML file class"""
+
+    def write(self, data):
+        """
+        Write data on yaml file
+
+        :param data: data to write on yaml file
+        :return: None
+        """
+        with self.raw_data as file:
+            yaml.dump(data, file)
+
+    def read(self, **kargs):
+        """
+        Read yaml format
+
+        :return: yaml file
+        """
+        with self.raw_data as file:
+            return yaml.full_load(file)
 
 
 class SQLliteConnection(Connection):
@@ -271,8 +320,77 @@ class FileManager:
         """
         self.data = file
 
+    def write(self, data):
+        """
+        Write data on file
+
+        :param data: data to write on file
+        :return: None
+        """
+        with self.data as file:
+            file.write(data)
+
+    def read(self, **kwargs):
+        """
+        Read file
+
+        :return: file
+        """
+        with self.data as file:
+            file.read(**kwargs)
+
+
+class LdapManager:
+    """LDAP manager class"""
+
+    def __init__(self, server, username, password, ssl=False, tls=True):
+        """
+        LDAP manager object
+
+        :param server: fqdn server name or ip address
+        :param username: username for bind operation
+        :param password: password of the username used for bind operation
+        :param ssl: disable or enable SSL. Default is False.
+        :param tls: disable or enable TLS. Default is True.
+        """
+        # Check ssl connection
+        port = 636 if ssl else 389
+        self.connector = ldap3.Server(server, get_info=ldap3.ALL, port=port, use_ssl=ssl)
+        # Check tls connection
+        self.auto_bind = ldap3.AUTO_BIND_TLS_BEFORE_BIND if tls else ldap3.AUTO_BIND_NONE
+        # Create a bind connection with user and password
+        self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
+                                     auto_bind=self.auto_bind, raise_exceptions=True)
+
+    def rebind(self, username, password):
+        """
+        Re-bind with specified username and password
+
+        :param username: username for bind operation
+        :param password: password of the username used for bind operation
+        :return: None
+        """
+        # Disconnect LDAP server
+        self.bind.unbind()
+        self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
+                                     auto_bind=self.auto_bind, raise_exceptions=True)
+
+    def query(self, base_search, search_filter, attributes):
+        """
+        Search LDAP element on subtree base search directory
+
+        :param base_search: distinguishedName of LDAP base search
+        :param search_filter: LDAP query language
+        :param attributes: list of returning LDAP attributes
+        :return: LDAP query result
+        """
+        if self.bind.search(search_base=base_search, search_filter=f'{search_filter}', attributes=attributes,
+                            search_scope=ldap3.SUBTREE):
+            return self.bind.response
+
 
 # endregion
+
 
 # region Variables
 DBTYPE = {
@@ -280,6 +398,13 @@ DBTYPE = {
     'mssql': MSSQLConnection,
     'mysql': MySQLConnection,
     'postgresql': PostgreSQLConnection
+}
+
+FILETYPE = {
+    'file': File,
+    'csv': CsvFile,
+    'json': JsonFile,
+    'yaml': YamlFile
 }
 
 
@@ -302,5 +427,51 @@ def create_database_manager(dbtype, host=None, port=None, database=None, usernam
     # Create connection
     connection = DBTYPE[dbtype](host=host, port=port, database=database, username=username, password=password)
     return DatabaseManager(connection=connection)
+
+
+def create_file_manager(filetype, filename, mode='r'):
+    """
+    Creates a FileManager object
+
+    :param filetype: type of file
+    :param filename: path of file
+    :param mode: mode of open file. Default is read.
+    :return: FileManager
+    """
+    file = FILETYPE[filetype](filename=filename, mode=mode)
+    return FileManager(file=file)
+
+
+def create_ldap_manager(server, username, password, ssl=False, tls=True):
+    """
+    Creates a LdapManager object
+
+    :param server: fqdn server name or ip address
+    :param username: username for bind operation
+    :param password: password of the username used for bind operation
+    :param ssl: disable or enable SSL. Default is False.
+    :param tls: disable or enable TLS. Default is True.
+    """
+    return LdapManager(server, username, password, ssl=ssl, tls=tls)
+
+
+def manager(datatype, *args, **kwargs):
+    """
+    Creates manager object based on datatype
+
+    :param datatype: type of manager
+    :param args: various positional arguments
+    :param kwargs: various keyword arguments
+    :return:
+    """
+    # Choose manager type
+    if datatype in DBTYPE:
+        return create_database_manager(datatype, *args, **kwargs)
+    elif datatype in FILETYPE:
+        return create_file_manager(datatype, *args, **kwargs)
+    elif datatype is 'ldap':
+        return create_ldap_manager(*args, **kwargs)
+    else:
+        raise ValueError(f"data type {datatype} doesn't exists!")
 
 # endregion
