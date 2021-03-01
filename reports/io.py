@@ -224,6 +224,7 @@ class DatabaseManager:
 
         :param connection: Connection based object
         """
+        self.type = 'database'
         self.connector = connection
         # Connect database
         self.connector.connect()
@@ -318,6 +319,7 @@ class FileManager:
 
         :param file: file object
         """
+        self.type = 'file'
         self.data = file
 
     def write(self, data):
@@ -353,6 +355,7 @@ class LdapManager:
         :param ssl: disable or enable SSL. Default is False.
         :param tls: disable or enable TLS. Default is True.
         """
+        self.type = 'ldap'
         # Check ssl connection
         port = 636 if ssl else 389
         self.connector = ldap3.Server(server, get_info=ldap3.ALL, port=port, use_ssl=ssl)
