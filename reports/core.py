@@ -21,3 +21,31 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Contains all business logic and data processing."""
+
+
+# region Classes
+class Executor:
+    """Executor receives, processes, transforms and writes data"""
+
+    def __init__(self, manager):
+        """
+        Create Executor object
+
+        :param manager: object received by the manager function
+        """
+        self.manager = manager
+        # Check type of manager
+        if self.manager.type is 'database':
+            self.reader = getattr(self.manager, 'execute')
+            self.writer = getattr(self.manager, 'execute')
+        elif self.manager.type is 'file':
+            self.reader = getattr(self.manager, 'read')
+            self.writer = getattr(self.manager, 'write')
+        elif self.manager.type is 'ldap':
+            self.reader = getattr(self.manager, 'query')
+            self.writer = None
+        else:
+            self.reader = None
+            self.writer = None
+
+# endregion
