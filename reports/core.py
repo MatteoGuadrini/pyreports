@@ -58,8 +58,16 @@ class Executor:
         """
         Read data
 
-        :return:
+        :return: None
         """
         self.data = self.reader(*args, **kwargs)
+
+    def write(self, *args, **kwargs):
+        """
+        Write data
+
+        :return: None
+        """
+        self.writer(*args, **kwargs)
 
 # endregion
