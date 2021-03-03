@@ -22,6 +22,11 @@
 
 """Contains all business logic and data processing."""
 
+# region Imports
+import tablib
+
+
+# endregion
 
 # region Classes
 class Executor:
@@ -34,6 +39,7 @@ class Executor:
         :param manager: object received by the manager function
         """
         self.manager = manager
+        self.data = None
         # Check type of manager
         if self.manager.type is 'database':
             self.reader = getattr(self.manager, 'execute')
@@ -47,5 +53,13 @@ class Executor:
         else:
             self.reader = None
             self.writer = None
+
+    def read(self, *args, **kwargs):
+        """
+        Read data
+
+        :return:
+        """
+        self.data = self.reader(*args, **kwargs)
 
 # endregion
