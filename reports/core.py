@@ -32,42 +32,15 @@ import tablib
 class Executor:
     """Executor receives, processes, transforms and writes data"""
 
-    def __init__(self, manager):
+    def __init__(self, data, header=None):
         """
         Create Executor object
 
-        :param manager: object received by the manager function
+        :param data: everything type of data
+        :param header: list header of data
         """
-        self.manager = manager
-        self.data = None
-        # Check type of manager
-        if self.manager.type is 'database':
-            self.reader = getattr(self.manager, 'execute')
-            self.writer = getattr(self.manager, 'execute')
-        elif self.manager.type is 'file':
-            self.reader = getattr(self.manager, 'read')
-            self.writer = getattr(self.manager, 'write')
-        elif self.manager.type is 'ldap':
-            self.reader = getattr(self.manager, 'query')
-            self.writer = None
-        else:
-            self.reader = None
-            self.writer = None
+        self.data = tablib.Dataset(*data, headers=header)
 
-    def read(self, *args, **kwargs):
-        """
-        Read data
 
-        :return: None
-        """
-        self.data = self.reader(*args, **kwargs)
-
-    def write(self, *args, **kwargs):
-        """
-        Write data
-
-        :return: None
-        """
-        self.writer(*args, **kwargs)
 
 # endregion
