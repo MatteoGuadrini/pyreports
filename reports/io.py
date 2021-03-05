@@ -234,6 +234,7 @@ class DatabaseManager:
         self.connector.connect()
         # Set description
         self.description = self.connector.cursor.description
+        self.data = None
         # Row properties
         self.lastrowid = None
         self.rowcount = 0
@@ -284,7 +285,10 @@ class DatabaseManager:
 
         :return: list of tuples
         """
-        return self.connector.cursor.fetchall()
+        self.data = ds = tablib.Dataset()
+        for data in self.connector.cursor.fetchall():
+            ds.append(list(data))
+        return self.data
 
     def fetchone(self):
         """
@@ -292,7 +296,8 @@ class DatabaseManager:
 
         :return: list
         """
-        return self.connector.cursor.fetchone()
+        self.data = tablib.Dataset(list(self.connector.cursor.fetchone()))
+        return self.data
 
     def fetchmany(self, size=1):
         """
@@ -301,7 +306,10 @@ class DatabaseManager:
         :param size: the number of rows returned
         :return: list of tuples
         """
-        return self.connector.cursor.fetchmany(size)
+        self.data = ds = tablib.Dataset()
+        for data in self.connector.cursor.fetchmany(size):
+            ds.append(list(data))
+        return self.data
 
     def callproc(self, proc_name, params=None):
         """
