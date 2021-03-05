@@ -39,8 +39,6 @@ class Executor:
         :param data: everything type of data
         :param header: list header of data
         """
-        self.data = tablib.Dataset(*data, headers=header)
-
-
+        self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
 
 # endregion

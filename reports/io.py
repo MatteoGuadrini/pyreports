@@ -27,9 +27,7 @@ import sqlite3
 import pymssql
 import mysql.connector as mdb
 import psycopg2
-import csv
-import json
-import yaml
+import tablib
 import ldap3
 
 
@@ -78,16 +76,18 @@ class File:
         :param data: data to write on file
         :return: None
         """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
         with self.raw_data as file:
-            file.write(data)
+            file.writelines(data)
 
-    def read(self, **kargs):
+    def read(self, **kwargs):
         """
         Read with format
 
         :return: file
         """
-        return self.raw_data
+        return tablib.Dataset(self.raw_data, **kwargs)
 
 
 class CsvFile(File):
@@ -100,19 +100,19 @@ class CsvFile(File):
         :param data: data to write on csv file
         :return: None
         """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
         with self.raw_data as file:
-            writer = csv.writer(file)
-            writer.writerow(data)
+            file.write(data.export('csv'))
 
-    def read(self, **kargs):
+    def read(self, **kwargs):
         """
         Read csv format
 
         :return: csv file
         """
         with self.raw_data as file:
-            reader = csv.reader(file, **kargs)
-            return reader
+            return tablib.Dataset().load(file, **kwargs)
 
 
 class JsonFile(File):
@@ -125,8 +125,10 @@ class JsonFile(File):
         :param data: data to write on json file
         :return: None
         """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
         with self.raw_data as file:
-            json.dump(data, file, indent=4)
+            file.write(data.export('json'))
 
     def read(self, **kwargs):
         """
@@ -135,7 +137,7 @@ class JsonFile(File):
         :return: json file
         """
         with self.raw_data as file:
-            return json.load(file, **kwargs)
+            return tablib.Dataset().load(file, **kwargs)
 
 
 class YamlFile(File):
@@ -148,17 +150,19 @@ class YamlFile(File):
         :param data: data to write on yaml file
         :return: None
         """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
         with self.raw_data as file:
-            yaml.dump(data, file)
+            file.write(data.export('yaml'))
 
-    def read(self, **kargs):
+    def read(self, **kwargs):
         """
         Read yaml format
 
         :return: yaml file
         """
         with self.raw_data as file:
-            return yaml.full_load(file)
+            return tablib.Dataset().load(file, **kwargs)
 
 
 class SQLliteConnection(Connection):
