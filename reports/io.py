@@ -285,9 +285,8 @@ class DatabaseManager:
 
         :return: list of tuples
         """
-        self.data = ds = tablib.Dataset()
-        for data in self.connector.cursor.fetchall():
-            ds.append(list(data))
+        self.data = tablib.Dataset()
+        self.data.append(list(data) for data in self.connector.cursor.fetchall())
         return self.data
 
     def fetchone(self):
@@ -306,9 +305,8 @@ class DatabaseManager:
         :param size: the number of rows returned
         :return: list of tuples
         """
-        self.data = ds = tablib.Dataset()
-        for data in self.connector.cursor.fetchmany(size):
-            ds.append(list(data))
+        self.data = tablib.Dataset()
+        self.data.append(list(data) for data in self.connector.cursor.fetchmany(size))
         return self.data
 
     def callproc(self, proc_name, params=None):
