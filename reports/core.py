@@ -21,3 +21,24 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Contains all business logic and data processing."""
+
+# region Imports
+import tablib
+
+
+# endregion
+
+# region Classes
+class Executor:
+    """Executor receives, processes, transforms and writes data"""
+
+    def __init__(self, data, header=None):
+        """
+        Create Executor object
+
+        :param data: everything type of data
+        :param header: list header of data
+        """
+        self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
+
+# endregion

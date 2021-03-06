@@ -27,9 +27,7 @@ import sqlite3
 import pymssql
 import mysql.connector as mdb
 import psycopg2
-import csv
-import json
-import yaml
+import tablib
 import ldap3
 
 
@@ -78,16 +76,18 @@ class File:
         :param data: data to write on file
         :return: None
         """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
         with self.raw_data as file:
-            file.write(data)
+            file.writelines(data)
 
-    def read(self, **kargs):
+    def read(self, **kwargs):
         """
         Read with format
 
         :return: file
         """
-        return self.raw_data
+        return tablib.Dataset(self.raw_data, **kwargs)
 
 
 class CsvFile(File):
@@ -100,19 +100,19 @@ class CsvFile(File):
         :param data: data to write on csv file
         :return: None
         """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
         with self.raw_data as file:
-            writer = csv.writer(file)
-            writer.writerow(data)
+            file.write(data.export('csv'))
 
-    def read(self, **kargs):
+    def read(self, **kwargs):
         """
         Read csv format
 
         :return: csv file
         """
         with self.raw_data as file:
-            reader = csv.reader(file, **kargs)
-            return reader
+            return tablib.Dataset().load(file, **kwargs)
 
 
 class JsonFile(File):
@@ -125,8 +125,10 @@ class JsonFile(File):
         :param data: data to write on json file
         :return: None
         """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
         with self.raw_data as file:
-            json.dump(data, file, indent=4)
+            file.write(data.export('json'))
 
     def read(self, **kwargs):
         """
@@ -135,7 +137,7 @@ class JsonFile(File):
         :return: json file
         """
         with self.raw_data as file:
-            return json.load(file, **kwargs)
+            return tablib.Dataset().load(file, **kwargs)
 
 
 class YamlFile(File):
@@ -148,17 +150,19 @@ class YamlFile(File):
         :param data: data to write on yaml file
         :return: None
         """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
         with self.raw_data as file:
-            yaml.dump(data, file)
+            file.write(data.export('yaml'))
 
-    def read(self, **kargs):
+    def read(self, **kwargs):
         """
         Read yaml format
 
         :return: yaml file
         """
         with self.raw_data as file:
-            return yaml.full_load(file)
+            return tablib.Dataset().load(file, **kwargs)
 
 
 class SQLliteConnection(Connection):
@@ -224,11 +228,13 @@ class DatabaseManager:
 
         :param connection: Connection based object
         """
+        self.type = 'database'
         self.connector = connection
         # Connect database
         self.connector.connect()
         # Set description
         self.description = self.connector.cursor.description
+        self.data = None
         # Row properties
         self.lastrowid = None
         self.rowcount = 0
@@ -279,7 +285,9 @@ class DatabaseManager:
 
         :return: list of tuples
         """
-        return self.connector.cursor.fetchall()
+        self.data = tablib.Dataset()
+        self.data.append(list(data) for data in self.connector.cursor.fetchall())
+        return self.data
 
     def fetchone(self):
         """
@@ -287,7 +295,8 @@ class DatabaseManager:
 
         :return: list
         """
-        return self.connector.cursor.fetchone()
+        self.data = tablib.Dataset(list(self.connector.cursor.fetchone()))
+        return self.data
 
     def fetchmany(self, size=1):
         """
@@ -296,7 +305,9 @@ class DatabaseManager:
         :param size: the number of rows returned
         :return: list of tuples
         """
-        return self.connector.cursor.fetchmany(size)
+        self.data = tablib.Dataset()
+        self.data.append(list(data) for data in self.connector.cursor.fetchmany(size))
+        return self.data
 
     def callproc(self, proc_name, params=None):
         """
@@ -318,6 +329,7 @@ class FileManager:
 
         :param file: file object
         """
+        self.type = 'file'
         self.data = file
 
     def write(self, data):
@@ -353,6 +365,7 @@ class LdapManager:
         :param ssl: disable or enable SSL. Default is False.
         :param tls: disable or enable TLS. Default is True.
         """
+        self.type = 'ldap'
         # Check ssl connection
         port = 636 if ssl else 389
         self.connector = ldap3.Server(server, get_info=ldap3.ALL, port=port, use_ssl=ssl)
