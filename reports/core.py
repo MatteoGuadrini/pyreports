@@ -41,4 +41,14 @@ class Executor:
         """
         self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
 
+    def headers(self, header):
+        """
+        Set header
+
+        :param header: header of data
+        :return: None
+        """
+        self.data.headers = header
+
+
 # endregion
