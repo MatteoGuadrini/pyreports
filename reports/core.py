@@ -50,5 +50,17 @@ class Executor:
         """
         self.data.headers = header
 
+    def select_column(self, column):
+        """
+        Filter data by column
+
+        :param column: name or index of column
+        :return: Dataset object
+        """
+        if isinstance(column, int):
+            return self.data.get_col(column)
+        else:
+            return self.data[column]
+
 
 # endregion
