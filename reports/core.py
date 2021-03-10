@@ -57,10 +57,11 @@ class Executor:
         :param column: name or index of column
         :return: Dataset object
         """
-        if isinstance(column, int):
-            return self.data.get_col(column)
-        else:
-            return self.data[column]
+        if self.data.headers:
+            if isinstance(column, int):
+                return self.data.get_col(column)
+            else:
+                return self.data[column]
 
 
 # endregion
