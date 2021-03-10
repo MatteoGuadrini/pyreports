@@ -233,7 +233,7 @@ class DatabaseManager:
         # Connect database
         self.connector.connect()
         # Set description
-        self.description = self.connector.cursor.description
+        self.description = None
         self.data = None
         # Row properties
         self.lastrowid = None
@@ -263,6 +263,8 @@ class DatabaseManager:
         self.lastrowid = self.connector.cursor.lastrowid
         # Set row cont
         self.rowcount = self.connector.cursor.rowcount
+        # Set description
+        self.description = self.connector.cursor.description
 
     def executemany(self, query, params):
         """
@@ -278,6 +280,8 @@ class DatabaseManager:
         self.lastrowid = self.connector.cursor.lastrowid
         # Set row cont
         self.rowcount = self.connector.cursor.rowcount
+        # Set description
+        self.description = self.connector.cursor.description
 
     def fetchall(self):
         """
@@ -285,7 +289,8 @@ class DatabaseManager:
 
         :return: Dataset object
         """
-        self.data = tablib.Dataset()
+        header = [field[0] for field in self.description]
+        self.data = tablib.Dataset(headers=header)
         self.data.append(list(data) for data in self.connector.cursor.fetchall())
         return self.data
 
@@ -295,7 +300,8 @@ class DatabaseManager:
 
         :return: Dataset object
         """
-        self.data = tablib.Dataset(list(self.connector.cursor.fetchone()))
+        header = [field[0] for field in self.description]
+        self.data = tablib.Dataset(list(self.connector.cursor.fetchone()), headers=header)
         return self.data
 
     def fetchmany(self, size=1):
@@ -305,7 +311,8 @@ class DatabaseManager:
         :param size: the number of rows returned
         :return: Dataset object
         """
-        self.data = tablib.Dataset()
+        header = [field[0] for field in self.description]
+        self.data = tablib.Dataset(headers=header)
         self.data.append(list(data) for data in self.connector.cursor.fetchmany(size))
         return self.data
 
@@ -388,7 +395,7 @@ class LdapManager:
         self.bind.unbind()
         self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
                                      auto_bind=self.auto_bind, raise_exceptions=True)
-        self.bind()
+        self.bind.bind()
 
     def query(self, base_search, search_filter, attributes):
         """
