@@ -63,5 +63,33 @@ class Executor:
             else:
                 return self.data[column]
 
+    def filter(self, flist=[], key=None, column=None):
+        """
+        Filter data through a list of strings (equal operator) and/or function key
+
+        :param flist: list of strings
+        :param key: function that takes a single argument and returns a boolean
+        :param column: select column name or index number
+        :return: Dataset object
+        """
+        ret_data = tablib.Dataset(headers=self.data.headers)
+        # Filter data through filter list
+        for row in self.data:
+            for f in flist:
+                if f in row:
+                    ret_data.append(row)
+            # Filter data through function
+            if key:
+                for field in row:
+                    if bool(key(field)):
+                        ret_data.append(row)
+        # Return all data or single column
+        if column and self.data.headers:
+            if isinstance(column, int):
+                return ret_data.get_col(column)
+            else:
+                return ret_data[column]
+        else:
+            return ret_data
 
 # endregion
