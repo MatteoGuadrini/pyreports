@@ -63,7 +63,7 @@ class Executor:
             else:
                 return self.data[column]
 
-    def filter(self, flist=[], key=None, column=None):
+    def filter(self, flist=None, key=None, column=None):
         """
         Filter data through a list of strings (equal operator) and/or function key
 
@@ -72,6 +72,8 @@ class Executor:
         :param column: select column name or index number
         :return: Dataset object
         """
+        if flist is None:
+            flist = []
         ret_data = tablib.Dataset(headers=self.data.headers)
         # Filter data through filter list
         for row in self.data:
