@@ -84,11 +84,13 @@ class Executor:
             for f in flist:
                 if f in row:
                     ret_data.append(row)
+                    break
             # Filter data through function
             if key:
                 for field in row:
                     if bool(key(field)):
                         ret_data.append(row)
+                        break
         # Return all data or single column
         if column and ret_data.headers:
             return select_column(ret_data, column)
