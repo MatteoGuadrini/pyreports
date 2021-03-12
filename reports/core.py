@@ -105,9 +105,18 @@ class Executor:
         Add column to data
 
         :param column: column name
-        :param value: list value for column
-        :return:
+        :param value: list value for column, or function with no arguments that returns a value
+        :return: None
         """
         self.data.append_col(value, header=column)
+
+    def del_column(self, column):
+        """
+        Delete column
+
+        :param column: column name
+        :return: None
+        """
+        del self.data[column]
 
 # endregion
