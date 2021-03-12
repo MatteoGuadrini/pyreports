@@ -28,23 +28,6 @@ import tablib
 
 # endregion
 
-# region Functions
-def select_column(dataset, column):
-    """
-    Filter dataset by column
-
-    :param dataset: dataset object
-    :param column: name or index of column
-    :return: Dataset object
-    """
-    if isinstance(column, int):
-        return dataset.get_col(column)
-    else:
-        return dataset[column]
-
-
-# endregion
-
 # region Classes
 class Executor:
     """Executor receives, processes, transforms and writes data"""
@@ -57,6 +40,15 @@ class Executor:
         :param header: list header of data
         """
         self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
+        self.origin = self.data
+
+    def reset(self):
+        """
+        Reset data to original data
+
+        :return: None
+        """
+        self.data = self.origin
 
     def headers(self, header):
         """
@@ -74,7 +66,7 @@ class Executor:
         :param flist: list of strings
         :param key: function that takes a single argument and returns a boolean
         :param column: select column name or index number
-        :return: Dataset object
+        :return: None
         """
         if flist is None:
             flist = []
@@ -91,10 +83,21 @@ class Executor:
                     if bool(key(field)):
                         ret_data.append(row)
                         break
+        self.data = ret_data
         # Return all data or single column
-        if column and ret_data.headers:
-            return select_column(ret_data, column)
+        if column and self.data.headers:
+            self.data = self.select_column(column)
+
+    def select_column(self, column):
+        """
+        Filter dataset by column
+
+        :param column: name or index of column
+        :return: Dataset object
+        """
+        if isinstance(column, int):
+            return self.data.get_col(column)
         else:
-            return ret_data
+            return self.data[column]
 
 # endregion
