@@ -28,6 +28,23 @@ import tablib
 
 # endregion
 
+# region Functions
+def select_column(dataset, column):
+    """
+    Filter dataset by column
+
+    :param dataset: dataset object
+    :param column: name or index of column
+    :return: Dataset object
+    """
+    if isinstance(column, int):
+        return dataset.get_col(column)
+    else:
+        return dataset[column]
+
+
+# endregion
+
 # region Classes
 class Executor:
     """Executor receives, processes, transforms and writes data"""
@@ -49,19 +66,6 @@ class Executor:
         :return: None
         """
         self.data.headers = header
-
-    def select_column(self, column):
-        """
-        Filter data by column
-
-        :param column: name or index of column
-        :return: Dataset object
-        """
-        if self.data.headers:
-            if isinstance(column, int):
-                return self.data.get_col(column)
-            else:
-                return self.data[column]
 
     def filter(self, flist=None, key=None, column=None):
         """
@@ -86,11 +90,8 @@ class Executor:
                     if bool(key(field)):
                         ret_data.append(row)
         # Return all data or single column
-        if column and self.data.headers:
-            if isinstance(column, int):
-                return ret_data.get_col(column)
-            else:
-                return ret_data[column]
+        if column and ret_data.headers:
+            return select_column(ret_data, column)
         else:
             return ret_data
 
