@@ -100,4 +100,14 @@ class Executor:
         else:
             return self.data[column]
 
+    def add_column(self, column, value):
+        """
+        Add column to data
+
+        :param column: column name
+        :param value: list value for column
+        :return:
+        """
+        self.data.append_col(value, header=column)
+
 # endregion
