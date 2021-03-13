@@ -85,7 +85,7 @@ class File:
         """
         Read with format
 
-        :return: file
+        :return: Dataset object
         """
         return tablib.Dataset(self.raw_data, **kwargs)
 
@@ -109,7 +109,7 @@ class CsvFile(File):
         """
         Read csv format
 
-        :return: csv file
+        :return: Dataset object
         """
         with self.raw_data as file:
             return tablib.Dataset().load(file, **kwargs)
@@ -134,7 +134,7 @@ class JsonFile(File):
         """
         Read json format
 
-        :return: json file
+        :return: Dataset object
         """
         with self.raw_data as file:
             return tablib.Dataset().load(file, **kwargs)
@@ -159,7 +159,7 @@ class YamlFile(File):
         """
         Read yaml format
 
-        :return: yaml file
+        :return: Dataset object
         """
         with self.raw_data as file:
             return tablib.Dataset().load(file, **kwargs)
@@ -233,7 +233,7 @@ class DatabaseManager:
         # Connect database
         self.connector.connect()
         # Set description
-        self.description = self.connector.cursor.description
+        self.description = None
         self.data = None
         # Row properties
         self.lastrowid = None
@@ -263,6 +263,8 @@ class DatabaseManager:
         self.lastrowid = self.connector.cursor.lastrowid
         # Set row cont
         self.rowcount = self.connector.cursor.rowcount
+        # Set description
+        self.description = self.connector.cursor.description
 
     def executemany(self, query, params):
         """
@@ -278,14 +280,17 @@ class DatabaseManager:
         self.lastrowid = self.connector.cursor.lastrowid
         # Set row cont
         self.rowcount = self.connector.cursor.rowcount
+        # Set description
+        self.description = self.connector.cursor.description
 
     def fetchall(self):
         """
         Fetches all (or all remaining) rows of a query result set
 
-        :return: list of tuples
+        :return: Dataset object
         """
-        self.data = tablib.Dataset()
+        header = [field[0] for field in self.description]
+        self.data = tablib.Dataset(headers=header)
         self.data.append(list(data) for data in self.connector.cursor.fetchall())
         return self.data
 
@@ -293,9 +298,10 @@ class DatabaseManager:
         """
         Retrieves the next row of a query result set
 
-        :return: list
+        :return: Dataset object
         """
-        self.data = tablib.Dataset(list(self.connector.cursor.fetchone()))
+        header = [field[0] for field in self.description]
+        self.data = tablib.Dataset(list(self.connector.cursor.fetchone()), headers=header)
         return self.data
 
     def fetchmany(self, size=1):
@@ -303,9 +309,10 @@ class DatabaseManager:
         Fetches the next set of rows of a query result
 
         :param size: the number of rows returned
-        :return: list of tuples
+        :return: Dataset object
         """
-        self.data = tablib.Dataset()
+        header = [field[0] for field in self.description]
+        self.data = tablib.Dataset(headers=header)
         self.data.append(list(data) for data in self.connector.cursor.fetchmany(size))
         return self.data
 
@@ -346,7 +353,7 @@ class FileManager:
         """
         Read file
 
-        :return: file
+        :return: Dataset object
         """
         with self.data as file:
             file.read(**kwargs)
@@ -374,6 +381,7 @@ class LdapManager:
         # Create a bind connection with user and password
         self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
                                      auto_bind=self.auto_bind, raise_exceptions=True)
+        self.bind.bind()
 
     def rebind(self, username, password):
         """
@@ -387,6 +395,7 @@ class LdapManager:
         self.bind.unbind()
         self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
                                      auto_bind=self.auto_bind, raise_exceptions=True)
+        self.bind.bind()
 
     def query(self, base_search, search_filter, attributes):
         """
@@ -395,11 +404,19 @@ class LdapManager:
         :param base_search: distinguishedName of LDAP base search
         :param search_filter: LDAP query language
         :param attributes: list of returning LDAP attributes
-        :return: LDAP query result
+        :return: Dataset object
         """
         if self.bind.search(search_base=base_search, search_filter=f'{search_filter}', attributes=attributes,
                             search_scope=ldap3.SUBTREE):
-            return self.bind.response
+            # Build Dataset
+            data = tablib.Dataset()
+            data.headers = attributes
+            for result in self.bind.response:
+                if result.get('attributes'):
+                    for attribute in range(len(attributes)):
+                        data.append(result.get('attributes').get(attributes[attribute]))
+            # Return object
+            return data
 
 
 # endregion

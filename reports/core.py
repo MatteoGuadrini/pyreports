@@ -40,5 +40,83 @@ class Executor:
         :param header: list header of data
         """
         self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
+        self.origin = self.data
+
+    def reset(self):
+        """
+        Reset data to original data
+
+        :return: None
+        """
+        self.data = self.origin
+
+    def headers(self, header):
+        """
+        Set header
+
+        :param header: header of data
+        :return: None
+        """
+        self.data.headers = header
+
+    def filter(self, flist=None, key=None, column=None):
+        """
+        Filter data through a list of strings (equal operator) and/or function key
+
+        :param flist: list of strings
+        :param key: function that takes a single argument and returns a boolean
+        :param column: select column name or index number
+        :return: None
+        """
+        if flist is None:
+            flist = []
+        ret_data = tablib.Dataset(headers=self.data.headers)
+        # Filter data through filter list
+        for row in self.data:
+            for f in flist:
+                if f in row:
+                    ret_data.append(row)
+                    break
+            # Filter data through function
+            if key:
+                for field in row:
+                    if bool(key(field)):
+                        ret_data.append(row)
+                        break
+        self.data = ret_data
+        # Return all data or single column
+        if column and self.data.headers:
+            self.data = self.select_column(column)
+
+    def select_column(self, column):
+        """
+        Filter dataset by column
+
+        :param column: name or index of column
+        :return: Dataset object
+        """
+        if isinstance(column, int):
+            return self.data.get_col(column)
+        else:
+            return self.data[column]
+
+    def add_column(self, column, value):
+        """
+        Add column to data
+
+        :param column: column name
+        :param value: list value for column, or function with no arguments that returns a value
+        :return: None
+        """
+        self.data.append_col(value, header=column)
+
+    def del_column(self, column):
+        """
+        Delete column
+
+        :param column: column name
+        :return: None
+        """
+        del self.data[column]
 
 # endregion
