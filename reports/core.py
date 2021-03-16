@@ -148,4 +148,12 @@ class Executor:
         """
         return len(self.data)
 
+    def count_column(self):
+        """
+        Count all column
+
+        :return: integer
+        """
+        return len(self.data.headers)
+
 # endregion
