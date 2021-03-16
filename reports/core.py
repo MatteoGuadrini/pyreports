@@ -42,6 +42,14 @@ class Executor:
         self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
         self.origin = self.data
 
+    def __len__(self):
+        """
+        Count data
+
+        :return: integer
+        """
+        return self.count_rows()
+
     def reset(self):
         """
         Reset data to original data
