@@ -140,4 +140,12 @@ class Executor:
         """
         del self.data[column]
 
+    def count_rows(self):
+        """
+        Count all rows
+
+        :return: integer
+        """
+        return len(self.data)
+
 # endregion
