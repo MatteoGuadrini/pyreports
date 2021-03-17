@@ -34,13 +34,13 @@ error_login.filter([400, 401, 403, 404, 500])
 
 # Save report: this is a FileManager object
 output = reports.manager('csv', '/home/report/error_login.csv', mode='w')
-output.write(error_login)
+output.write(error_login.data)
 
 ```
 
 ### Combine source
 
-I take the data from a database table and a log file, process the data through my function and save the report in json format
+I take the data from a database table and a log file and save the report in json format
 
 ```python
 import reports
@@ -55,18 +55,19 @@ mydb.execute('SELECT * FROM site_login')
 site_login = mydb.fetchall()
 error_log = mylog.read()
 
-# Filter data
+# Filter database
 error_login = reports.Executor(site_login)
 error_login.filter([400, 401, 403, 404, 500])
 users_in_error = set(error_login.select_column('users'))
 
-# Prepare data
+# Prepare log
 myreport = dict()
-for line in error_log:
+log_user_error = reports.Executor(error_log)
+log_user_error.filter(list(users_in_error))
+for line in log_user_error.data:
     for user in users_in_error:
-        if user in line:
-            myreport.setdefault(user, [])
-            myreport[user].append(line)
+        myreport.setdefault(user, [])
+        myreport[user].append(line)
 
 # Save report: this is a FileManager object
 output = reports.manager('json', '/home/report/error_login.json', mode='w')
