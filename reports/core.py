@@ -164,4 +164,12 @@ class Executor:
         """
         return len(self.data.headers)
 
+    def clone(self):
+        """
+        Clone Executor object
+
+        :return: executor
+        """
+        return Executor(self.origin, header=self.origin.headers)
+
 # endregion
