@@ -50,6 +50,14 @@ class Executor:
         """
         return self.count_rows()
 
+    def get_data(self):
+        """
+        Get dataset
+
+        :return: dataset
+        """
+        return self.data
+
     def reset(self):
         """
         Reset data to original data

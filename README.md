@@ -34,7 +34,7 @@ error_login.filter([400, 401, 403, 404, 500])
 
 # Save report: this is a FileManager object
 output = reports.manager('csv', '/home/report/error_login.csv', mode='w')
-output.write(error_login.data)
+output.write(error_login.get_data())
 
 ```
 
@@ -64,7 +64,7 @@ users_in_error = set(error_login.select_column('users'))
 myreport = dict()
 log_user_error = reports.Executor(error_log)
 log_user_error.filter(list(users_in_error))
-for line in log_user_error.data:
+for line in log_user_error.get_data():
     for user in users_in_error:
         myreport.setdefault(user, [])
         myreport[user].append(line)
