@@ -165,6 +165,31 @@ class YamlFile(File):
             return tablib.Dataset().load(file, **kwargs)
 
 
+class ExcelFile(File):
+    """Excel file class"""
+
+    def write(self, data):
+        """
+        Write data on xlsx file
+
+        :param data: data to write on yaml file
+        :return: None
+        """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
+        with self.raw_data as file:
+            file.write(data.export('xlsx'))
+
+    def read(self, **kwargs):
+        """
+        Read xlsx format
+
+        :return: Dataset object
+        """
+        with self.raw_data as file:
+            return tablib.import_set(file, **kwargs)
+
+
 class SQLliteConnection(Connection):
     """Connection sqlite class"""
 
