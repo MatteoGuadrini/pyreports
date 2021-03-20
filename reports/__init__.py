@@ -22,4 +22,7 @@
 
 """Build complex reports from/to various formats."""
 
-__version__ = '0.0.6'
+from .io import manager
+from .core import Executor
+
+__version__ = '0.0.7'

@@ -42,6 +42,30 @@ class Executor:
         self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
         self.origin = self.data
 
+    def __len__(self):
+        """
+        Count data
+
+        :return: integer
+        """
+        return self.count_rows()
+
+    def __iter__(self):
+        """
+        Iterate over dataset
+
+        :return: next value
+        """
+        return (row for row in self.data)
+
+    def get_data(self):
+        """
+        Get dataset
+
+        :return: dataset
+        """
+        return self.data
+
     def reset(self):
         """
         Reset data to original data
@@ -64,7 +88,7 @@ class Executor:
         Filter data through a list of strings (equal operator) and/or function key
 
         :param flist: list of strings
-        :param key: function that takes a single argument and returns a boolean
+        :param key: function that takes a single argument and returns data
         :param column: select column name or index number
         :return: None
         """
@@ -78,11 +102,32 @@ class Executor:
                     ret_data.append(row)
                     break
             # Filter data through function
-            if key:
+            if key and callable(key):
                 for field in row:
                     if bool(key(field)):
                         ret_data.append(row)
                         break
+        self.data = ret_data
+        # Single column
+        if column and self.data.headers:
+            self.data = self.select_column(column)
+
+    def map(self, key, column=None):
+        """
+        Apply function to data
+
+        :param key: function that takes a single argument
+        :param column: select column name or index number
+        :return: None
+        """
+        ret_data = tablib.Dataset(headers=self.data.headers)
+        for row in self.data:
+            # Apply function to data
+            if key and callable(key):
+                new_row = list()
+                for field in row:
+                    new_row.append(key(field))
+                ret_data.append(new_row)
         self.data = ret_data
         # Return all data or single column
         if column and self.data.headers:
@@ -118,5 +163,29 @@ class Executor:
         :return: None
         """
         del self.data[column]
+
+    def count_rows(self):
+        """
+        Count all rows
+
+        :return: integer
+        """
+        return len(self.data)
+
+    def count_column(self):
+        """
+        Count all column
+
+        :return: integer
+        """
+        return len(self.data.headers)
+
+    def clone(self):
+        """
+        Clone Executor object
+
+        :return: executor
+        """
+        return Executor(self.origin, header=self.origin.headers)
 
 # endregion

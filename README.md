@@ -16,6 +16,8 @@ _reports_ uses the [**tablib**](https://tablib.readthedocs.io/en/stable/) librar
 
 ### Simple report
 
+I take the data from a database table, filter the data I need and save it in a csv file
+
 ```python
 import reports
 
@@ -28,11 +30,48 @@ site_login = mydb.fetchall()
 
 # Filter data
 error_login = reports.Executor(site_login)
-error_login.filter([400, 401, 403, 404])
+error_login.filter([400, 401, 403, 404, 500])
 
 # Save report: this is a FileManager object
 output = reports.manager('csv', '/home/report/error_login.csv', mode='w')
-output.write(error_login)
+output.write(error_login.get_data())
+
+```
+
+### Combine source
+
+I take the data from a database table and a log file and save the report in json format
+
+```python
+import reports
+
+# Select source: this is a DatabaseManager object
+mydb = reports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+# Select another source: this is a FileManager object
+mylog = reports.manager('file', '/var/log/httpd/error.log')
+
+# Get data
+mydb.execute('SELECT * FROM site_login')
+site_login = mydb.fetchall()
+error_log = mylog.read()
+
+# Filter database
+error_login = reports.Executor(site_login)
+error_login.filter([400, 401, 403, 404, 500])
+users_in_error = set(error_login.select_column('users'))
+
+# Prepare log
+myreport = dict()
+log_user_error = reports.Executor(error_log)
+log_user_error.filter(list(users_in_error))
+for line in log_user_error:
+    for user in users_in_error:
+        myreport.setdefault(user, [])
+        myreport[user].append(line)
+
+# Save report: this is a FileManager object
+output = reports.manager('json', '/home/report/error_login.json', mode='w')
+output.write(myreport)
 
 ```
 
