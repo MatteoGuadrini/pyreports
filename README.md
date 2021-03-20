@@ -64,7 +64,7 @@ users_in_error = set(error_login.select_column('users'))
 myreport = dict()
 log_user_error = reports.Executor(error_log)
 log_user_error.filter(list(users_in_error))
-for line in log_user_error.get_data():
+for line in log_user_error:
     for user in users_in_error:
         myreport.setdefault(user, [])
         myreport[user].append(line)

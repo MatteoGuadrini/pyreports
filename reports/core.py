@@ -50,6 +50,14 @@ class Executor:
         """
         return self.count_rows()
 
+    def __iter__(self):
+        """
+        Iterate over dataset
+
+        :return: next value
+        """
+        return (row for row in self.data)
+
     def get_data(self):
         """
         Get dataset
