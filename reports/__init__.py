@@ -25,4 +25,4 @@
 from .io import manager
 from .core import Executor
 
-__version__ = '0.0.6'
+__version__ = '0.0.7'
