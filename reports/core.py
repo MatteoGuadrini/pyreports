@@ -192,24 +192,29 @@ class Executor:
 class Report:
     """Report represents the workflow for generating a report"""
 
-    def __init__(self, inputs, filters=None, map_func=None, column=None, count=False, output=None):
+    def __init__(self, inputs, title=None, filters=None, map_func=None, column=None, count=False, output=None):
         """
         Create Report object
 
         :param inputs: list of Dataset
+        :param title: title of Report object
         :param filters: list or function for filter data
         :param map_func: function for modifying data
         :param column: select column name or index
         :param count: count rows
-        :param output: output Dataset, default print in stdout
+        :param output: output Manager, default print in stdout
         """
         # Discard all objects that are not Datasets
         self.inputs = [inp for inp in inputs if isinstance(inp, tablib.Dataset)]
         # Set other arguments
+        self.title = title
         self.filter = filters
         self.map = map_func
         self.column = column
         self.count = count
         self.output = output
+        # Data for report
+        self.report = None
+
 
 # endregion
