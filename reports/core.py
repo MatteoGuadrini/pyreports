@@ -216,5 +216,8 @@ class Report:
         # Data for report
         self.report = None
 
+    def __repr__(self):
+        return f"<Report object, title={self.title if self.title else None}>"
+
 
 # endregion
