@@ -459,7 +459,8 @@ FILETYPE = {
     'file': File,
     'csv': CsvFile,
     'json': JsonFile,
-    'yaml': YamlFile
+    'yaml': YamlFile,
+    'xlsx': ExcelFile,
 }
 
 
