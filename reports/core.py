@@ -211,13 +211,32 @@ class Report:
         self.filter = filters
         self.map = map_func
         self.column = column
-        self.count = count
+        self.count = bool(count)
         self.output = output
         # Data for report
-        self.report = None
+        self.report = list()
 
     def __repr__(self):
         return f"<Report object, title={self.title if self.title else None}>"
+
+    def exec(self):
+        """
+        Create Executor object to apply filters and map function to all inputs
+
+        :return: None
+        """
+        # Loop foreach inputs
+        for inp in self.inputs:
+            # Create a temporary Executor object
+            ex = Executor(inp, header=inp.headers)
+            # Apply map function
+            if self.map:
+                ex.map(self.map)
+            # Apply filters
+            if self.filter:
+                ex.filter(self.filter)
+            # Add input to report
+            self.report.append(ex.get_data())
 
 
 # endregion
