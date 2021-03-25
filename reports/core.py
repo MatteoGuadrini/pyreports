@@ -237,6 +237,9 @@ class Report:
                 ex.filter(self.filter)
             # Add input to report
             self.report.append(ex.get_data())
+        # Count element
+        if self.count:
+            self.report = [(dt, len(dt)) for dt in self.report]
 
 
 # endregion
