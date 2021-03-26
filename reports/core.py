@@ -202,7 +202,7 @@ class Report:
         :param map_func: function for modifying data
         :param column: select column name or index
         :param count: count rows
-        :param output: output Manager, default print in stdout
+        :param output: file or database type
         """
         # Discard all objects that are not Datasets
         self.inputs = [inp for inp in inputs if isinstance(inp, tablib.Dataset)]
@@ -218,6 +218,19 @@ class Report:
 
     def __repr__(self):
         return f"<Report object, title={self.title if self.title else None}>"
+
+    def _print_data(self):
+        """
+        Print data and count
+
+        :return: data and count
+        """
+        for data in self.inputs:
+            if isinstance(data, tuple):
+                print(data[0])
+                print(f'rows: {data[1]}')
+            else:
+                print(data)
 
     def exec(self):
         """
