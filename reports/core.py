@@ -24,11 +24,13 @@
 
 # region Imports
 import tablib
+from .io import FileManager
 
 
 # endregion
 
 # region Classes
+
 class Executor:
     """Executor receives, processes, transforms and writes data"""
 
@@ -187,5 +189,85 @@ class Executor:
         :return: executor
         """
         return Executor(self.origin, header=self.origin.headers)
+
+
+class Report:
+    """Report represents the workflow for generating a report"""
+
+    def __init__(self, input_data, title=None, filters=None, map_func=None, column=None, count=False, output=None):
+        """
+        Create Report object
+
+        :param input_data: Dataset object
+        :param title: title of Report object
+        :param filters: list or function for filter data
+        :param map_func: function for modifying data
+        :param column: select column name or index
+        :param count: count rows
+        :param output: FileManager object
+        """
+        # Discard all objects that are not Datasets
+        if isinstance(input_data, tablib.Dataset):
+            self.data = input_data
+        else:
+            raise ValueError('Only Dataset object is allowed for input')
+        # Set other arguments
+        self.title = title
+        self.filter = filters
+        self.map = map_func
+        self.column = column
+        self.count = bool(count)
+        if isinstance(output, FileManager):
+            self.output = output
+        else:
+            raise ValueError('Only FileManager object is allowed for output')
+        # Data for report
+        self.report = None
+
+    def __repr__(self):
+        return f"<Report object title={self.title if self.title else None}>"
+
+    def _print_data(self):
+        """
+        Print data and count
+
+        :return: data and count
+        """
+        if isinstance(self.report, tuple):
+            print(self.report[0])
+            print(f'rows: {self.report[1]}')
+        else:
+            print(self.report)
+
+    def exec(self):
+        """
+        Create Executor object to apply filters and map function to all inputs
+
+        :return: None
+        """
+        # Create a temporary Executor object
+        ex = Executor(self.data, header=self.data.headers)
+        # Apply map function
+        if self.map:
+            ex.map(self.map)
+        # Apply filters
+        if self.filter:
+            ex.filter(self.filter)
+        # Count element
+        if self.count:
+            self.report = (ex.get_data(), len(ex))
+        else:
+            self.report = ex.get_data()
+
+    def export(self):
+        """
+        Save data on output
+
+        :return: if count is True, return row count
+        """
+        if self.output:
+            self.output.write(self.report)
+        else:
+            self._print_data()
 
 # endregion

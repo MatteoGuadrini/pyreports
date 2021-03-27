@@ -75,6 +75,28 @@ output.write(myreport)
 
 ```
 
+### Report object
+
+```python
+import reports
+
+# Select source: this is a DatabaseManager object
+mydb = reports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+output = reports.manager('xlsx', '/home/report/error_login.xlsx', mode='w')
+
+# Get data
+mydb.execute('SELECT * FROM site_login')
+site_login = mydb.fetchall()
+
+# Create report data
+report = reports.Report(site_login, title='Site login failed', filters=[400, 401, 403, 404, 500], output=output)
+# Filter data
+report.exec()
+# Save data on file
+report.export()
+
+```
+
 ## Open source
 _reports_ is an open source project. Any contribute, It's welcome.
 
