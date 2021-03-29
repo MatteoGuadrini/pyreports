@@ -25,6 +25,7 @@
 # region Imports
 import tablib
 from .io import FileManager
+from .exception import ReportManagerError, ReportDataError
 
 
 # endregion
@@ -210,7 +211,7 @@ class Report:
         if isinstance(input_data, tablib.Dataset):
             self.data = input_data
         else:
-            raise ValueError('Only Dataset object is allowed for input')
+            raise ReportDataError('Only Dataset object is allowed for input')
         # Set other arguments
         self.title = title
         self.filter = filters
@@ -220,7 +221,7 @@ class Report:
         if isinstance(output, FileManager):
             self.output = output
         else:
-            raise ValueError('Only FileManager object is allowed for output')
+            raise ReportManagerError('Only FileManager object is allowed for output')
         # Data for report
         self.report = None
 
