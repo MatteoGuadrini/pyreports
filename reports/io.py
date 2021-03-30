@@ -87,7 +87,10 @@ class File:
 
         :return: Dataset object
         """
-        return tablib.Dataset(self.raw_data, **kwargs)
+        data = tablib.Dataset(**kwargs)
+        for line in self.raw_data:
+            data.append([line])
+        return data
 
 
 class CsvFile(File):
