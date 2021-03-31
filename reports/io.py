@@ -58,16 +58,15 @@ class Connection:
 class File:
     """File base class"""
 
-    def __init__(self, filename, mode='r'):
+    def __init__(self, filename):
         """
         File base object
 
         :param filename: file path
-        :param mode: mode of open file. Default is read.
         """
-        with open(filename, mode=mode) as f:
+        with open(filename) as f:
             self.file = filename
-            self.raw_data = f
+            self.raw_data = f.read()
 
     def write(self, data):
         """
@@ -78,8 +77,8 @@ class File:
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with self.raw_data as file:
-            file.writelines(data)
+        with open(self.file, mode='w') as file:
+            file.write('\n'.join(line for row in data for line in row))
 
     def read(self, **kwargs):
         """
@@ -88,8 +87,9 @@ class File:
         :return: Dataset object
         """
         data = tablib.Dataset(**kwargs)
-        for line in self.raw_data:
-            data.append([line])
+        with open(self.file) as file:
+            for line in file:
+                data.append([line.strip('\n')])
         return data
 
 
@@ -105,7 +105,7 @@ class CsvFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with self.raw_data as file:
+        with open(self.file, mode='w') as file:
             file.write(data.export('csv'))
 
     def read(self, **kwargs):
@@ -114,7 +114,7 @@ class CsvFile(File):
 
         :return: Dataset object
         """
-        with self.raw_data as file:
+        with open(self.file) as file:
             return tablib.Dataset().load(file, **kwargs)
 
 
@@ -130,7 +130,7 @@ class JsonFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with self.raw_data as file:
+        with open(self.file, mode='w') as file:
             file.write(data.export('json'))
 
     def read(self, **kwargs):
@@ -139,7 +139,7 @@ class JsonFile(File):
 
         :return: Dataset object
         """
-        with self.raw_data as file:
+        with open(self.file) as file:
             return tablib.Dataset().load(file, **kwargs)
 
 
@@ -155,7 +155,7 @@ class YamlFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with self.raw_data as file:
+        with open(self.file, mode='w') as file:
             file.write(data.export('yaml'))
 
     def read(self, **kwargs):
@@ -164,7 +164,7 @@ class YamlFile(File):
 
         :return: Dataset object
         """
-        with self.raw_data as file:
+        with open(self.file) as file:
             return tablib.Dataset().load(file, **kwargs)
 
 
@@ -180,7 +180,7 @@ class ExcelFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with self.raw_data as file:
+        with open(self.file, mode='wb') as file:
             file.write(data.export('xlsx'))
 
     def read(self, **kwargs):
@@ -189,7 +189,7 @@ class ExcelFile(File):
 
         :return: Dataset object
         """
-        with self.raw_data as file:
+        with open(self.file) as file:
             return tablib.import_set(file, **kwargs)
 
 
@@ -488,16 +488,15 @@ def create_database_manager(dbtype, host=None, port=None, database=None, usernam
     return DatabaseManager(connection=connection)
 
 
-def create_file_manager(filetype, filename, mode='r'):
+def create_file_manager(filetype, filename):
     """
     Creates a FileManager object
 
     :param filetype: type of file
     :param filename: path of file
-    :param mode: mode of open file. Default is read.
     :return: FileManager
     """
-    file = FILETYPE[filetype](filename=filename, mode=mode)
+    file = FILETYPE[filetype](filename=filename)
     return FileManager(file=file)
 
 
@@ -528,7 +527,7 @@ def manager(datatype, *args, **kwargs):
         return create_database_manager(datatype, *args, **kwargs)
     elif datatype in FILETYPE:
         return create_file_manager(datatype, *args, **kwargs)
-    elif datatype is 'ldap':
+    elif datatype == 'ldap':
         return create_ldap_manager(*args, **kwargs)
     else:
         raise ValueError(f"data type {datatype} doesn't exists!")

@@ -33,7 +33,7 @@ error_login = reports.Executor(site_login)
 error_login.filter([400, 401, 403, 404, 500])
 
 # Save report: this is a FileManager object
-output = reports.manager('csv', '/home/report/error_login.csv', mode='w')
+output = reports.manager('csv', '/home/report/error_login.csv')
 output.write(error_login.get_data())
 
 ```
@@ -70,7 +70,7 @@ for line in log_user_error:
         myreport[user].append(line)
 
 # Save report: this is a FileManager object
-output = reports.manager('json', '/home/report/error_login.json', mode='w')
+output = reports.manager('json', '/home/report/error_login.json')
 output.write(myreport)
 
 ```
