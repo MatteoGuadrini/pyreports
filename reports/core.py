@@ -228,6 +228,9 @@ class Report:
     def __repr__(self):
         return f"<Report object title={self.title if self.title else None}>"
 
+    def __str__(self):
+        return self._print_data()
+
     def _print_data(self):
         """
         Print data and count
@@ -269,6 +272,6 @@ class Report:
         if self.output:
             self.output.write(self.report)
         else:
-            self._print_data()
+            print(self)
 
 # endregion
