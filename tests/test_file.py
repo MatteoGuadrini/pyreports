@@ -1,4 +1,5 @@
 import unittest
+import reports
 from tablib import Dataset
 from tempfile import gettempdir
 from unittest.mock import MagicMock, mock_open, patch
@@ -26,6 +27,12 @@ class TestFile(unittest.TestCase):
             with open(f'/{tmp_folder}/test_file.txt') as rf:
                 result = rf.read()
         self.assertEqual(read_data, result)
+        # Real reports.io.File object
+        file_real = reports.io.File(f'/{tmp_folder}/test_file.txt')
+        real_data = file_real.read()
+        self.assertIsInstance(real_data, Dataset)
+        file_real.write(real_data)
+        self.assertEqual(file_real.read()[0][0], 'first line')
 
 
 if __name__ == '__main__':
