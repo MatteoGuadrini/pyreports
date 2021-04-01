@@ -51,6 +51,14 @@ class TestFile(unittest.TestCase):
         real_data = json_real.read()
         self.assertIsInstance(real_data, Dataset)
 
+    def test_yaml(self):
+        yaml_real = reports.io.YamlFile(f'{tmp_folder}/test_yaml.yaml')
+        # Write data
+        yaml_real.write(['Matteo', 'Guadrini', 35])
+        # Read data
+        real_data = yaml_real.read()
+        self.assertIsInstance(real_data, Dataset)
+
 
 if __name__ == '__main__':
     unittest.main()
