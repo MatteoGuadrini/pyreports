@@ -43,6 +43,14 @@ class TestFile(unittest.TestCase):
         real_data = csv_real.read()
         self.assertIsInstance(real_data, Dataset)
 
+    def test_json(self):
+        json_real = reports.io.JsonFile(f'{tmp_folder}/test_json.json')
+        # Write data
+        json_real.write(['Matteo', 'Guadrini', 35])
+        # Read data
+        real_data = json_real.read()
+        self.assertIsInstance(real_data, Dataset)
+
 
 if __name__ == '__main__':
     unittest.main()
