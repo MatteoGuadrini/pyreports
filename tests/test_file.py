@@ -59,6 +59,14 @@ class TestFile(unittest.TestCase):
         real_data = yaml_real.read()
         self.assertIsInstance(real_data, Dataset)
 
+    def test_excel(self):
+        excel_real = reports.io.YamlFile(f'{tmp_folder}/test_excel.xlsx')
+        # Write data
+        excel_real.write(['Matteo', 'Guadrini', 35])
+        # Read data
+        real_data = excel_real.read()
+        self.assertIsInstance(real_data, Dataset)
+
 
 if __name__ == '__main__':
     unittest.main()
