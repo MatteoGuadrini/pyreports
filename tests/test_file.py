@@ -4,6 +4,8 @@ from tablib import Dataset
 from tempfile import gettempdir
 from unittest.mock import MagicMock, mock_open, patch
 
+tmp_folder = gettempdir()
+
 
 class TestFile(unittest.TestCase):
 
@@ -19,20 +21,27 @@ class TestFile(unittest.TestCase):
         lines = file.read()
         self.assertIsInstance(lines, Dataset)
         # Write file data
-        tmp_folder = gettempdir()
         read_data = ''.join(file.raw_data)
-        with open(f'/{tmp_folder}/test_file.txt', 'w') as wf:
+        with open(f'{tmp_folder}/test_file.txt', 'w') as wf:
             wf.write(read_data)
         with patch('__main__.open', mock_open(read_data=read_data)):
-            with open(f'/{tmp_folder}/test_file.txt') as rf:
+            with open(f'{tmp_folder}/test_file.txt') as rf:
                 result = rf.read()
         self.assertEqual(read_data, result)
         # Real reports.io.File object
-        file_real = reports.io.File(f'/{tmp_folder}/test_file.txt')
+        file_real = reports.io.File(f'{tmp_folder}/test_file.txt')
         real_data = file_real.read()
         self.assertIsInstance(real_data, Dataset)
         file_real.write(real_data)
         self.assertEqual(file_real.read()[0][0], 'first line')
+
+    def test_csv(self):
+        csv_real = reports.io.CsvFile(f'{tmp_folder}/test_csv.csv')
+        # Write data
+        csv_real.write(['Matteo', 'Guadrini', 35])
+        # Read data
+        real_data = csv_real.read()
+        self.assertIsInstance(real_data, Dataset)
 
 
 if __name__ == '__main__':
