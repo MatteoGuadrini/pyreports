@@ -64,9 +64,7 @@ class File:
 
         :param filename: file path
         """
-        with open(filename) as f:
-            self.file = filename
-            self.raw_data = f.read()
+        self.file = filename
 
     def write(self, data):
         """
