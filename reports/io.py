@@ -372,8 +372,7 @@ class FileManager:
         :param data: data to write on file
         :return: None
         """
-        with self.data as file:
-            file.write(data)
+        self.data.write(data)
 
     def read(self, **kwargs):
         """
@@ -381,8 +380,7 @@ class FileManager:
 
         :return: Dataset object
         """
-        with self.data as file:
-            file.read(**kwargs)
+        return self.data.read(**kwargs)
 
 
 class LdapManager:
