@@ -76,7 +76,7 @@ class File:
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
         with open(self.file, mode='w') as file:
-            file.write('\n'.join(line for row in data for line in row))
+            file.write('\n'.join(str(line) for row in data for line in row))
 
     def read(self, **kwargs):
         """
