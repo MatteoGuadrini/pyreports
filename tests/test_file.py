@@ -60,7 +60,7 @@ class TestFile(unittest.TestCase):
         self.assertIsInstance(real_data, Dataset)
 
     def test_excel(self):
-        excel_real = reports.io.YamlFile(f'{tmp_folder}/test_excel.xlsx')
+        excel_real = reports.io.ExcelFile(f'{tmp_folder}/test_excel.xlsx')
         # Write data
         excel_real.write(['Matteo', 'Guadrini', 35])
         # Read data
@@ -101,6 +101,14 @@ class TestFileManager(unittest.TestCase):
         yaml_manager.write(['Matteo', 'Guadrini', 45])
         # Read file
         self.assertIsInstance(yaml_manager.read(), Dataset)
+
+    def test_excel_manager(self):
+        # Test excel manager
+        excel_manager = reports.io.create_file_manager('xlsx', f'{tmp_folder}/test_excel.xlsx')
+        # Write file
+        excel_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(excel_manager.read(), Dataset)
 
 
 if __name__ == '__main__':

@@ -187,7 +187,7 @@ class ExcelFile(File):
 
         :return: Dataset object
         """
-        with open(self.file) as file:
+        with open(self.file, 'rb') as file:
             return tablib.import_set(file, **kwargs)
 
 
