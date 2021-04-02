@@ -12,7 +12,7 @@ class TestFile(unittest.TestCase):
     def test_file(self):
         # Simulate reports.io.File object
         file = MagicMock()
-        file.raw_data = ['first line\n', 'second line\n', 'third line']
+        file.raw_data = ['Matteo\n', 'Guadrini\n', '35']
         data = Dataset()
         for line in file.raw_data:
             data.append([line])
@@ -33,7 +33,7 @@ class TestFile(unittest.TestCase):
         real_data = file_real.read()
         self.assertIsInstance(real_data, Dataset)
         file_real.write(real_data)
-        self.assertEqual(file_real.read()[0][0], 'first line')
+        self.assertEqual(file_real.read()[0][0], 'Matteo')
 
     def test_csv(self):
         csv_real = reports.io.CsvFile(f'{tmp_folder}/test_csv.csv')
@@ -66,6 +66,25 @@ class TestFile(unittest.TestCase):
         # Read data
         real_data = excel_real.read()
         self.assertIsInstance(real_data, Dataset)
+
+
+class TestFileManager(unittest.TestCase):
+
+    def test_file_manager(self):
+        # Test file manager
+        file_manager = reports.io.create_file_manager('file', f'{tmp_folder}/test_file.txt')
+        # Write file
+        file_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(file_manager.read(), Dataset)
+
+    def test_csv_manager(self):
+        # Test csv manager
+        csv_manager = reports.io.create_file_manager('file', f'{tmp_folder}/test_csv.txt')
+        # Write file
+        csv_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(csv_manager.read(), Dataset)
 
 
 if __name__ == '__main__':
