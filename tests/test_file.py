@@ -94,6 +94,14 @@ class TestFileManager(unittest.TestCase):
         # Read file
         self.assertIsInstance(json_manager.read(), Dataset)
 
+    def test_yaml_manager(self):
+        # Test yaml manager
+        yaml_manager = reports.io.create_file_manager('yaml', f'{tmp_folder}/test_yaml.yaml')
+        # Write file
+        yaml_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(yaml_manager.read(), Dataset)
+
 
 if __name__ == '__main__':
     unittest.main()
