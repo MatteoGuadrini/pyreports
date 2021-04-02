@@ -80,11 +80,19 @@ class TestFileManager(unittest.TestCase):
 
     def test_csv_manager(self):
         # Test csv manager
-        csv_manager = reports.io.create_file_manager('file', f'{tmp_folder}/test_csv.txt')
+        csv_manager = reports.io.create_file_manager('csv', f'{tmp_folder}/test_csv.csv')
         # Write file
         csv_manager.write(['Matteo', 'Guadrini', 45])
         # Read file
         self.assertIsInstance(csv_manager.read(), Dataset)
+
+    def test_json_manager(self):
+        # Test json manager
+        json_manager = reports.io.create_file_manager('json', f'{tmp_folder}/test_json.json')
+        # Write file
+        json_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(json_manager.read(), Dataset)
 
 
 if __name__ == '__main__':
