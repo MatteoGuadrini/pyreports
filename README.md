@@ -4,7 +4,17 @@ _reports_ is a python library that allows you to create complex reports from var
 text files, ldap, etc. and perform processing, filters, counters, etc. 
 and then export or write them in various formats or in databases.
 
-> Project status: **alpha released**
+> Project status: **beta released**
+
+## Test package
+
+To test the package, follow these instructions:
+
+```console
+$ git clone https://github.com/MatteoGuadrini/reports.git
+$ cd reports/tests
+$ python -m unittest test_*.py
+```
 
 ## How does it work
 
