@@ -4,7 +4,17 @@ _reports_ is a python library that allows you to create complex reports from var
 text files, ldap, etc. and perform processing, filters, counters, etc. 
 and then export or write them in various formats or in databases.
 
-> Project status: **alpha released**
+> Project status: **beta released**
+
+## Test package
+
+To test the package, follow these instructions:
+
+```console
+$ git clone https://github.com/MatteoGuadrini/reports.git
+$ cd reports/tests
+$ python -m unittest test_*.py
+```
 
 ## How does it work
 
@@ -33,7 +43,7 @@ error_login = reports.Executor(site_login)
 error_login.filter([400, 401, 403, 404, 500])
 
 # Save report: this is a FileManager object
-output = reports.manager('csv', '/home/report/error_login.csv', mode='w')
+output = reports.manager('csv', '/home/report/error_login.csv')
 output.write(error_login.get_data())
 
 ```
@@ -70,7 +80,7 @@ for line in log_user_error:
         myreport[user].append(line)
 
 # Save report: this is a FileManager object
-output = reports.manager('json', '/home/report/error_login.json', mode='w')
+output = reports.manager('json', '/home/report/error_login.json')
 output.write(myreport)
 
 ```
