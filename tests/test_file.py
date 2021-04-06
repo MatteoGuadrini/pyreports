@@ -126,6 +126,14 @@ class TestFileManager(unittest.TestCase):
         # Read file
         self.assertIsInstance(csv_manager.read(), Dataset)
 
+    def test_manager_for_json(self):
+        # Test json manager
+        json_manager = reports.io.manager('csv', f'{tmp_folder}/test_json.json')
+        # Write file
+        json_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(json_manager.read(), Dataset)
+
 
 if __name__ == '__main__':
     unittest.main()
