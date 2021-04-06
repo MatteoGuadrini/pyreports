@@ -52,7 +52,7 @@ class TestFile(unittest.TestCase):
         self.assertIsInstance(real_data, Dataset)
 
     def test_yaml(self):
-        yaml_real = reports.io.YamlFile(f'{tmp_folder}/test_yaml.yaml')
+        yaml_real = reports.io.YamlFile(f'{tmp_folder}/test_yaml.yml')
         # Write data
         yaml_real.write(['Matteo', 'Guadrini', 35])
         # Read data
@@ -96,7 +96,7 @@ class TestFileManager(unittest.TestCase):
 
     def test_yaml_manager(self):
         # Test yaml manager
-        yaml_manager = reports.io.create_file_manager('yaml', f'{tmp_folder}/test_yaml.yaml')
+        yaml_manager = reports.io.create_file_manager('yaml', f'{tmp_folder}/test_yaml.yml')
         # Write file
         yaml_manager.write(['Matteo', 'Guadrini', 45])
         # Read file
@@ -133,6 +133,14 @@ class TestFileManager(unittest.TestCase):
         json_manager.write(['Matteo', 'Guadrini', 45])
         # Read file
         self.assertIsInstance(json_manager.read(), Dataset)
+
+    def test_manager_for_yaml(self):
+        # Test yaml manager
+        yaml_manager = reports.io.manager('csv', f'{tmp_folder}/test_yaml.yml')
+        # Write file
+        yaml_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(yaml_manager.read(), Dataset)
 
 
 if __name__ == '__main__':
