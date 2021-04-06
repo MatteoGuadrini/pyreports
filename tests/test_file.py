@@ -118,6 +118,14 @@ class TestFileManager(unittest.TestCase):
         # Read file
         self.assertIsInstance(file_manager.read(), Dataset)
 
+    def test_manager_for_csv(self):
+        # Test csv manager
+        csv_manager = reports.io.manager('csv', f'{tmp_folder}/test_csv.csv')
+        # Write file
+        csv_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(csv_manager.read(), Dataset)
+
 
 if __name__ == '__main__':
     unittest.main()
