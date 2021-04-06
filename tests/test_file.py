@@ -142,6 +142,14 @@ class TestFileManager(unittest.TestCase):
         # Read file
         self.assertIsInstance(yaml_manager.read(), Dataset)
 
+    def test_manager_for_excel(self):
+        # Test excel manager
+        excel_manager = reports.io.manager('csv', f'{tmp_folder}/test_excel.xlsx')
+        # Write file
+        excel_manager.write(['Matteo', 'Guadrini', 45])
+        # Read file
+        self.assertIsInstance(excel_manager.read(), Dataset)
+
 
 if __name__ == '__main__':
     unittest.main()
