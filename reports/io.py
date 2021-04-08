@@ -195,7 +195,7 @@ class SQLliteConnection(Connection):
     """Connection sqlite class"""
 
     def connect(self):
-        self.connection = sqlite3.connect(database=self.host)
+        self.connection = sqlite3.connect(database=self.database)
         self.cursor = self.connection.cursor()
 
     def close(self):
