@@ -63,6 +63,26 @@ class TestDBConnection(unittest.TestCase):
             # Test close
             conn.cursor.close()
 
+    def test_postgresqldb_connection(self):
+        # Simulate reports.io.PostgreSQLConnection object
+        conn = MagicMock()
+        with patch(target='psycopg2.connect') as mock:
+            # Test connect
+            conn.connection = mock.return_value
+            conn.cursor = conn.connection.cursor.return_value
+            conn.connection.host = 'postgresqldb.local'
+            conn.connection.database = 'mydb'
+            conn.connection.username = 'username'
+            conn.connection.password = 'password'
+            conn.connection.port = 5432
+            self.assertEqual(conn.connection.host, 'postgresqldb.local')
+            self.assertEqual(conn.connection.database, 'mydb')
+            self.assertEqual(conn.connection.username, 'username')
+            self.assertEqual(conn.connection.password, 'password')
+            self.assertEqual(conn.connection.port, 5432)
+            # Test close
+            conn.cursor.close()
+
 
 if __name__ == '__main__':
     unittest.main()
