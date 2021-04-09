@@ -85,6 +85,7 @@ class TestDBConnection(unittest.TestCase):
 
 
 class TestDBManager(unittest.TestCase):
+
     conn = MagicMock()
     with patch(target='psycopg2.connect') as mock:
         conn.connection = mock.return_value
