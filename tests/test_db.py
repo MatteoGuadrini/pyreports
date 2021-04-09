@@ -4,7 +4,7 @@ from tablib import Dataset
 from unittest.mock import MagicMock, patch
 
 
-class TestDB(unittest.TestCase):
+class TestDBConnection(unittest.TestCase):
 
     def test_connection(self):
         # reports.io.Connection object
@@ -40,6 +40,26 @@ class TestDB(unittest.TestCase):
             self.assertEqual(conn.connection.username, 'username')
             self.assertEqual(conn.connection.password, 'password')
             self.assertEqual(conn.connection.port, 3306)
+            # Test close
+            conn.cursor.close()
+
+    def test_mssqldb_connection(self):
+        # Simulate reports.io.MSSQLConnection object
+        conn = MagicMock()
+        with patch(target='pymssql.connect') as mock:
+            # Test connect
+            conn.connection = mock.return_value
+            conn.cursor = conn.connection.cursor.return_value
+            conn.connection.host = 'mssqldb.local'
+            conn.connection.database = 'mydb'
+            conn.connection.username = 'username'
+            conn.connection.password = 'password'
+            conn.connection.port = 1433
+            self.assertEqual(conn.connection.host, 'mssqldb.local')
+            self.assertEqual(conn.connection.database, 'mydb')
+            self.assertEqual(conn.connection.username, 'username')
+            self.assertEqual(conn.connection.password, 'password')
+            self.assertEqual(conn.connection.port, 1433)
             # Test close
             conn.cursor.close()
 
