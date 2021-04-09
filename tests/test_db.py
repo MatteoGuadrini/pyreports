@@ -84,5 +84,32 @@ class TestDBConnection(unittest.TestCase):
             conn.cursor.close()
 
 
+class TestDBManager(unittest.TestCase):
+    conn = MagicMock()
+    with patch(target='psycopg2.connect') as mock:
+        conn.connection = mock.return_value
+        conn.cursor = conn.connection.cursor.return_value
+        conn.connection.host = 'postgresqldb.local'
+        conn.connection.database = 'mydb'
+        conn.connection.username = 'username'
+        conn.connection.password = 'password'
+        conn.connection.port = 5432
+
+    def test_db_manager(self):
+        # Test database manager
+        db_manager = reports.io.DatabaseManager(connection=self.conn)
+        self.assertIsInstance(db_manager, reports.io.DatabaseManager)
+        # Test reconnect
+        db_manager.reconnect()
+        # Test SELECT query
+        db_manager.execute('SELECT * from test')
+        data = db_manager.fetchall()
+        self.assertIsInstance(data, Dataset)
+        # Test store procedure
+        db_manager.callproc('myproc')
+        data = db_manager.fetchone()
+        self.assertIsInstance(data, Dataset)
+
+
 if __name__ == '__main__':
     unittest.main()
