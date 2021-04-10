@@ -421,6 +421,14 @@ class LdapManager:
                                      auto_bind=self.auto_bind, raise_exceptions=True)
         self.bind.bind()
 
+    def unbind(self):
+        """
+        Unbind LDAP connection
+
+        :return: None
+        """
+        self.bind.unbind()
+
     def query(self, base_search, search_filter, attributes):
         """
         Search LDAP element on subtree base search directory
