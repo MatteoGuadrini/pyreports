@@ -195,7 +195,7 @@ class SQLliteConnection(Connection):
     """Connection sqlite class"""
 
     def connect(self):
-        self.connection = sqlite3.connect(database=self.host)
+        self.connection = sqlite3.connect(database=self.database)
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -420,6 +420,14 @@ class LdapManager:
         self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
                                      auto_bind=self.auto_bind, raise_exceptions=True)
         self.bind.bind()
+
+    def unbind(self):
+        """
+        Unbind LDAP connection
+
+        :return: None
+        """
+        self.bind.unbind()
 
     def query(self, base_search, search_filter, attributes):
         """
