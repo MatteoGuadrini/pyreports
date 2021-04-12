@@ -125,7 +125,7 @@ class TestLDAPManager(unittest.TestCase):
         self.conn.bind.unbind()
 
     def test_query(self):
-        self.conn.bind.search()
+        self.conn.bind.search('OU=test,DC=test,DC=local', 'objectCategory=person', ['name', 'sn', 'phone'])
 
 
 if __name__ == '__main__':
