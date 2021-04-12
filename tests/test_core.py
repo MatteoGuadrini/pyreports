@@ -14,6 +14,10 @@ class TestExecutor(unittest.TestCase):
         self.assertIsInstance(self.data.get_data(), Dataset)
         self.assertEqual(str(self.data.get_data()), 'Matteo|Guadrini|35')
 
+    def test_set_headers(self):
+        self.data.headers(['name', 'surname', 'age'])
+        self.assertEqual(self.data.data.headers, ['name', 'surname', 'age'])
+
 
 if __name__ == '__main__':
     unittest.main()
