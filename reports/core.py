@@ -43,7 +43,8 @@ class Executor:
         :param header: list header of data
         """
         self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
-        self.origin = self.data
+        self.origin = tablib.Dataset()
+        self.origin.extend(self.data)
 
     def __len__(self):
         """
@@ -75,7 +76,8 @@ class Executor:
 
         :return: None
         """
-        self.data = self.origin
+        self.data = tablib.Dataset()
+        self.data.extend(self.origin)
 
     def headers(self, header):
         """
