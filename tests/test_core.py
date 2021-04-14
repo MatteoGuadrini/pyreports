@@ -76,6 +76,11 @@ class TestExecutor(unittest.TestCase):
         self.data.headers(['name', 'surname', 'age'])
         self.assertEqual(self.data.count_column(), 3)
 
+    def test_clone(self):
+        new_data = self.data.clone()
+        self.assertNotEqual(new_data, self.data)
+        self.assertIsInstance(new_data, reports.Executor)
+
 
 
 if __name__ == '__main__':
