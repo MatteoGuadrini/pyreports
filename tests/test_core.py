@@ -37,6 +37,14 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(self.data.get_data()[1], ('Ford', 'Prefect', 42))
         self.data.reset()
 
+    def test_filter_by_list_and_column(self):
+        self.data.headers(['name', 'surname', 'age'])
+        self.data.data.append(['Arthur', 'Dent', 42])
+        self.data.data.append(['Ford', 'Prefect', 42])
+        self.data.filter([42], column='age')
+        self.assertEqual(self.data.get_data()[0], 42)
+        self.data.reset()
+
     def test_map(self):
 
         def int_to_string(number):
