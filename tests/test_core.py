@@ -70,6 +70,12 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(self.data.select_column(2), [35, 42, 42])
         self.data.reset()
 
+    def test_count(self):
+        self.assertEqual(len(self.data), 1)
+        self.assertEqual(self.data.count_rows(), 1)
+        self.data.headers(['name', 'surname', 'age'])
+        self.assertEqual(self.data.count_column(), 3)
+
 
 
 if __name__ == '__main__':
