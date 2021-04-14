@@ -60,6 +60,17 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(self.data.get_data()[2], ('Ford', 'Prefect', '42'))
         self.data.reset()
 
+    def test_select_column(self):
+        self.data.headers(['name', 'surname', 'age'])
+        self.data.data.append(['Arthur', 'Dent', 42])
+        self.data.data.append(['Ford', 'Prefect', 42])
+        # By name
+        self.assertEqual(self.data.select_column('age'), [35, 42, 42])
+        # By number
+        self.assertEqual(self.data.select_column(2), [35, 42, 42])
+        self.data.reset()
+
+
 
 if __name__ == '__main__':
     unittest.main()
