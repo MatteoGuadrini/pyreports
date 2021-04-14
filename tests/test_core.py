@@ -4,7 +4,6 @@ from tablib import Dataset
 
 
 class TestExecutor(unittest.TestCase):
-
     data = reports.Executor(Dataset(['Matteo', 'Guadrini', 35]))
 
     def test_executor_instance(self):
@@ -36,6 +35,21 @@ class TestExecutor(unittest.TestCase):
         self.data.filter(key=is_answer)
         self.assertEqual(self.data.get_data()[0], ('Arthur', 'Dent', 42))
         self.assertEqual(self.data.get_data()[1], ('Ford', 'Prefect', 42))
+        self.data.reset()
+
+    def test_map(self):
+
+        def int_to_string(number):
+            if isinstance(number, int):
+                return str(number)
+            else:
+                return number
+
+        self.data.data.append(['Arthur', 'Dent', 42])
+        self.data.data.append(['Ford', 'Prefect', 42])
+        self.data.map(int_to_string)
+        self.assertEqual(self.data.get_data()[1], ('Arthur', 'Dent', '42'))
+        self.assertEqual(self.data.get_data()[2], ('Ford', 'Prefect', '42'))
         self.data.reset()
 
 
