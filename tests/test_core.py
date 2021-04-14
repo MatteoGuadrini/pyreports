@@ -25,6 +25,19 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(self.data.get_data()[0], ('Arthur', 'Dent', 42))
         self.data.reset()
 
+    def test_filter_by_key(self):
+
+        def is_answer(number):
+            if number == 42:
+                return True
+
+        self.data.data.append(['Arthur', 'Dent', 42])
+        self.data.data.append(['Ford', 'Prefect', 42])
+        self.data.filter(key=is_answer)
+        self.assertEqual(self.data.get_data()[0], ('Arthur', 'Dent', 42))
+        self.assertEqual(self.data.get_data()[1], ('Ford', 'Prefect', 42))
+        self.data.reset()
+
 
 if __name__ == '__main__':
     unittest.main()
