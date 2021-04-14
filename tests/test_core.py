@@ -80,7 +80,7 @@ class TestExecutor(unittest.TestCase):
         new_data = self.data.clone()
         self.assertNotEqual(new_data, self.data)
         self.assertIsInstance(new_data, reports.Executor)
-
+        self.assertEqual(type(new_data), type(self.data))
 
 
 if __name__ == '__main__':
