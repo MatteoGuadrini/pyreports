@@ -89,10 +89,10 @@ class TestExecutor(unittest.TestCase):
 
 class TestReport(unittest.TestCase):
 
-    input_data = Dataset(['Matteo', 'Guadrini', 35])
+    input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)])
     output_data = reports.manager('csv', f'{tmp_folder}/test_csv.csv')
     title = 'Test report'
-    filters = [42, 35]
+    filters = ['42']
     column = 'age'
     count = True
     report = reports.Report(input_data=input_data,
@@ -105,6 +105,11 @@ class TestReport(unittest.TestCase):
 
     def test_report_object(self):
         self.assertIsInstance(self.report, reports.Report)
+
+    def test_exec(self):
+        self.report.exec()
+        self.assertEqual(self.report.report[0][0], ('Arthur', 'Dent', '42'))
+        self.assertEqual(self.report.report[1], 1)
 
 
 if __name__ == '__main__':
