@@ -247,7 +247,7 @@ class Report:
 
     def exec(self):
         """
-        Create Executor object to apply filters and map function to all inputs
+        Create Executor object to apply filters and map function to input data
 
         :return: None
         """
@@ -258,7 +258,10 @@ class Report:
             ex.map(self.map)
         # Apply filters
         if self.filter:
-            ex.filter(self.filter)
+            if callable(self.filter):
+                ex.filter(key=self.filter)
+            else:
+                ex.filter(self.filter)
         # Count element
         if self.count:
             self.report = (ex.get_data(), len(ex))
