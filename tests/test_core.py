@@ -1,9 +1,13 @@
 import unittest
 import reports
 from tablib import Dataset
+from tempfile import gettempdir
+
+tmp_folder = gettempdir()
 
 
 class TestExecutor(unittest.TestCase):
+
     data = reports.Executor(Dataset(['Matteo', 'Guadrini', 35]))
 
     def test_executor_instance(self):
@@ -81,6 +85,22 @@ class TestExecutor(unittest.TestCase):
         self.assertNotEqual(new_data, self.data)
         self.assertIsInstance(new_data, reports.Executor)
         self.assertEqual(type(new_data), type(self.data))
+
+
+class TestReport(unittest.TestCase):
+    input_data = Dataset(['Matteo', 'Guadrini', 35])
+    output_data = reports.manager('csv', f'{tmp_folder}/test_csv.csv')
+    title = 'Test report'
+    filters = [42, 35]
+    column = 'age'
+    count = True
+    report = reports.Report(input_data=input_data,
+                            title=title,
+                            filters=filters,
+                            map_func=lambda item: str(item) if isinstance(item, int) else item,
+                            column=column,
+                            count=count,
+                            output=output_data)
 
 
 if __name__ == '__main__':
