@@ -88,6 +88,7 @@ class TestExecutor(unittest.TestCase):
 
 
 class TestReport(unittest.TestCase):
+
     input_data = Dataset(['Matteo', 'Guadrini', 35])
     output_data = reports.manager('csv', f'{tmp_folder}/test_csv.csv')
     title = 'Test report'
@@ -101,6 +102,9 @@ class TestReport(unittest.TestCase):
                             column=column,
                             count=count,
                             output=output_data)
+
+    def test_report_object(self):
+        self.assertIsInstance(self.report, reports.Report)
 
 
 if __name__ == '__main__':
