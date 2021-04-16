@@ -228,7 +228,7 @@ class Report:
         self.report = None
 
     def __repr__(self):
-        return f"<Report object title={self.title if self.title else None}>"
+        return f"<Report object, title={self.title if self.title else None}>"
 
     def __str__(self):
         return self._print_data()
@@ -240,10 +240,10 @@ class Report:
         :return: data and count
         """
         if isinstance(self.report, tuple):
-            print(self.report[0])
-            print(f'rows: {self.report[1]}')
+            out = f'{self.report[0]}\nrows: {self.report[1]}'
+            return out
         else:
-            print(self.report)
+            return self.report
 
     def exec(self):
         """
@@ -274,9 +274,15 @@ class Report:
 
         :return: if count is True, return row count
         """
-        if self.output:
-            self.output.write(self.report)
+        if 'Manager' in self.output.__class__.__name__ or self.output is None:
+            if self.output:
+                if isinstance(self.report, tuple):
+                    self.output.write(self.report[0])
+                else:
+                    self.output.write(self.report)
+            else:
+                print(self)
         else:
-            print(self)
+            raise ReportManagerError('the output object is not Manager or NoneType object')
 
 # endregion
