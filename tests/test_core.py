@@ -111,6 +111,10 @@ class TestReport(unittest.TestCase):
         self.assertEqual(self.report.report[0][0], ('Arthur', 'Dent', '42'))
         self.assertEqual(self.report.report[1], 1)
 
+    def test_export(self):
+        self.report.export()
+        self.assertIsInstance(self.report.output.read(), Dataset)
+
 
 if __name__ == '__main__':
     unittest.main()
