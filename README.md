@@ -12,8 +12,8 @@ To test the package, follow these instructions:
 
 ```console
 $ git clone https://github.com/MatteoGuadrini/reports.git
-$ cd reports/tests
-$ python -m unittest test_*.py
+$ cd reports
+$ python -m unittest discover tests
 ```
 
 ## How does it work
