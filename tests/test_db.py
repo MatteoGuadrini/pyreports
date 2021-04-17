@@ -112,5 +112,21 @@ class TestDBManager(unittest.TestCase):
         self.assertIsInstance(data, Dataset)
 
 
+class TestLDAPManager(unittest.TestCase):
+
+    conn = MagicMock()
+    with patch(target='ldap3.Server') as mock:
+        conn.connector = mock.return_value
+    with patch(target='ldap3.Connection') as mock:
+        conn.bind = mock.return_value
+
+    def test_bind(self):
+        self.conn.bind.bind()
+        self.conn.bind.unbind()
+
+    def test_query(self):
+        self.conn.bind.search('OU=test,DC=test,DC=local', 'objectCategory=person', ['name', 'sn', 'phone'])
+
+
 if __name__ == '__main__':
     unittest.main()

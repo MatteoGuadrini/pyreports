@@ -43,7 +43,8 @@ class Executor:
         :param header: list header of data
         """
         self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
-        self.origin = self.data
+        self.origin = tablib.Dataset()
+        self.origin.extend(self.data)
 
     def __len__(self):
         """
@@ -75,7 +76,8 @@ class Executor:
 
         :return: None
         """
-        self.data = self.origin
+        self.data = tablib.Dataset()
+        self.data.extend(self.origin)
 
     def headers(self, header):
         """
@@ -226,7 +228,7 @@ class Report:
         self.report = None
 
     def __repr__(self):
-        return f"<Report object title={self.title if self.title else None}>"
+        return f"<Report object, title={self.title if self.title else None}>"
 
     def __str__(self):
         return self._print_data()
@@ -238,14 +240,14 @@ class Report:
         :return: data and count
         """
         if isinstance(self.report, tuple):
-            print(self.report[0])
-            print(f'rows: {self.report[1]}')
+            out = f'{self.report[0]}\nrows: {self.report[1]}'
+            return out
         else:
-            print(self.report)
+            return self.report
 
     def exec(self):
         """
-        Create Executor object to apply filters and map function to all inputs
+        Create Executor object to apply filters and map function to input data
 
         :return: None
         """
@@ -256,7 +258,10 @@ class Report:
             ex.map(self.map)
         # Apply filters
         if self.filter:
-            ex.filter(self.filter)
+            if callable(self.filter):
+                ex.filter(key=self.filter)
+            else:
+                ex.filter(self.filter)
         # Count element
         if self.count:
             self.report = (ex.get_data(), len(ex))
@@ -269,9 +274,15 @@ class Report:
 
         :return: if count is True, return row count
         """
-        if self.output:
-            self.output.write(self.report)
+        if 'Manager' in self.output.__class__.__name__ or self.output is None:
+            if self.output:
+                if isinstance(self.report, tuple):
+                    self.output.write(self.report[0])
+                else:
+                    self.output.write(self.report)
+            else:
+                print(self)
         else:
-            print(self)
+            raise ReportManagerError('the output object is not Manager or NoneType object')
 
 # endregion
