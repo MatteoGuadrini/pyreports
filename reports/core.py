@@ -285,4 +285,19 @@ class Report:
         else:
             raise ReportManagerError('the output object is not Manager or NoneType object')
 
+
+class ReportBook:
+    """ReportBook represent a collection of Report's object"""
+
+    def __init__(self, reports=None, title=None):
+        """
+        Create a ReportBook object
+
+        :param reports: Report's object list
+        :param title: title of report book
+        """
+        self.reports = reports
+        self.title = title
+
+
 # endregion
