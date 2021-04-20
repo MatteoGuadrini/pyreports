@@ -319,6 +319,14 @@ class ReportBook:
             raise ReportDataError('you can only add Report object')
         self.reports.append(other)
 
+    def __iter__(self):
+        """
+        Return report iterator
+
+        :return: iterable object
+        """
+        return (report for report in self.reports)
+
     def add(self, report: Report):
         """
         Add report object
