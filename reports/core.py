@@ -305,7 +305,7 @@ class ReportBook:
         """
 
         if reports is None:
-            self.reports = []
+            self.reports = list()
         self.title = title
 
     def __add__(self, other: Report):
@@ -328,5 +328,16 @@ class ReportBook:
         """
         self.reports += report
 
+    def remove(self, index: int = None):
+        """
+        Remove Report object, last added or index specified
+
+        :param index: report number to remove
+        :return: None
+        """
+        if index:
+            self.reports.pop(index)
+        else:
+            self.reports.pop(-1)
 
 # endregion
