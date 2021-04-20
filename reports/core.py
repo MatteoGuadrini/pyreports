@@ -197,7 +197,14 @@ class Executor:
 class Report:
     """Report represents the workflow for generating a report"""
 
-    def __init__(self, input_data, title=None, filters=None, map_func=None, column=None, count=False, output=None):
+    def __init__(self,
+                 input_data: tablib.Dataset,
+                 title=None,
+                 filters=None,
+                 map_func=None,
+                 column=None,
+                 count=False,
+                 output=None):
         """
         Create Report object
 
@@ -296,8 +303,21 @@ class ReportBook:
         :param reports: Report's object list
         :param title: title of report book
         """
-        self.reports = reports
+
+        if reports is None:
+            self.reports = []
         self.title = title
+
+    def __add__(self, other: Report):
+        """
+        Add report object
+
+        :param other: Report object
+        :return: None
+        """
+        if not isinstance(other, Report):
+            raise ReportDataError('you can only add Report object')
+        self.reports.append(other)
 
 
 # endregion
