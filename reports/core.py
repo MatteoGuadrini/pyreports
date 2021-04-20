@@ -319,5 +319,14 @@ class ReportBook:
             raise ReportDataError('you can only add Report object')
         self.reports.append(other)
 
+    def add(self, report: Report):
+        """
+        Add report object
+
+        :param report: Report object
+        :return: None
+        """
+        self.reports += report
+
 
 # endregion
