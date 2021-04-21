@@ -348,4 +348,25 @@ class ReportBook:
         else:
             self.reports.pop(-1)
 
+    def export(self, output=None):
+        """
+        Save data on report output or an Excel workbook
+
+        :param output: output path for report export
+        :return: None
+        """
+        if output:
+            # Prepare reports
+            for report in self:
+                report.exec()
+            # Prepare book for export
+            book = tablib.Databook(tuple([report.report for report in self]))
+            # Save Excel WorkBook
+            with open(output, 'wb') as f:
+                f.write(book.export('xlsx'))
+        else:
+            for report in self:
+                report.export()
+
+
 # endregion
