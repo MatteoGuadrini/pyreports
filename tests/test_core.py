@@ -7,7 +7,6 @@ tmp_folder = gettempdir()
 
 
 class TestExecutor(unittest.TestCase):
-
     data = reports.Executor(Dataset(['Matteo', 'Guadrini', 35]))
 
     def test_executor_instance(self):
@@ -88,7 +87,6 @@ class TestExecutor(unittest.TestCase):
 
 
 class TestReport(unittest.TestCase):
-
     input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)])
     output_data = reports.manager('csv', f'{tmp_folder}/test_csv.csv')
     title = 'Test report'
@@ -114,6 +112,33 @@ class TestReport(unittest.TestCase):
     def test_export(self):
         self.report.export()
         self.assertIsInstance(self.report.output.read(), Dataset)
+
+
+class TestReportBook(unittest.TestCase):
+    input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)])
+    output_data = reports.manager('csv', f'{tmp_folder}/test_csv.csv')
+    title = 'Test report'
+    filters = ['42']
+    column = 'age'
+    count = True
+    report1 = reports.Report(input_data=input_data,
+                             title=title,
+                             filters=filters,
+                             map_func=lambda item: str(item) if isinstance(item, int) else item,
+                             column=column,
+                             count=count,
+                             output=output_data)
+    report2 = reports.Report(input_data=input_data,
+                             title=title,
+                             filters=filters,
+                             map_func=lambda item: str(item) if isinstance(item, int) else item,
+                             column=column,
+                             count=count,
+                             output=output_data)
+    book = reports.ReportBook()
+
+    def test_report_book_instance(self):
+        self.assertIsInstance(self.book, reports.ReportBook)
 
 
 if __name__ == '__main__':
