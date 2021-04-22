@@ -135,10 +135,15 @@ class TestReportBook(unittest.TestCase):
                              column=column,
                              count=count,
                              output=output_data)
-    book = reports.ReportBook()
+    book = reports.ReportBook([report1])
 
     def test_report_book_instance(self):
         self.assertIsInstance(self.book, reports.ReportBook)
+
+    def test_add_report(self):
+        self.book.add(self.report2)
+        self.book += self.report2
+        self.assertRaises(reports.exception.ReportDataError, self.book.__add__, [self.report2])
 
 
 if __name__ == '__main__':
