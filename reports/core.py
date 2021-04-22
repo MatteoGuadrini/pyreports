@@ -330,6 +330,9 @@ class ReportBook:
         """
         return (report for report in self.reports)
 
+    def __len__(self):
+        return len(self.reports)
+
     def add(self, report: Report):
         """
         Add report object
