@@ -333,6 +333,12 @@ class ReportBook:
     def __len__(self):
         return len(self.reports)
 
+    def __str__(self):
+        output = f'ReportBook {self.title if self.title else None}\n'
+        output += '\n'.join('\t' + str(report.title)
+                            for report in self.reports)
+        return output
+
     def add(self, report: Report):
         """
         Add report object
