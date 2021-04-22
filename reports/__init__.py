@@ -24,5 +24,6 @@
 
 from .io import manager
 from .core import Executor, Report, ReportBook
+from .exception import ReportDataError, ReportManagerError
 
 __version__ = '0.0.8'
