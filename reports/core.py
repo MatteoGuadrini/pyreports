@@ -310,16 +310,16 @@ class ReportBook:
             self.reports = reports
         self.title = title
 
-    def __add__(self, other: Report):
+    def __add__(self, other):
         """
         Add report object
 
         :param other: Report object
-        :return: None
+        :return: ReportBook
         """
-        if not isinstance(other, Report):
-            raise ReportDataError('you can only add Report object')
-        self.reports.append(other)
+        if not isinstance(other, ReportBook):
+            raise ReportDataError('you can only add ReportBook object')
+        self.reports.extend(other.reports)
         return self
 
     def __iter__(self):
@@ -339,6 +339,9 @@ class ReportBook:
                             for report in self.reports)
         return output
 
+    def __repr__(self):
+        return f"<ReportBook object, title={self.title if self.title else None}>"
+
     def add(self, report: Report):
         """
         Add report object
@@ -346,7 +349,9 @@ class ReportBook:
         :param report: Report object
         :return: None
         """
-        self += report
+        if not isinstance(report, Report):
+            raise ReportDataError('you can only add Report object')
+        self.reports.append(report)
 
     def remove(self, index: int = None):
         """
