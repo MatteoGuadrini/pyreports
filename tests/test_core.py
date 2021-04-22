@@ -122,14 +122,14 @@ class TestReportBook(unittest.TestCase):
     column = 'age'
     count = True
     report1 = reports.Report(input_data=input_data,
-                             title=title,
+                             title=title + '1',
                              filters=filters,
                              map_func=lambda item: str(item) if isinstance(item, int) else item,
                              column=column,
                              count=count,
                              output=output_data)
     report2 = reports.Report(input_data=input_data,
-                             title=title,
+                             title=title + '2',
                              filters=filters,
                              map_func=lambda item: str(item) if isinstance(item, int) else item,
                              column=column,
@@ -142,14 +142,22 @@ class TestReportBook(unittest.TestCase):
 
     def test_add_report(self):
         self.book.add(self.report2)
-        self.book += self.report2
-        self.assertRaises(reports.exception.ReportDataError, self.book.__add__, [self.report2])
-        self.assertEqual(len(self.book), 3)
+        self.assertRaises(reports.exception.ReportDataError, self.book.add, [self.report2])
+        self.assertEqual(len(self.book), 2)
 
     def test_remove_report(self):
         self.book.remove()
         self.book.remove(0)
-        self.assertEqual(len(self.book), 1)
+        self.assertEqual(len(self.book), 0)
+
+    def test_merge_report_books(self):
+        book1 = reports.ReportBook([self.report1])
+        book2 = reports.ReportBook([self.report2])
+        final_book1 = book1 + book2
+        final_book1 += book1
+        self.assertEqual(book1, final_book1)
+        self.assertEqual(len(final_book1), 4)
+        self.assertRaises(reports.exception.ReportDataError, final_book1.__add__, [final_book1])
 
 
 if __name__ == '__main__':
