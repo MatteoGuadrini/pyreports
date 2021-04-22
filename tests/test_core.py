@@ -144,6 +144,12 @@ class TestReportBook(unittest.TestCase):
         self.book.add(self.report2)
         self.book += self.report2
         self.assertRaises(reports.exception.ReportDataError, self.book.__add__, [self.report2])
+        self.assertEqual(len(self.book), 3)
+
+    def test_remove_report(self):
+        self.book.remove()
+        self.book.remove(0)
+        self.assertEqual(len(self.book), 1)
 
 
 if __name__ == '__main__':
