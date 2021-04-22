@@ -306,6 +306,8 @@ class ReportBook:
 
         if reports is None:
             self.reports = list()
+        else:
+            self.reports = reports
         self.title = title
 
     def __add__(self, other: Report):
@@ -318,6 +320,7 @@ class ReportBook:
         if not isinstance(other, Report):
             raise ReportDataError('you can only add Report object')
         self.reports.append(other)
+        return self
 
     def __iter__(self):
         """
@@ -334,7 +337,7 @@ class ReportBook:
         :param report: Report object
         :return: None
         """
-        self.reports += report
+        self += report
 
     def remove(self, index: int = None):
         """
