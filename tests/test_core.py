@@ -106,8 +106,8 @@ class TestReport(unittest.TestCase):
 
     def test_exec(self):
         self.report.exec()
-        self.assertEqual(self.report.report[0][0], ('Arthur', 'Dent', '42'))
-        self.assertEqual(self.report.report[1], 1)
+        self.assertEqual(self.report.report[0], ('Arthur', 'Dent', '42'))
+        self.assertEqual(self.report.count, 1)
 
     def test_export(self):
         self.report.export()
@@ -117,6 +117,7 @@ class TestReport(unittest.TestCase):
 class TestReportBook(unittest.TestCase):
     input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)])
     output_data = reports.manager('csv', f'{tmp_folder}/test_csv.csv')
+    output_data2 = reports.manager('csv', f'{tmp_folder}/test_csv2.csv')
     title = 'Test report'
     filters = ['42']
     column = 'age'
@@ -134,7 +135,7 @@ class TestReportBook(unittest.TestCase):
                              map_func=lambda item: str(item) if isinstance(item, int) else item,
                              column=column,
                              count=count,
-                             output=output_data)
+                             output=output_data2)
     book = reports.ReportBook([report1])
 
     def test_report_book_instance(self):
@@ -158,6 +159,10 @@ class TestReportBook(unittest.TestCase):
         self.assertEqual(book1, final_book1)
         self.assertEqual(len(final_book1), 4)
         self.assertRaises(reports.exception.ReportDataError, final_book1.__add__, [final_book1])
+
+    def test_export_book(self):
+        self.book.export()
+        self.book.export(output=f'{tmp_folder}/test_export_book.xlsx')
 
 
 if __name__ == '__main__':
