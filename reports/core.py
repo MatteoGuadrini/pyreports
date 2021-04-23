@@ -270,10 +270,9 @@ class Report:
             else:
                 ex.filter(self.filter)
         # Count element
-        if self.count:
-            self.report = (ex.get_data(), len(ex))
-        else:
-            self.report = ex.get_data()
+        if bool(self.count):
+            self.count = len(ex)
+        self.report = ex.get_data()
 
     def export(self):
         """
@@ -283,10 +282,7 @@ class Report:
         """
         if 'Manager' in self.output.__class__.__name__ or self.output is None:
             if self.output:
-                if isinstance(self.report, tuple):
-                    self.output.write(self.report[0])
-                else:
-                    self.output.write(self.report)
+                self.output.write(self.report)
             else:
                 print(self)
         else:
@@ -383,6 +379,7 @@ class ReportBook:
                 f.write(book.export('xlsx'))
         else:
             for report in self:
+                report.exec()
                 report.export()
 
 
