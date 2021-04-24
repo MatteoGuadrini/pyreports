@@ -107,6 +107,31 @@ report.export()
 
 ```
 
+### ReportBook collection object
+
+```python
+import reports
+
+# Select source: this is a DatabaseManager object
+mydb = reports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+
+# Get data
+mydb.execute('SELECT * FROM site_login')
+site_login = mydb.fetchall()
+
+# Create report data
+report_failed = reports.Report(site_login, title='Site login failed', filters=[400, 401, 403, 404, 500])
+report_success = reports.Report(site_login, title='Site login success', filters=[200, 201, 202, 'OK'])
+# Filter data
+report_failed.exec()
+report_success.exec()
+# Create my ReportBook object
+my_report = reports.ReportBook([report_failed, report_success])
+# Save data on Excel file, with two worksheet ('Site login failed' and 'Site login success')
+my_report.export(output='/home/report/site_login.xlsx')
+
+```
+
 ## Open source
 _reports_ is an open source project. Any contribute, It's welcome.
 
