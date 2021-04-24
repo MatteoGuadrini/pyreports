@@ -197,7 +197,14 @@ class Executor:
 class Report:
     """Report represents the workflow for generating a report"""
 
-    def __init__(self, input_data, title=None, filters=None, map_func=None, column=None, count=False, output=None):
+    def __init__(self,
+                 input_data: tablib.Dataset,
+                 title=None,
+                 filters=None,
+                 map_func=None,
+                 column=None,
+                 count=False,
+                 output=None):
         """
         Create Report object
 
@@ -263,10 +270,9 @@ class Report:
             else:
                 ex.filter(self.filter)
         # Count element
-        if self.count:
-            self.report = (ex.get_data(), len(ex))
-        else:
-            self.report = ex.get_data()
+        if bool(self.count):
+            self.count = len(ex)
+        self.report = ex.get_data()
 
     def export(self):
         """
@@ -276,13 +282,105 @@ class Report:
         """
         if 'Manager' in self.output.__class__.__name__ or self.output is None:
             if self.output:
-                if isinstance(self.report, tuple):
-                    self.output.write(self.report[0])
-                else:
-                    self.output.write(self.report)
+                self.output.write(self.report)
             else:
                 print(self)
         else:
             raise ReportManagerError('the output object is not Manager or NoneType object')
+
+
+class ReportBook:
+    """ReportBook represent a collection of Report's object"""
+
+    def __init__(self, reports=None, title=None):
+        """
+        Create a ReportBook object
+
+        :param reports: Report's object list
+        :param title: title of report book
+        """
+
+        if reports is None:
+            self.reports = list()
+        else:
+            self.reports = reports
+        self.title = title
+
+    def __add__(self, other):
+        """
+        Add report object
+
+        :param other: Report object
+        :return: ReportBook
+        """
+        if not isinstance(other, ReportBook):
+            raise ReportDataError('you can only add ReportBook object')
+        self.reports.extend(other.reports)
+        return self
+
+    def __iter__(self):
+        """
+        Return report iterator
+
+        :return: iterable object
+        """
+        return (report for report in self.reports)
+
+    def __len__(self):
+        return len(self.reports)
+
+    def __str__(self):
+        output = f'ReportBook {self.title if self.title else None}\n'
+        output += '\n'.join('\t' + str(report.title)
+                            for report in self.reports)
+        return output
+
+    def __repr__(self):
+        return f"<ReportBook object, title={self.title if self.title else None}>"
+
+    def add(self, report: Report):
+        """
+        Add report object
+
+        :param report: Report object
+        :return: None
+        """
+        if not isinstance(report, Report):
+            raise ReportDataError('you can only add Report object')
+        self.reports.append(report)
+
+    def remove(self, index: int = None):
+        """
+        Remove Report object, last added or index specified
+
+        :param index: report number to remove
+        :return: None
+        """
+        if index:
+            self.reports.pop(index)
+        else:
+            self.reports.pop(-1)
+
+    def export(self, output=None):
+        """
+        Save data on report output or an Excel workbook
+
+        :param output: output path for report export
+        :return: None
+        """
+        if output:
+            # Prepare reports
+            for report in self:
+                report.exec()
+            # Prepare book for export
+            book = tablib.Databook(tuple([report.report for report in self]))
+            # Save Excel WorkBook
+            with open(output, 'wb') as f:
+                f.write(book.export('xlsx'))
+        else:
+            for report in self:
+                report.exec()
+                report.export()
+
 
 # endregion

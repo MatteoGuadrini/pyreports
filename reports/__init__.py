@@ -23,6 +23,7 @@
 """Build complex reports from/to various formats."""
 
 from .io import manager
-from .core import Executor, Report
+from .core import Executor, Report, ReportBook
+from .exception import ReportDataError, ReportManagerError
 
-__version__ = '0.0.8'
+__version__ = '0.0.9'
