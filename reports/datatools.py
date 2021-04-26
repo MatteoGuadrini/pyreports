@@ -29,6 +29,24 @@ from .exception import ReportDataError
 # endregion
 
 # region Functions
+def select_column(data, column):
+    """
+    Select Dataset column
+
+    :param data: Dataset object
+    :param column: column name or index
+    :return: list
+    """
+    # Check if dataset have a column
+    if not data.headers:
+        raise ReportDataError('dataset object must have the headers')
+    # Select column
+    if isinstance(column, int):
+        return data.get_col(column)
+    else:
+        return data[column]
+
+
 def average(data, column):
     """
     Average of list of integers or floats
