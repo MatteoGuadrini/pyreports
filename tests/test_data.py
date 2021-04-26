@@ -10,6 +10,9 @@ class TestDataTools(unittest.TestCase):
     def test_average(self):
         self.assertEqual(int(reports.average(self.data, 'age')), int(39.666666666666664))
 
+    def test_most_common(self):
+        self.assertEqual(reports.most_common(self.data, 'age'), 42)
+
 
 if __name__ == '__main__':
     unittest.main()
