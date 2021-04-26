@@ -21,3 +21,34 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Contains all functions for data processing."""
+
+# region Imports
+from .exception import ReportDataError
+
+
+# endregion
+
+# region Functions
+def average(data, column):
+    """
+    Average of list of integers or floats
+
+    :param data: Dataset object
+    :param column: column name of index
+    :return: float
+    """
+    # Check if dataset have a column
+    if not data.headers:
+        raise ReportDataError('dataset object must have the columns')
+    # Select column
+    if isinstance(column, int):
+        data = data.get_col(column)
+    else:
+        data = data[column]
+    # Check if all item is integer or float
+    if not all(isinstance(item, (int, float)) for item in data):
+        raise ReportDataError('the column contains only int or float')
+    # Calculate average
+    return float(sum(data) / len(data))
+
+# endregion
