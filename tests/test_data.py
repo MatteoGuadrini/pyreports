@@ -8,10 +8,13 @@ class TestDataTools(unittest.TestCase):
     data.headers = ['name', 'surname', 'age']
 
     def test_average(self):
-        self.assertEqual(int(reports.average(self.data, 'age')), int(39.666666666666664))
+        self.assertEqual(int(reports.average(self.data, 'age')), 39)
 
     def test_most_common(self):
         self.assertEqual(reports.most_common(self.data, 'age'), 42)
+
+    def test_percentage(self):
+        self.assertEqual(int(reports.percentage(self.data, 42)), 66)
 
 
 if __name__ == '__main__':
