@@ -76,4 +76,21 @@ def most_common(data, column):
     data = select_column(data, column)
     return max(data, key=data.count)
 
+
+def percentage(data, filter_):
+    """
+    Calculating the percentage according to filter
+
+    :param data: Dataset object
+    :param filter_: filter
+    :return: float
+    """
+    # Filtering data...
+    data_filtered = [item
+                     for row in data
+                     for item in row
+                     if filter_ == item]
+    quotient = len(data_filtered) / len(data)
+    return quotient * 100
+
 # endregion
