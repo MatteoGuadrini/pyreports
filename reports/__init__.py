@@ -25,5 +25,6 @@
 from .io import manager
 from .core import Executor, Report, ReportBook
 from .exception import ReportDataError, ReportManagerError
+from .datatools import average
 
 __version__ = '0.0.9'
