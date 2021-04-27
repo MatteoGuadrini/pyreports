@@ -16,6 +16,11 @@ class TestDataTools(unittest.TestCase):
     def test_percentage(self):
         self.assertEqual(int(reports.percentage(self.data, 42)), 66)
 
+    def test_counter(self):
+        c = reports.counter(self.data, 2)
+        self.assertEqual(list(c.keys()), [35, 42])
+        self.assertEqual(c.most_common(1), [(42, 2)])
+
 
 if __name__ == '__main__':
     unittest.main()
