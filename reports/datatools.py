@@ -25,6 +25,7 @@
 # region Imports
 from .exception import ReportDataError
 from collections import Counter
+from tablib import Dataset, InvalidDimensions
 
 
 # endregion
@@ -108,4 +109,27 @@ def counter(data, column):
     # Return Counter object
     return Counter((item for item in data))
 
-# endregion
+
+def aggregate(*columns):
+    """
+    Aggregate in a new Dataset the columns
+
+    :param columns: columns added
+    :return: Dataset
+    """
+    if len(columns) >= 2:
+        new_data = Dataset()
+        # Check len of all columns
+        last_list = columns[0]
+        for list_ in columns[1:]:
+            if len(last_list) != len(list_):
+                raise InvalidDimensions('the columns are not the same length')
+            last_list = list_
+        # Aggregate columns
+        for column in columns:
+            new_data.append_col(column)
+        return new_data
+    else:
+        raise ReportDataError('you can aggregate two or more columns')
+
+    # endregion
