@@ -132,4 +132,16 @@ def aggregate(*columns):
     else:
         raise ReportDataError('you can aggregate two or more columns')
 
-    # endregion
+
+def chunks(data, length):
+    """
+    Yield successive n-sized chunks from data
+
+    :param data: Dataset object
+    :param length: n-sized chunks
+    :return: list
+    """
+    for i in range(0, len(data), length):
+        yield data[i:i + length]
+
+# endregion
