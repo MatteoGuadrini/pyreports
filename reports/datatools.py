@@ -24,12 +24,13 @@
 
 # region Imports
 from .exception import ReportDataError
+from collections import Counter
 
 
 # endregion
 
 # region Functions
-def select_column(data, column):
+def _select_column(data, column):
     """
     Select Dataset column
 
@@ -56,7 +57,7 @@ def average(data, column):
     :return: float
     """
     # Select column
-    data = select_column(data, column)
+    data = _select_column(data, column)
     # Check if all item is integer or float
     if not all(isinstance(item, (int, float)) for item in data):
         raise ReportDataError('the column contains only int or float')
@@ -73,7 +74,7 @@ def most_common(data, column):
     :return: Any
     """
     # Select column
-    data = select_column(data, column)
+    data = _select_column(data, column)
     return max(data, key=data.count)
 
 
@@ -92,5 +93,19 @@ def percentage(data, filter_):
                      if filter_ == item]
     quotient = len(data_filtered) / len(data)
     return quotient * 100
+
+
+def counter(data, column):
+    """
+    Count all row value
+
+    :param data: Dataset object
+    :param column: column name or index
+    :return: Counter
+    """
+    # Select column
+    data = _select_column(data, column)
+    # Return Counter object
+    return Counter((item for item in data))
 
 # endregion
