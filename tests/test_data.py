@@ -1,4 +1,7 @@
 import unittest
+
+import tablib
+
 import reports
 from tablib import Dataset
 
@@ -20,6 +23,15 @@ class TestDataTools(unittest.TestCase):
         c = reports.counter(self.data, 2)
         self.assertEqual(list(c.keys()), [35, 42])
         self.assertEqual(c.most_common(1), [(42, 2)])
+
+    def test_aggregate(self):
+        names = self.data.get_col(0)
+        surnames = self.data.get_col(1)
+        ages = self.data.get_col(2)
+        self.assertEqual(reports.aggregate(names, surnames, ages)[0], ('Matteo', 'Guadrini', 35))
+        ages = ['Name', 'Surname']
+        self.assertRaises(tablib.InvalidDimensions, reports.aggregate, names, surnames, ages)
+        self.assertRaises(reports.ReportDataError, reports.aggregate, names)
 
 
 if __name__ == '__main__':
