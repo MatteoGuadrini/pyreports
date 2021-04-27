@@ -33,6 +33,12 @@ class TestDataTools(unittest.TestCase):
         self.assertRaises(tablib.InvalidDimensions, reports.aggregate, names, surnames, ages)
         self.assertRaises(reports.ReportDataError, reports.aggregate, names)
 
+    def test_chunks(self):
+        data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42), ('Ford', 'Prefect', 42)])
+        data.extend([('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42), ('Ford', 'Prefect', 42)])
+        data.headers = ['name', 'surname', 'age']
+        self.assertEqual(list(reports.chunks(data, 4))[0][0], ('Matteo', 'Guadrini', 35))
+
 
 if __name__ == '__main__':
     unittest.main()
