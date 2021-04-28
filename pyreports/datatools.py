@@ -3,7 +3,7 @@
 # vim: se ts=4 et syn=python:
 
 # created by: matteo.guadrini
-# datatools -- reports
+# datatools -- pyreports
 #
 #     Copyright (C) 2021 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #

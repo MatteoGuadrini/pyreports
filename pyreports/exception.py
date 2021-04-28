@@ -3,7 +3,7 @@
 # vim: se ts=4 et syn=python:
 
 # created by: matteo.guadrini
-# __init__.py -- reports
+# exception.py -- pyreports
 #
 #     Copyright (C) 2021 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
@@ -20,11 +20,17 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Build complex reports from/to various formats."""
+"""Contains all custom exception."""
 
-from .io import manager
-from .core import Executor, Report, ReportBook
-from .exception import ReportDataError, ReportManagerError
-from .datatools import average, most_common, percentage, counter, aggregate, chunks
 
-__version__ = '0.0.9'
+# ReportException hierarchy
+class ReportException(Exception):
+    pass
+
+
+class ReportDataError(ReportException):
+    pass
+
+
+class ReportManagerError(ReportException):
+    pass

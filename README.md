@@ -1,6 +1,6 @@
-# reports
+# pyreports
 
-_reports_ is a python library that allows you to create complex reports from various sources such as databases, 
+_pyreports_ is a python library that allows you to create complex reports from various sources such as databases, 
 text files, ldap, etc. and perform processing, filters, counters, etc. 
 and then export or write them in various formats or in databases.
 
@@ -30,47 +30,47 @@ $ python setup.py install
 
 ## How does it work
 
-_reports_ wants to be a library that simplifies the collection of data from multiple sources such as databases, 
+_pyreports_ wants to be a library that simplifies the collection of data from multiple sources such as databases, 
 files and directory servers (through LDAP), the processing of them through built-in and customized functions, 
 and the saving in various formats (or, by inserting the data in a database).
 
-_reports_ uses the [**tablib**](https://tablib.readthedocs.io/en/stable/) library to organize the data into _Dataset_ object.
+_pyreports_ uses the [**tablib**](https://tablib.readthedocs.io/en/stable/) library to organize the data into _Dataset_ object.
 
 ### Simple report
 
 I take the data from a database table, filter the data I need and save it in a csv file
 
 ```python
-import reports
+import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = reports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
 
 # Get data
 mydb.execute('SELECT * FROM site_login')
 site_login = mydb.fetchall()
 
 # Filter data
-error_login = reports.Executor(site_login)
+error_login = pyreports.Executor(site_login)
 error_login.filter([400, 401, 403, 404, 500])
 
 # Save report: this is a FileManager object
-output = reports.manager('csv', '/home/report/error_login.csv')
+output = pyreports.manager('csv', '/home/report/error_login.csv')
 output.write(error_login.get_data())
 
 ```
 
 ### Combine source
 
-I take the data from a database table and a log file and save the report in json format
+I take the data from a database table, and a log file, and save the report in json format
 
 ```python
-import reports
+import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = reports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
 # Select another source: this is a FileManager object
-mylog = reports.manager('file', '/var/log/httpd/error.log')
+mylog = pyreports.manager('file', '/var/log/httpd/error.log')
 
 # Get data
 mydb.execute('SELECT * FROM site_login')
@@ -78,13 +78,13 @@ site_login = mydb.fetchall()
 error_log = mylog.read()
 
 # Filter database
-error_login = reports.Executor(site_login)
+error_login = pyreports.Executor(site_login)
 error_login.filter([400, 401, 403, 404, 500])
 users_in_error = set(error_login.select_column('users'))
 
 # Prepare log
 myreport = dict()
-log_user_error = reports.Executor(error_log)
+log_user_error = pyreports.Executor(error_log)
 log_user_error.filter(list(users_in_error))
 for line in log_user_error:
     for user in users_in_error:
@@ -92,7 +92,7 @@ for line in log_user_error:
         myreport[user].append(line)
 
 # Save report: this is a FileManager object
-output = reports.manager('json', '/home/report/error_login.json')
+output = pyreports.manager('json', '/home/report/error_login.json')
 output.write(myreport)
 
 ```
@@ -100,18 +100,18 @@ output.write(myreport)
 ### Report object
 
 ```python
-import reports
+import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = reports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
-output = reports.manager('xlsx', '/home/report/error_login.xlsx', mode='w')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+output = pyreports.manager('xlsx', '/home/report/error_login.xlsx', mode='w')
 
 # Get data
 mydb.execute('SELECT * FROM site_login')
 site_login = mydb.fetchall()
 
 # Create report data
-report = reports.Report(site_login, title='Site login failed', filters=[400, 401, 403, 404, 500], output=output)
+report = pyreports.Report(site_login, title='Site login failed', filters=[400, 401, 403, 404, 500], output=output)
 # Filter data
 report.exec()
 # Save data on file
@@ -122,30 +122,30 @@ report.export()
 ### ReportBook collection object
 
 ```python
-import reports
+import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = reports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
 
 # Get data
 mydb.execute('SELECT * FROM site_login')
 site_login = mydb.fetchall()
 
 # Create report data
-report_failed = reports.Report(site_login, title='Site login failed', filters=[400, 401, 403, 404, 500])
-report_success = reports.Report(site_login, title='Site login success', filters=[200, 201, 202, 'OK'])
+report_failed = pyreports.Report(site_login, title='Site login failed', filters=[400, 401, 403, 404, 500])
+report_success = pyreports.Report(site_login, title='Site login success', filters=[200, 201, 202, 'OK'])
 # Filter data
 report_failed.exec()
 report_success.exec()
 # Create my ReportBook object
-my_report = reports.ReportBook([report_failed, report_success])
+my_report = pyreports.ReportBook([report_failed, report_success])
 # Save data on Excel file, with two worksheet ('Site login failed' and 'Site login success')
 my_report.export(output='/home/report/site_login.xlsx')
 
 ```
 
 ## Open source
-_reports_ is an open source project. Any contribute, It's welcome.
+_pyreports_ is an open source project. Any contribute, It's welcome.
 
 **A great thanks**.
 
