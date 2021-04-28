@@ -355,6 +355,14 @@ class DatabaseManager:
         """
         return self.connector.cursor.callproc(proc_name, params)
 
+    def commit(self):
+        """
+        This method sends a COMMIT statement to the server
+
+        :return: None
+        """
+        self.connector.connection.commit()
+
 
 class FileManager:
     """File manager class for various readable file format"""
