@@ -8,8 +8,7 @@ class TestDBConnection(unittest.TestCase):
 
     def test_connection(self):
         # pyreports.io.Connection object
-        conn = pyreports.io.Connection()
-        self.assertIsInstance(conn, pyreports.io.Connection)
+        self.assertRaises(TypeError, pyreports.io.Connection)
 
     def test_sqllite_connection(self):
         # Simulate pyreports.io.SQLliteConnection object

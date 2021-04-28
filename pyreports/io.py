@@ -29,13 +29,14 @@ import mysql.connector as mdb
 import psycopg2
 import tablib
 import ldap3
+from abc import ABC, abstractmethod
 
 
 # endregion
 
 
 # region Classes
-class Connection:
+class Connection(ABC):
     """Connection base class"""
 
     def __init__(self, host=None, port=None, database=None, username=None, password=None):
@@ -48,9 +49,11 @@ class Connection:
         self.password = password
         self.cursor = None
 
+    @abstractmethod
     def connect(self):
         pass
 
+    @abstractmethod
     def close(self):
         pass
 
