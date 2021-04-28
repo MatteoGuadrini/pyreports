@@ -16,6 +16,18 @@ $ cd reports
 $ python -m unittest discover tests
 ```
 
+## Install package
+
+To install package, follow these instructions:
+
+```console
+$ pip install reports #from pypi
+
+$ git clone https://github.com/MatteoGuadrini/reports.git #from official repo
+$ cd reports
+$ python setup.py install
+```
+
 ## How does it work
 
 _reports_ wants to be a library that simplifies the collection of data from multiple sources such as databases, 
