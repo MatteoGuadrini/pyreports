@@ -1,11 +1,12 @@
 from setuptools import setup
+from pyreports import __version__
 
 with open("README.md") as fh:
     long_description = fh.read()
 
 setup(
     name='pyreports',
-    version='0.0.9',
+    version=__version__,
     packages=['pyreports'],
     url='https://github.com/MatteoGuadrini/reports',
     license='GNU General Public License v3.0',
@@ -14,7 +15,7 @@ setup(
     keywords='pyreports reports report csv yaml export excel database ldap dataset file executor book',
     maintainer='Matteo Guadrini',
     maintainer_email='matteo.guadrini@hotmail.it',
-    install_requires=['ldap3', 'pymssql', 'mysql-connector-python', 'psycopg2-binary', 'tablib'],
+    install_requires=['ldap3', 'pymssql', 'mysql-connector-python', 'psycopg2-binary', 'tablib', 'tablib[xlsx]'],
     description='pyreports is a python library that allows you to create complex report from various sources',
     long_description=long_description,
     long_description_content_type="text/markdown",
