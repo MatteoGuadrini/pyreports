@@ -144,6 +144,34 @@ my_report.export(output='/home/report/site_login.xlsx')
 
 ```
 
+## Tools for dataset
+
+This library includes many tools for handling data received from databases and files. 
+Here are some practical examples of data manipulation.
+
+```python
+import pyreports
+
+# Select source: this is a DatabaseManager object
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+
+# Get data
+mydb.execute('SELECT * FROM site_login')
+site_login = mydb.fetchall()
+
+# Most common error
+most_common_error_code = pyreports.most_common(site_login, 'code')  # args: Dataset, column name
+print(most_common_error_code)   # 404
+
+# Percentage of error 404
+percentage_error_404 = pyreports.percentage(site_login, 404)    # args: Dataset, filter
+print(percentage_error_404)   # 68,66666 (percent)
+
+# Count every error code
+count_error_code = pyreports.counter(site_login, 'code')  # args: Dataset, column name
+print(count_error_code)   # Counter({200: 4032, 201: 42, 202: 1, 'OK': 4032, 400: 40, 401: 38, 403: 27, 404: 802, 500: 3})
+```
+
 ## Open source
 _pyreports_ is an open source project. Any contribute, It's welcome.
 

@@ -144,9 +144,8 @@ def chunks(data, length):
 
     :param data: Dataset object
     :param length: n-sized chunks
-    :return: list
+    :return: generator
     """
     for i in range(0, len(data), length):
         yield data[i:i + length]
-
 # endregion
