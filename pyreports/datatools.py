@@ -110,11 +110,12 @@ def counter(data, column):
     return Counter((item for item in data))
 
 
-def aggregate(*columns):
+def aggregate(*columns, fill_empty: bool = False):
     """
     Aggregate in a new Dataset the columns
 
     :param columns: columns added
+    :param fill_empty: fill the empty field of data with None
     :return: Dataset
     """
     if len(columns) >= 2:
@@ -122,9 +123,13 @@ def aggregate(*columns):
         # Check len of all columns
         last_list = columns[0]
         for list_ in columns[1:]:
-            if len(last_list) != len(list_):
-                raise InvalidDimensions('the columns are not the same length')
-            last_list = list_
+            if fill_empty:
+                while len(last_list) != len(list_):
+                    list_.append(None)
+            else:
+                if len(last_list) != len(list_) and not fill_empty:
+                    raise InvalidDimensions('the columns are not the same length')
+                last_list = list_
         # Aggregate columns
         for column in columns:
             new_data.append_col(column)
