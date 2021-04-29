@@ -33,6 +33,12 @@ class TestDataTools(unittest.TestCase):
         self.assertRaises(tablib.InvalidDimensions, pyreports.aggregate, names, surnames, ages)
         self.assertRaises(pyreports.ReportDataError, pyreports.aggregate, names)
 
+    def test_aggregate_fill_empty(self):
+        names = self.data.get_col(0)
+        surnames = self.data.get_col(1)
+        ages = ['Name', 'Surname']
+        self.assertEqual(pyreports.aggregate(names, surnames, ages, fill_empty=True)[2], ('Ford', 'Prefect', None))
+
     def test_chunks(self):
         data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42), ('Ford', 'Prefect', 42)])
         data.extend([('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42), ('Ford', 'Prefect', 42)])
