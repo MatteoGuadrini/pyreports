@@ -161,15 +161,15 @@ site_login = mydb.fetchall()
 
 # Most common error
 most_common_error_code = pyreports.most_common(site_login, 'code')  # args: Dataset, column name
-print(most_common_error_code)   # 404
+print(most_common_error_code)   # 200
 
 # Percentage of error 404
 percentage_error_404 = pyreports.percentage(site_login, 404)    # args: Dataset, filter
-print(percentage_error_404)   # 68,66666 (percent)
+print(percentage_error_404)   # 16.088264794 (percent)
 
 # Count every error code
 count_error_code = pyreports.counter(site_login, 'code')  # args: Dataset, column name
-print(count_error_code)   # Counter({200: 4032, 201: 42, 202: 1, 'OK': 4032, 400: 40, 401: 38, 403: 27, 404: 802, 500: 3})
+print(count_error_code)   # Counter({200: 4032, 201: 42, 202: 1, 400: 40, 401: 38, 403: 27, 404: 802, 500: 3})
 ```
 
 ## Open source
