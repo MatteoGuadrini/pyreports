@@ -25,6 +25,6 @@
 from .io import manager
 from .core import Executor, Report, ReportBook
 from .exception import ReportDataError, ReportManagerError
-from .datatools import average, most_common, percentage, counter, aggregate, chunks
+from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge
 
 __version__ = '0.0.9'

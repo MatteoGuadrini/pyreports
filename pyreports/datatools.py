@@ -127,7 +127,7 @@ def aggregate(*columns, fill_empty: bool = False):
                 while len(last_list) != len(list_):
                     list_.append(None)
             else:
-                if len(last_list) != len(list_) and not fill_empty:
+                if len(last_list) != len(list_):
                     raise InvalidDimensions('the columns are not the same length')
                 last_list = list_
         # Aggregate columns
@@ -136,6 +136,26 @@ def aggregate(*columns, fill_empty: bool = False):
         return new_data
     else:
         raise ReportDataError('you can aggregate two or more columns')
+
+
+def merge(*datasets):
+    """
+    Merge two or more dataset in only one
+
+    :param datasets: Dataset object collection
+    :return: Dataset
+    """
+    if len(datasets) >= 2:
+        new_data = Dataset()
+        # Check len of row
+        length_row = len(datasets[0][0])
+        for data in datasets:
+            if length_row != len(data[0]):
+                raise InvalidDimensions('the row are not the same length')
+            new_data.extend(data)
+        return new_data
+    else:
+        raise ReportDataError('you can merge two or more dataset object')
 
 
 def chunks(data, length):
