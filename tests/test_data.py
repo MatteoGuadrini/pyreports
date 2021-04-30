@@ -45,6 +45,9 @@ class TestDataTools(unittest.TestCase):
         data.headers = ['name', 'surname', 'age']
         self.assertEqual(list(pyreports.chunks(data, 4))[0][0], ('Matteo', 'Guadrini', 35))
 
+    def test_merge(self):
+        self.assertEqual(pyreports.merge(self.data, self.data)[3], ('Matteo', 'Guadrini', 35))
+
 
 if __name__ == '__main__':
     unittest.main()
