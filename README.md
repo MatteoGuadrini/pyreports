@@ -4,7 +4,7 @@ _pyreports_ is a python library that allows you to create complex reports from v
 text files, ldap, etc. and perform processing, filters, counters, etc. 
 and then export or write them in various formats or in databases.
 
-> Project status: **beta released**
+> Project status: **RC released**
 
 ## Test package
 
