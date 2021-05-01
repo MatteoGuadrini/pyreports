@@ -1,5 +1,5 @@
 import unittest
-import reports
+import pyreports
 from tablib import Dataset
 from tempfile import gettempdir
 
@@ -7,10 +7,10 @@ tmp_folder = gettempdir()
 
 
 class TestExecutor(unittest.TestCase):
-    data = reports.Executor(Dataset(['Matteo', 'Guadrini', 35]))
+    data = pyreports.Executor(Dataset(['Matteo', 'Guadrini', 35]))
 
     def test_executor_instance(self):
-        self.assertIsInstance(self.data, reports.Executor)
+        self.assertIsInstance(self.data, pyreports.Executor)
 
     def test_get_data(self):
         self.assertIsInstance(self.data.get_data(), Dataset)
@@ -82,27 +82,27 @@ class TestExecutor(unittest.TestCase):
     def test_clone(self):
         new_data = self.data.clone()
         self.assertNotEqual(new_data, self.data)
-        self.assertIsInstance(new_data, reports.Executor)
+        self.assertIsInstance(new_data, pyreports.Executor)
         self.assertEqual(type(new_data), type(self.data))
 
 
 class TestReport(unittest.TestCase):
     input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)])
-    output_data = reports.manager('csv', f'{tmp_folder}/test_csv.csv')
+    output_data = pyreports.manager('csv', f'{tmp_folder}/test_csv.csv')
     title = 'Test report'
     filters = ['42']
     column = 'age'
     count = True
-    report = reports.Report(input_data=input_data,
-                            title=title,
-                            filters=filters,
-                            map_func=lambda item: str(item) if isinstance(item, int) else item,
-                            column=column,
-                            count=count,
-                            output=output_data)
+    report = pyreports.Report(input_data=input_data,
+                              title=title,
+                              filters=filters,
+                              map_func=lambda item: str(item) if isinstance(item, int) else item,
+                              column=column,
+                              count=count,
+                              output=output_data)
 
     def test_report_object(self):
-        self.assertIsInstance(self.report, reports.Report)
+        self.assertIsInstance(self.report, pyreports.Report)
 
     def test_exec(self):
         self.report.exec()
@@ -116,34 +116,34 @@ class TestReport(unittest.TestCase):
 
 class TestReportBook(unittest.TestCase):
     input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)])
-    output_data = reports.manager('csv', f'{tmp_folder}/test_csv.csv')
-    output_data2 = reports.manager('csv', f'{tmp_folder}/test_csv2.csv')
+    output_data = pyreports.manager('csv', f'{tmp_folder}/test_csv.csv')
+    output_data2 = pyreports.manager('csv', f'{tmp_folder}/test_csv2.csv')
     title = 'Test report'
     filters = ['42']
     column = 'age'
     count = True
-    report1 = reports.Report(input_data=input_data,
-                             title=title + '1',
-                             filters=filters,
-                             map_func=lambda item: str(item) if isinstance(item, int) else item,
-                             column=column,
-                             count=count,
-                             output=output_data)
-    report2 = reports.Report(input_data=input_data,
-                             title=title + '2',
-                             filters=filters,
-                             map_func=lambda item: str(item) if isinstance(item, int) else item,
-                             column=column,
-                             count=count,
-                             output=output_data2)
-    book = reports.ReportBook([report1])
+    report1 = pyreports.Report(input_data=input_data,
+                               title=title + '1',
+                               filters=filters,
+                               map_func=lambda item: str(item) if isinstance(item, int) else item,
+                               column=column,
+                               count=count,
+                               output=output_data)
+    report2 = pyreports.Report(input_data=input_data,
+                               title=title + '2',
+                               filters=filters,
+                               map_func=lambda item: str(item) if isinstance(item, int) else item,
+                               column=column,
+                               count=count,
+                               output=output_data2)
+    book = pyreports.ReportBook([report1])
 
     def test_report_book_instance(self):
-        self.assertIsInstance(self.book, reports.ReportBook)
+        self.assertIsInstance(self.book, pyreports.ReportBook)
 
     def test_add_report(self):
         self.book.add(self.report2)
-        self.assertRaises(reports.exception.ReportDataError, self.book.add, [self.report2])
+        self.assertRaises(pyreports.exception.ReportDataError, self.book.add, [self.report2])
         self.assertEqual(len(self.book), 2)
 
     def test_remove_report(self):
@@ -152,13 +152,13 @@ class TestReportBook(unittest.TestCase):
         self.assertEqual(len(self.book), 0)
 
     def test_merge_report_books(self):
-        book1 = reports.ReportBook([self.report1])
-        book2 = reports.ReportBook([self.report2])
+        book1 = pyreports.ReportBook([self.report1])
+        book2 = pyreports.ReportBook([self.report2])
         final_book1 = book1 + book2
         final_book1 += book1
         self.assertEqual(book1, final_book1)
         self.assertEqual(len(final_book1), 4)
-        self.assertRaises(reports.exception.ReportDataError, final_book1.__add__, [final_book1])
+        self.assertRaises(pyreports.exception.ReportDataError, final_book1.__add__, [final_book1])
 
     def test_export_book(self):
         self.book.export()

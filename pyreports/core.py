@@ -3,7 +3,7 @@
 # vim: se ts=4 et syn=python:
 
 # created by: matteo.guadrini
-# core -- reports
+# core -- pyreports
 #
 #     Copyright (C) 2021 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
@@ -369,7 +369,7 @@ class ReportBook:
         :return: None
         """
         if output:
-            # Prepare reports
+            # Prepare pyreports
             for report in self:
                 report.exec()
             # Prepare book for export

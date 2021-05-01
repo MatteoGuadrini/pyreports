@@ -1,5 +1,5 @@
 import unittest
-import reports
+import pyreports
 from tablib import Dataset
 from unittest.mock import MagicMock, patch
 
@@ -7,12 +7,11 @@ from unittest.mock import MagicMock, patch
 class TestDBConnection(unittest.TestCase):
 
     def test_connection(self):
-        # reports.io.Connection object
-        conn = reports.io.Connection()
-        self.assertIsInstance(conn, reports.io.Connection)
+        # pyreports.io.Connection object
+        self.assertRaises(TypeError, pyreports.io.Connection)
 
     def test_sqllite_connection(self):
-        # Simulate reports.io.SQLliteConnection object
+        # Simulate pyreports.io.SQLliteConnection object
         conn = MagicMock()
         with patch(target='sqlite3.connect') as mock:
             # Test connect
@@ -24,7 +23,7 @@ class TestDBConnection(unittest.TestCase):
             conn.cursor.close()
 
     def test_mysql_connection(self):
-        # Simulate reports.io.MySQLConnection object
+        # Simulate pyreports.io.MySQLConnection object
         conn = MagicMock()
         with patch(target='mysql.connector.connect') as mock:
             # Test connect
@@ -44,7 +43,7 @@ class TestDBConnection(unittest.TestCase):
             conn.cursor.close()
 
     def test_mssqldb_connection(self):
-        # Simulate reports.io.MSSQLConnection object
+        # Simulate pyreports.io.MSSQLConnection object
         conn = MagicMock()
         with patch(target='pymssql.connect') as mock:
             # Test connect
@@ -64,7 +63,7 @@ class TestDBConnection(unittest.TestCase):
             conn.cursor.close()
 
     def test_postgresqldb_connection(self):
-        # Simulate reports.io.PostgreSQLConnection object
+        # Simulate pyreports.io.PostgreSQLConnection object
         conn = MagicMock()
         with patch(target='psycopg2.connect') as mock:
             # Test connect
@@ -98,8 +97,8 @@ class TestDBManager(unittest.TestCase):
 
     def test_db_manager(self):
         # Test database manager
-        db_manager = reports.io.DatabaseManager(connection=self.conn)
-        self.assertIsInstance(db_manager, reports.io.DatabaseManager)
+        db_manager = pyreports.io.DatabaseManager(connection=self.conn)
+        self.assertIsInstance(db_manager, pyreports.io.DatabaseManager)
         # Test reconnect
         db_manager.reconnect()
         # Test SELECT query

@@ -3,7 +3,7 @@
 # vim: se ts=4 et syn=python:
 
 # created by: matteo.guadrini
-# inputs -- reports
+# inputs -- pyreports
 #
 #     Copyright (C) 2021 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
@@ -29,13 +29,14 @@ import mysql.connector as mdb
 import psycopg2
 import tablib
 import ldap3
+from abc import ABC, abstractmethod
 
 
 # endregion
 
 
 # region Classes
-class Connection:
+class Connection(ABC):
     """Connection base class"""
 
     def __init__(self, host=None, port=None, database=None, username=None, password=None):
@@ -48,9 +49,11 @@ class Connection:
         self.password = password
         self.cursor = None
 
+    @abstractmethod
     def connect(self):
         pass
 
+    @abstractmethod
     def close(self):
         pass
 
@@ -351,6 +354,14 @@ class DatabaseManager:
         :return: sequence of parameters with modified output and input/output parameters
         """
         return self.connector.cursor.callproc(proc_name, params)
+
+    def commit(self):
+        """
+        This method sends a COMMIT statement to the server
+
+        :return: None
+        """
+        self.connector.connection.commit()
 
 
 class FileManager:
