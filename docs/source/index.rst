@@ -12,10 +12,6 @@ text files, ldap, etc. and perform processing, filters, counters, etc. and then 
 You can use this library for complex reports, or to simply filter data into datasets divided by topic. Furthermore,
 it is possible to export in various formats, such as csv, excel files or write directly to the database (*mysql*, *mssql*, *postgresql* and more).
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
 Features
 ********
 
@@ -24,6 +20,13 @@ Features
 - Data analysis
 - Process data with filters and maps
 - Some functions will help you to process averages, percentages and much more
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   install
+   example
 
 Indices and tables
 ==================
