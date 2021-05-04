@@ -16,7 +16,14 @@ it is possible to export in various formats, such as csv, excel files or write d
    :maxdepth: 2
    :caption: Contents:
 
+Features
+********
 
+- Capture any type of data
+- Export data in many formats
+- Data analysis
+- Process data with filters and maps
+- Some functions will help you to process averages, percentages and much more
 
 Indices and tables
 ==================
