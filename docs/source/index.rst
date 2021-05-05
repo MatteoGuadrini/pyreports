@@ -27,6 +27,7 @@ Features
 
    install
    example
+   package
 
 Indices and tables
 ==================
