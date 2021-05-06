@@ -7,6 +7,8 @@ Example scripts using ``pyreports`` module.
    :maxdepth: 2
    :caption: Contents:
 
+
+
 Basic features
 **************
 
