@@ -81,3 +81,6 @@ Each type of manager is managed by micro types; Below is the complete list:
     json = pyreports.manager('json', '/tmp/json.json')
     yaml = pyreports.manager('yaml', '/tmp/yaml.yaml')
     xlsx = pyreports.manager('xlsx', '/tmp/xlsx.xlsx')
+
+    # LDAPManager object
+    ldap = pyreports.manager('ldap', server='ldap.local', username='user', password='password', ssl=False, tls=True)
