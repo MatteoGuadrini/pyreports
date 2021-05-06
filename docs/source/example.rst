@@ -65,7 +65,7 @@ Each type of manager is managed by micro types; Below is the complete list:
 .. warning::
     LDAP manager should only be used for inputs. An ldap manager has no write methods.
 
-. code-block:: python
+.. code-block:: python
 
     import pyreports
 
