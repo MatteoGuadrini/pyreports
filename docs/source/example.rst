@@ -74,3 +74,10 @@ Each type of manager is managed by micro types; Below is the complete list:
     mssql_db = pyreports.manager('mssql', host='mysql1.local', database='test', username='dba', password='dba0000')
     mysql_db = pyreports.manager('mysql', host='mssql1.local', database='test', username='dba', password='dba0000')
     postgresql_db = pyreports.manager('postgresql', host='postgresql1.local', database='test', username='dba', password='dba0000')
+
+    # FileManager object
+    file = pyreports.manager('file', '/tmp/log.log')
+    csv = pyreports.manager('csv', '/tmp/csv.csv')
+    json = pyreports.manager('json', '/tmp/json.json')
+    yaml = pyreports.manager('yaml', '/tmp/yaml.yaml')
+    xlsx = pyreports.manager('xlsx', '/tmp/xlsx.xlsx')
