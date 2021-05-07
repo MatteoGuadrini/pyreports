@@ -26,6 +26,7 @@ Features
    :caption: Contents:
 
    install
+   managers
    example
    package
 

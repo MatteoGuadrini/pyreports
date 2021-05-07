@@ -9,8 +9,8 @@ Here are the installation instructions
 
 
 
-Python
-******
+Requirements
+************
 
 *pyreports* is written in python3 (3.6 and higher).
 
