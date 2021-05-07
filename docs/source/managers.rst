@@ -29,9 +29,6 @@ Each type of manager is managed by micro types; Below is the complete list:
 #. LDAP
     #. ldap (Active Directory Server, OpenLDAP, FreeIPA, etc.)
 
-.. warning::
-    LDAP manager should only be used for inputs. An ldap manager has no write methods.
-
 .. code-block:: python
 
     import pyreports
@@ -49,7 +46,7 @@ Each type of manager is managed by micro types; Below is the complete list:
     yaml = pyreports.manager('yaml', '/tmp/yaml.yaml')
     xlsx = pyreports.manager('xlsx', '/tmp/xlsx.xlsx')
 
-    # LDAPManager object
+    # LdapManager object
     ldap = pyreports.manager('ldap', server='ldap.local', username='user', password='password', ssl=False, tls=True)
 
 Managers at work
@@ -129,3 +126,30 @@ FileManager
     # Write data
     cars.append(['Audi', 52642])
     csv.write(cars)
+
+LdapManager
+-----------
+
+**LdapManager** is an object that allows you to interface and get data from a directory server via the ldap protocol.
+
+.. code-block:: python
+
+    import pyreports
+
+    # LdapManager object
+    ldap = pyreports.manager('ldap', server='ldap.local', username='user', password='password', ssl=False, tls=True)
+
+    # Rebind connection
+    ldap.rebind()
+
+    # Query: get data
+    # This is Dataset object
+    users = ldap.query('DC=test,DC=local', '(&(objectClass=user)(objectCategory=person))', ['name', 'mail', 'phone'])
+    if users:
+        print(users)
+
+    # Close connection
+    ldap.unbind()
+
+.. warning::
+    *LdapManager* should only be used for inputs. An ldap manager has no write methods.
