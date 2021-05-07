@@ -56,12 +56,11 @@ Managers at work
 ****************
 
 A Manager object corresponds to each type of manager. And each Manager object has its own methods for writing and reading data.
-Let's start with the most complex: the **Databasemanager**.
 
 DatabaseManager
 ---------------
 
-*Database managers* have eight methods that are used to reconnect, query, commit changes and much more. Let's see these methods in action below.
+**Databasemanager** have eight methods that are used to reconnect, query, commit changes and much more. Let's see these methods in action below.
 
 .. note::
     The following example will be done on a *mysql* type database, but it can be applied to any database because `DB-API 2.0 <https://www.python.org/dev/peps/pep-0249/>`_ is used.
@@ -110,4 +109,23 @@ DatabaseManager
     print(mysql_db.fetchall())                  # Dataset object
 
 .. note::
-    Whatever operation is done, the return value of the ``fetch*`` methods return `Dataset objects <https://tablib.readthedocs.io/en/stable/tutorial/#creating-a-dataset>`_.
+    Whatever operation is done, the return value of the ``fetch*`` methods return `Dataset objects <https://tablib.readthedocs.io/en/stable/api/#dataset-object>`_.
+
+FileManager
+-----------
+
+**FileManager** has two simple methods: *read* and *write*. Let's see how to use this manager.
+
+.. code-block:: python
+
+    import pyreports
+
+    # FileManager object
+    csv = pyreports.manager('csv', '/tmp/cars.csv')
+
+    # Read data
+    cars = csv.read()       # Dataset object
+
+    # Write data
+    cars.append(['Audi', 52642])
+    csv.write(cars)
