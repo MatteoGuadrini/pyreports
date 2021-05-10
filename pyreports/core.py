@@ -43,6 +43,9 @@ class Executor:
         :param header: list header of data
         """
         self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
+        # Set header
+        if header or header is None:
+            self.headers(header)
         self.origin = tablib.Dataset()
         self.origin.extend(self.data)
 
