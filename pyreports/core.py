@@ -104,7 +104,7 @@ class Executor:
             flist = []
         ret_data = tablib.Dataset(headers=self.data.headers)
         # Filter data through filter list
-        for row in self.data:
+        for row in self:
             for f in flist:
                 if f in row:
                     ret_data.append(row)
@@ -129,7 +129,7 @@ class Executor:
         :return: None
         """
         ret_data = tablib.Dataset(headers=self.data.headers)
-        for row in self.data:
+        for row in self:
             # Apply function to data
             if key and callable(key):
                 new_row = list()
