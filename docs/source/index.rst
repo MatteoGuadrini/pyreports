@@ -27,6 +27,7 @@ Features
 
    install
    managers
+   executors
    example
    package
 
