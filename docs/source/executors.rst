@@ -54,5 +54,36 @@ the return value of a database object)
     myex = pyreports.Executor(mydata, header=['name', 'surname', 'salary'])
     myex = pyreports.Executor([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], header=['name', 'surname', 'salary'])
 
+Filter data
+-----------
 
+One of the main functions of working with data is to filter it. The *Executor* object has a filter method for doing this.
+This method accepts a list of values that must correspond to one of the values of a row in the Executor's Dataset.
 
+Another way to filter the data of an *Executor* object is to pass a function that takes a single argument and returns something.
+The return value will be called by the ``bool`` class to see if it is ``True`` or ``False``.
+This function will be called to every single value of the row of the Executor's Dataset.
+
+Finally, it is possible to declare the name of a single return column, if not all columns are needed.
+
+.. note::
+    You can pass both a list of values and a function to filter the data.
+
+.. code-block:: python
+
+    # Filter data by list
+    myex.filter([55000, 65000, 75000])                          # Filter data only for specified salaries
+
+    # Filter data by callable
+    myex.filter(key=str.istitle)                                # Filter data only for string contains Title case
+
+    # Filter data by column
+    myex.filter(column='salary')                                # Filter by column: name
+    myex.filter(column=2)                                       # Filter by column: index
+
+    # Filter data by list, callable and column
+    myex.filter([55000, 65000, 75000], str.istitle, 'salary')   # Filter for all three methods
+
+.. warning::
+    If the filters are not applied, the result will be an empty Executor object.
+    If you want to reapply a filter, you will have to reset the object, using the ``reset()`` method. See below.
