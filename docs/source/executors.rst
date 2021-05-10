@@ -60,9 +60,9 @@ Filter data
 One of the main functions of working with data is to filter it. The *Executor* object has a filter method for doing this.
 This method accepts a list of values that must correspond to one of the values of a row in the Executor's Dataset.
 
-Another way to filter the data of an *Executor* object is to pass a function that takes a single argument and returns something.
+Another way to filter the data of an *Executor* object is to pass a callable that takes a single argument and returns something.
 The return value will be called by the ``bool`` class to see if it is ``True`` or ``False``.
-This function will be called to every single value of the row of the Executor's Dataset.
+This callable will be called to every single value of the row of the Executor's Dataset.
 
 Finally, it is possible to declare the name of a single return column, if not all columns are needed.
 
@@ -77,6 +77,13 @@ Finally, it is possible to declare the name of a single return column, if not al
     # Filter data by callable
     myex.filter(key=str.istitle)                                # Filter data only for string contains Title case
 
+    def big_salary(salary):
+        if not isinstance(salary, int):
+            return False
+        return True if salary >= 65000 else False               # My custom function
+
+    myex.filter(key=big_salary)                                 # Filter data with a salary greater than or equal to 65000
+
     # Filter data by column
     myex.filter(column='salary')                                # Filter by column: name
     myex.filter(column=2)                                       # Filter by column: index
@@ -87,3 +94,29 @@ Finally, it is possible to declare the name of a single return column, if not al
 .. warning::
     If the filters are not applied, the result will be an empty Executor object.
     If you want to reapply a filter, you will have to reset the object, using the ``reset()`` method. See below.
+
+Map (modify) data
+-----------------
+
+The *Executor* object is provided with a method to modify the data in real time.
+The ``map`` method accepts a mandatory argument, i.e. a callable that accepts a single argument and an optional one
+that accepts the name of the column or the number of its index.
+
+.. code-block:: python
+
+    # Define my function for increase salary; isn't that amazing!
+    def salary_increase(salary):
+        if isinstance(salary, int):
+            if salary <= 65000:
+                return salary + 10000
+        return salary
+
+    # Let's go! Increase salary today!
+    myex.map(salary_increase)
+
+    # Now, return only salary columns
+    myex.map(salary_increase, column='salary')
+
+.. warning::
+    If the function you are passing to the *map* method returns nothing, ``None`` will be substituted for the original value.
+    If you are using special conditions make sure your function always returns to its original value.
