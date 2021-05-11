@@ -120,3 +120,40 @@ that accepts the name of the column or the number of its index.
 .. warning::
     If the function you are passing to the *map* method returns nothing, ``None`` will be substituted for the original value.
     If you are using special conditions make sure your function always returns to its original value.
+
+Get data
+--------
+
+An *Executor* is not a data object. It is an object that contains data for processing, filters and etc.
+Once an instance of an *Executor* object is created, the original data is saved so that it can be retrieved.
+
+So there is a way to retrieve and print the current and original data.
+
+.. code-block:: python
+
+    # Get current data
+    myex.get_data()                                 # Return current Dataset object
+    myex.origin                                     # Return original Dataset object
+    print(myex.get_data())                          # Print Dataset with current data
+
+    # Assign result to variable
+    my_dataset = myex.get_data()                    # Return Dataset object
+
+    # Create a new executor
+    new_ex = pyreports.Executor(myex.get_data())    # New Executor object with current data
+    new_ex = myex.clone()                           # New Executor object with original data
+
+.. note::
+    If you want to clone the original data contained in an Executor object, use the ``clone`` method.
+
+It is possible through this object, to restore the data source after the modification or the applied filter.
+
+.. code-block:: python
+
+    # Restore data
+    myex.reset()                                 # Reset data to origin
+    print(myex.get_data())
+
+.. attention::
+    Once the object is reset, any changes made will be lost, unless the object has been cloned.
+
