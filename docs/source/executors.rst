@@ -54,6 +54,9 @@ the return value of a database object)
     myex = pyreports.Executor(mydata, header=['name', 'surname', 'salary'])
     myex = pyreports.Executor([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], header=['name', 'surname', 'salary'])
 
+    # Set header after creation
+    myex.headers(['name', 'surname', 'salary'])
+
 Filter data
 -----------
 
@@ -193,3 +196,17 @@ It is also possible to delete a column.
     # Delete column
     myex.del_column('floor')
 
+Count
+-----
+
+The *Executor* object contains data. You may need to count rows and columns.
+The object supports the protocol for counting through the built-in ``len`` function, which will return the current number of rows.
+
+. code-block:: python
+
+    # Count columns
+    myex.count_columns()        # Return number of columns
+
+    # Count rows
+    myex.count_rows()           # Return number of rows
+    len(myex)                   # Return number of rows
