@@ -202,7 +202,7 @@ Count
 The *Executor* object contains data. You may need to count rows and columns.
 The object supports the protocol for counting through the built-in ``len`` function, which will return the current number of rows.
 
-. code-block:: python
+.. code-block:: python
 
     # Count columns
     myex.count_columns()        # Return number of columns
@@ -210,3 +210,18 @@ The object supports the protocol for counting through the built-in ``len`` funct
     # Count rows
     myex.count_rows()           # Return number of rows
     len(myex)                   # Return number of rows
+
+Iteration
+---------
+
+The *Executor* object supports the python iteration protocol (return of generator object).
+This means that you can use it in a for loop or in a list comprehension.
+
+.. code-block:: python
+
+    # For each row in Executor
+    for row in myex:
+        print(row)
+
+    # List comprehension
+    my_list_of_rows = [row for row in myex]
