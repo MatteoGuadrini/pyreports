@@ -180,7 +180,7 @@ class Executor:
         """
         return len(self.data)
 
-    def count_column(self):
+    def count_columns(self):
         """
         Count all column
 

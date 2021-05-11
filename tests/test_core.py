@@ -77,7 +77,7 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(len(self.data), 1)
         self.assertEqual(self.data.count_rows(), 1)
         self.data.headers(['name', 'surname', 'age'])
-        self.assertEqual(self.data.count_column(), 3)
+        self.assertEqual(self.data.count_columns(), 3)
 
     def test_clone(self):
         new_data = self.data.clone()
