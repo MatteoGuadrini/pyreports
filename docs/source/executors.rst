@@ -131,7 +131,7 @@ So there is a way to retrieve and print the current and original data.
 
 .. code-block:: python
 
-    # Get current data
+    # Get data
     myex.get_data()                                 # Return current Dataset object
     myex.origin                                     # Return original Dataset object
     print(myex.get_data())                          # Print Dataset with current data
@@ -156,4 +156,40 @@ It is possible through this object, to restore the data source after the modific
 
 .. attention::
     Once the object is reset, any changes made will be lost, unless the object has been cloned.
+
+Work with columns
+-----------------
+
+Since the *Executor* object is based on a Dataset object, it is possible to work not only with rows but also with columns.
+Let's see how to select a single column.
+
+.. code-block:: python
+
+    # Select column
+    myex.select_column(1)               # Select column by index number (surname)
+    myex.select_column('surname')       # Select column by name (surname)
+
+We can also add columns as long as they are the same length as the others, otherwise, we will receive an ``InvalidDimension`` exception.
+
+.. code-block:: python
+
+    # Add column with values
+    myex.add_column('floor', [1, 2])
+
+    # Add column with function values
+    def stringify_salary(row):
+        return f'$ {row[2]}'
+
+    myex.add_column('str_salary', stringify_salary)
+
+.. note::
+    The function passed to the ``add_column`` method must have a single argument representing the row (the name *"row"* is a convention).
+    You can use this argument to access data from other columns.
+
+It is also possible to delete a column.
+
+.. code-block:: python
+
+    # Delete column
+    myex.del_column('floor')
 
