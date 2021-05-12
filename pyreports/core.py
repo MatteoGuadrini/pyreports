@@ -207,7 +207,7 @@ class Report:
                  map_func=None,
                  column=None,
                  count=False,
-                 output=None):
+                 output: FileManager = None):
         """
         Create Report object
 
@@ -283,13 +283,13 @@ class Report:
 
         :return: if count is True, return row count
         """
-        if 'Manager' in self.output.__class__.__name__ or self.output is None:
+        if isinstance(self.output, FileManager) or self.output is None:
             if self.output:
                 self.output.write(self.report)
             else:
                 print(self)
         else:
-            raise ReportManagerError('the output object is not Manager or NoneType object')
+            raise ReportManagerError('the output object is FileManager or NoneType object')
 
 
 class ReportBook:
@@ -384,6 +384,5 @@ class ReportBook:
             for report in self:
                 report.exec()
                 report.export()
-
 
 # endregion
