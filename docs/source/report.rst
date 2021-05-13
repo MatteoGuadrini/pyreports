@@ -132,3 +132,31 @@ Once the ``exec`` method is called, and then once the data is processed, we can 
     report_only_55k.output = salary55k
     report_only_55k.export()            # Save report on /tmp/salary55k.csv
 
+
+ReportBook at work
+******************
+
+The *ReportBook* object is a collection (list) of *Report* objects.
+This basically allows you to collect multiple reports in a single container object.
+The main advantage is the ability to iterate over each *Report* and access its properties.
+
+.. code-block:: python
+
+    import pyreports
+    import tablib
+
+    # Instantiate the Report objects
+    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    report_only_55k = pyreports.Report(mydata, filters=[55000], title='Report salary 55k')
+    report_only_65k = pyreports.Report(mydata, filters=[65000], title='Report salary 65k')
+
+    # Create a ReportBook
+    salary = pyreports.ReportBook([report_only_55k, report_only_65k])
+
+    # View ReportBook
+    salary           # repr(salary)
+    print(salary)    # str(salary)
+
+.. note::
+    The ReportBook object supports the ``title`` property, as follows: ``pyreports.ReportBook(title='My report book')``
+
