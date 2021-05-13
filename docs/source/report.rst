@@ -177,3 +177,46 @@ This method not only saves *Report* objects to its output, but first executes th
 
     # Export each Report on one file Excel (xlsx)
     salary.export('/tmp/salary_report.xlsx')
+
+Add and remove report
+---------------------
+
+Being a container, the *ReportBook* object can be used to add and remove *Report* object.
+
+.. code-block:: python
+
+    # Create an empty ReportBook
+    salary = pyreports.ReportBook(title='Salary report')
+
+    # Add a Report object
+    salary.add(report_only_55k)
+    salary.add(report_only_65k)
+
+    # Remove last Report object added
+    salary.remove()                     # Remove report_only_65k object
+    salary.remove(0)                    # Remove report_only_55k object, via index
+
+Count reports
+-------------
+
+The *ReportBook* object supports the protocol for the built-in ``len`` function, to count the *Report* objects it contains.
+
+.. code-block:: python
+
+    # Count object
+    len(salary)
+
+Iteration
+---------
+
+The *ReportBook* object supports the python iteration protocol (return of generator object).
+This means that you can use it in a for loop or in a list comprehension.
+
+.. code-block:: python
+
+    # For each report in ReportBook
+    for report in salary:
+        print(report)
+
+    # List comprehension
+    my_list_of_report = [report for report in salary]
