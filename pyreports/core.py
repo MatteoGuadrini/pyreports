@@ -289,7 +289,7 @@ class Report:
             else:
                 print(self)
         else:
-            raise ReportManagerError('the output object is FileManager or NoneType object')
+            raise ReportManagerError('the output object must be FileManager or NoneType object')
 
 
 class ReportBook:

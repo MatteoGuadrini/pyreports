@@ -87,4 +87,27 @@ But we can also edit the data on-demand and then filter it, as follows in the ne
 
 .. note::
     It is also possible to declare a counter of the processed lines by setting ``count=True``.
-    Moreover, as for an Executor object, you can specify a single return column using the column argument; former. ``column='surname'``.
+    Moreover, as for an Executor object, you can specify a single return ``column`` using the column argument; ex. ``column='surname'``.
+
+Execute Report
+--------------
+
+Once a *Report* object has been instantiated, you can execute the filters and editing functions (map) set during the creation of the object.
+
+.. code-block:: python
+
+    # Apply filters and map function
+    salary55k.exec()
+
+    # Print result
+    print(salary55k)
+
+    # Adding count after creation
+    salary55k.count = True
+    salary55k.exec()
+    print(salary55k)
+
+.. warning::
+    Once a filter or map function is applied, it will not be possible to go back.
+    If you want to change filters after call the ``exec`` method, you need to re-instantiate the object.
+
