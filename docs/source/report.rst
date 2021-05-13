@@ -160,3 +160,20 @@ The main advantage is the ability to iterate over each *Report* and access its p
 .. note::
     The ReportBook object supports the ``title`` property, as follows: ``pyreports.ReportBook(title='My report book')``
 
+Export reports
+--------------
+
+The *ReportBook* object has an ``export`` method.
+This method not only saves *Report* objects to its output, but first executes the ``exec`` method of each *Report* object it contains.
+
+.. warning::
+    As for *Report* objects, even a *ReportBook* object once the export method has been called,
+    it will need to be instantiated again if you want to reset the data to the source, before applying the filters and map functions.
+
+.. code-block:: python
+
+    # Export a ReportBook
+    salary.export()         # This run exec() and export() on each Report object
+
+    # Export each Report on one file Excel (xlsx)
+    salary.export('/tmp/salary_report.xlsx')
