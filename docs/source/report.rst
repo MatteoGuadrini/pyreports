@@ -97,17 +97,38 @@ Once a *Report* object has been instantiated, you can execute the filters and ed
 .. code-block:: python
 
     # Apply filters and map function
-    salary55k.exec()
+    report_only_55k.exec()
 
     # Print result
-    print(salary55k)
+    print(report_only_55k)
 
     # Adding count after creation
-    salary55k.count = True
-    salary55k.exec()
-    print(salary55k)
+    report_only_55k.count = True
+    report_only_55k.exec()
+    print(report_only_55k)
 
 .. warning::
     Once a filter or map function is applied, it will not be possible to go back.
     If you want to change filters after call the ``exec`` method, you need to re-instantiate the object.
+
+Export
+------
+
+Once the ``exec`` method is called, and then once the data is processed, we can export the data based on the output set when instantiating the object.
+
+.. note::
+    If the output has not been specified, calling the export method will print the data to stdout.
+
+.. code-block:: python
+
+    # Save report on /tmp/salary55k.csv
+    report_only_55k.export()
+
+    # Unset output
+    report_only_55k.output = None
+    report_only_55k.export()            # This print the data on stdout
+
+    # Set output
+    report_only_55k.output = salary55k
+    report_only_55k.export()            # Save report on /tmp/salary55k.csv
 

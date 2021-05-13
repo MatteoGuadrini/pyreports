@@ -230,7 +230,7 @@ class Report:
         self.map = map_func
         self.column = column
         self.count = bool(count)
-        if isinstance(output, FileManager):
+        if isinstance(output, FileManager) or output is None:
             self.output = output
         else:
             raise ReportManagerError('Only FileManager object is allowed for output')

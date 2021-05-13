@@ -104,6 +104,10 @@ class TestReport(unittest.TestCase):
     def test_report_object(self):
         self.assertIsInstance(self.report, pyreports.Report)
 
+    def test_no_output_report_object(self):
+        new_report = pyreports.Report(input_data=self.input_data)
+        self.assertIsInstance(new_report, pyreports.Report)
+
     def test_exec(self):
         self.report.exec()
         self.assertEqual(self.report.report[0], ('Arthur', 'Dent', '42'))
