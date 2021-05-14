@@ -61,3 +61,20 @@ The **percentage** function will calculate the percentage based on a filter (Any
 
     # Calculate percentage
     print(pyreports.percentage(mydata, 65000))  # 66.66666666666666 (percent)
+
+Counter
+-------
+
+The **counter** function will return a `Counter <https://docs.python.org/3/library/collections.html#collections.Counter>`_ object, with inside it the count of each element of a specific column.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a dataset
+    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    mydata.append(('Ford', 'Prefect', 65000))
+
+    # Create Counter object
+    print(pyreports.counter(mydata, 'name'))  # Counter({'Arthur': 1, 'Ford': 2})
+
