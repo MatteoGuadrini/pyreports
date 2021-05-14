@@ -78,3 +78,24 @@ The **counter** function will return a `Counter <https://docs.python.org/3/libra
     # Create Counter object
     print(pyreports.counter(mydata, 'name'))  # Counter({'Arthur': 1, 'Ford': 2})
 
+Aggregate
+---------
+
+The **aggregate** function aggregates multiple columns of some *Dataset* into a single *Dataset*.
+
+.. warning::
+    The number of elements in the columns must be the same. If you want to aggregate columns with a different number of elements,
+    you need to specify the argument ``fill_empty=True``. Otherwise, an ``InvalidDimension`` exception will be raised.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    employee = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    places = tablib.Dataset([('London', 'Green palace', 1), ('Helsinky', 'Red palace', 2)], headers=['city', 'place', 'floor'])
+
+    # Aggregate column for create a new Dataset
+    new_data = pyreports.aggregate(employee['name'], employee['surname'], employee['salary'], places['city'], places['place']))
+    print(new_data.headers)     # ['name', 'surname', 'salary', 'city', 'place']
+
