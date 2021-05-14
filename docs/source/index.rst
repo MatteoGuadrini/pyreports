@@ -47,8 +47,10 @@ Features
    managers
    executors
    report
+   datatools
    example
    package
+
 
 Indices and tables
 ==================
