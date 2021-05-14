@@ -45,3 +45,19 @@ The **most_common** function will return the value of a specific column that is 
 
     # Get most common
     print(pyreports.most_common(mydata, 'name'))  # Ford
+
+Percentage
+----------
+
+The **percentage** function will calculate the percentage based on a filter (Any) on the whole *Dataset*.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a dataset
+    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    mydata.append(('Ford', 'Prefect', 65000))
+
+    # Calculate percentage
+    print(pyreports.percentage(mydata, 65000))  # 66.66666666666666 (percent)
