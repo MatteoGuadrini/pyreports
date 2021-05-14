@@ -115,7 +115,26 @@ The **merge** function combines multiple *Dataset* objects into one.
     employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
     employee2 = tablib.Dataset([('Tricia', 'McMillian', 55000), ('Zaphod', 'Beeblebrox', 65000)], headers=['name', 'surname', 'salary'])
 
-    # Aggregate column for create a new Dataset
+    # Merge two Dataset object into only one
     employee = pyreports.merge(employee1, employee2)
     print(len(employee))     # 4
 
+Chunks
+------
+
+The **chunks** function divides a *Dataset* into pieces from *N* (``int``). This function returns a generator object.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    mydata.append(*[('Tricia', 'McMillian', 55000), ('Zaphod', 'Beeblebrox', 65000)])
+
+    # Divide data into 2 chunks
+    new_data = pyreports.chunks(mydata, 2)      # Generator object
+    print(list(new_data))     # [[('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], [('Tricia', 'McMillian', 55000), ('Zaphod', 'Beeblebrox', 65000)]]
+
+.. note::
+    If the division does not result zero, the last tuple of elements will be a smaller number.
