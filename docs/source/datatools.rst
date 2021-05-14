@@ -99,3 +99,23 @@ The **aggregate** function aggregates multiple columns of some *Dataset* into a 
     new_data = pyreports.aggregate(employee['name'], employee['surname'], employee['salary'], places['city'], places['place']))
     print(new_data.headers)     # ['name', 'surname', 'salary', 'city', 'place']
 
+Merge
+-----
+
+The **merge** function combines multiple *Dataset* objects into one.
+
+.. warning::
+    The datasets must have the same number of columns otherwise an ``InvalidDimension`` exception will be raised.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    employee2 = tablib.Dataset([('Tricia', 'McMillian', 55000), ('Zaphod', 'Beeblebrox', 65000)], headers=['name', 'surname', 'salary'])
+
+    # Aggregate column for create a new Dataset
+    employee = pyreports.merge(employee1, employee2)
+    print(len(employee))     # 4
+
