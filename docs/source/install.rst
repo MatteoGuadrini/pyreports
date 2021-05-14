@@ -29,6 +29,3 @@ Installation
 .. code-block:: console
 
     $ pip install --user pyreports
-
-.. note::
-    If you want to use the command line tool, you need to install the system-wide library: ``pip install pyreports``

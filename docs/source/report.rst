@@ -61,6 +61,9 @@ This object enables a series of features for data processing.
 The example above, creates a *Report* object that filters input data only for employees with a salary of 55k.
 But we can also edit the data on-demand and then filter it, as follows in the next example.
 
+.. note::
+    You can also pass a function to the ``filters`` argument, as for an *Executor* object.
+
 .. code-block:: python
 
     import pyreports
