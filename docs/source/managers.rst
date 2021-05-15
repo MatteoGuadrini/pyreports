@@ -82,7 +82,7 @@ DatabaseManager
       ('Aston Martin', 78324),
       ('Ferrari', 129782),
     ]
-    mysql_db.executemany("INSERT INTO cars(name, price) VALUES(%s, %S)", new_cars)
+    mysql_db.executemany("INSERT INTO cars(name, price) VALUES(%s, %s)", new_cars)
     # Commit changes
     mysql_db.commit()
     # Query: SELECT

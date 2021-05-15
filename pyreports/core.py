@@ -42,7 +42,10 @@ class Executor:
         :param data: everything type of data
         :param header: list header of data
         """
-        self.data = tablib.Dataset(*data, headers=header) if not isinstance(data, tablib.Dataset) else data
+        self.data = tablib.Dataset(*data) if not isinstance(data, tablib.Dataset) else data
+        # Set header
+        if header or header is None:
+            self.headers(header)
         self.origin = tablib.Dataset()
         self.origin.extend(self.data)
 
@@ -101,7 +104,7 @@ class Executor:
             flist = []
         ret_data = tablib.Dataset(headers=self.data.headers)
         # Filter data through filter list
-        for row in self.data:
+        for row in self:
             for f in flist:
                 if f in row:
                     ret_data.append(row)
@@ -126,7 +129,7 @@ class Executor:
         :return: None
         """
         ret_data = tablib.Dataset(headers=self.data.headers)
-        for row in self.data:
+        for row in self:
             # Apply function to data
             if key and callable(key):
                 new_row = list()
@@ -177,7 +180,7 @@ class Executor:
         """
         return len(self.data)
 
-    def count_column(self):
+    def count_columns(self):
         """
         Count all column
 
@@ -204,7 +207,7 @@ class Report:
                  map_func=None,
                  column=None,
                  count=False,
-                 output=None):
+                 output: FileManager = None):
         """
         Create Report object
 
@@ -227,7 +230,7 @@ class Report:
         self.map = map_func
         self.column = column
         self.count = bool(count)
-        if isinstance(output, FileManager):
+        if isinstance(output, FileManager) or output is None:
             self.output = output
         else:
             raise ReportManagerError('Only FileManager object is allowed for output')
@@ -280,13 +283,13 @@ class Report:
 
         :return: if count is True, return row count
         """
-        if 'Manager' in self.output.__class__.__name__ or self.output is None:
+        if isinstance(self.output, FileManager) or self.output is None:
             if self.output:
                 self.output.write(self.report)
             else:
                 print(self)
         else:
-            raise ReportManagerError('the output object is not Manager or NoneType object')
+            raise ReportManagerError('the output object must be FileManager or NoneType object')
 
 
 class ReportBook:
@@ -381,6 +384,5 @@ class ReportBook:
             for report in self:
                 report.exec()
                 report.export()
-
 
 # endregion

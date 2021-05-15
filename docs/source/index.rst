@@ -12,6 +12,24 @@ text files, ldap, etc. and perform processing, filters, counters, etc. and then 
 You can use this library for complex reports, or to simply filter data into datasets divided by topic. Furthermore,
 it is possible to export in various formats, such as csv, excel files or write directly to the database (*mysql*, *mssql*, *postgresql* and more).
 
+.. _workflow:
+
+Report workflow
+***************
+
+This package provides tools for receiving, processing and exporting data. Mostly, it follows this workflow.
+
+.. code-block::
+
+   +-----------------+      +-----------------+      +-----------------+
+   |                 |      |                 |      |                 |
+   |                 |      |                 |      |                 |
+   |      INPUT      +----->|     PROCESS     +----->|      OUTPUT     |
+   |                 |      |                 |      |                 |
+   |                 |      |                 |      |                 |
+   +-----------------+      +-----------------+      +-----------------+
+
+
 Features
 ********
 
@@ -27,8 +45,12 @@ Features
 
    install
    managers
+   executors
+   report
+   datatools
    example
    package
+
 
 Indices and tables
 ==================
