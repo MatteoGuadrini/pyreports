@@ -62,7 +62,7 @@ In this example I have a json file as input, received from a web server, I proce
 
     # INPUT
 
-    # Return json from GET  request on web server: this is a FileManager object
+    # Return json from GET request on web server: this is a FileManager object
     web_server_result = pyreports.manager('json', '/home/report/users.json')
     # Get data
     users = web_server_result.read()                            # return Dataset object
@@ -85,3 +85,35 @@ In this example I have a json file as input, received from a web server, I proce
     mydb.executemany("INSERT INTO external_users(name, surname, employeeType) VALUES(%s, %s, %s)", list(user_ext))
     mydb.commit()
 
+
+Combine inputs
+--------------
+
+In this example, we will take two different inputs, and combine them to export an excel file containing the data processing of the two sources.
+
+.. code-block:: python
+
+    import pyreports
+
+    # INPUT
+
+    # Config Unix application file: this is a FileManager object
+    config_file = pyreports.manager('yaml', '/home/myapp.yml')
+    # Console admin: this is a DatabaseManager object
+    mydb = pyreports.manager('mssql', host='mssql1.local', database='admins', username='sa', password='sa0000')
+    # Get data
+    admin_app = config_file.read()                  # return Dataset object: three column (name, shell, login)
+    mydb.execute('SELECT * FROM console_admins')
+    admins = mydb.fetchall()                        # return Dataset object: three column (name, shell, login)
+
+    # PROCESS
+
+    # Filter data
+    all_console_admins = pyreports.Executor(admins) # accept Dataset object
+    all_console_admins.filter(config_file['shell']) # filter by shells
+
+    # OUTPUT
+
+    # Save report: this is a FileManager object
+    output = pyreports.manager('xlsx', '/home/report/all_admins.xlsx')
+    output.write(all_console_admins.get_data())
