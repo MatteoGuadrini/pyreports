@@ -279,10 +279,13 @@ class Report:
 
     def export(self):
         """
-        Save data on output
+        Process and save data on output
 
         :return: if count is True, return row count
         """
+        # Process data before export
+        self.exec()
+        # Verify if output is FileManager object
         if isinstance(self.output, FileManager) or self.output is None:
             if self.output:
                 self.output.write(self.report)
