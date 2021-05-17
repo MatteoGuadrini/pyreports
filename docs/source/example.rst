@@ -203,3 +203,45 @@ In the last sheet, there will be an element counter for every single error prese
     all_apache_error.export('/home/report/apache_log_error_code.xlsx')
 
 We now have a script that parses and breaks an apache httpd log file by error code.
+
+Report e-commerce data
+----------------------
+
+In this example, we combine data from different e-commerce databases.
+In addition, we will create two reports: one for the sales, the other for the warehouse.
+Then once saved, we will create an additional report that combines both of the previous ones.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Get data from database: a DatabaseManager object
+    sales = pyreports.manager('postgresql', host='pssql1.local', database='sales', username='reader_sales', password='pwd0000')
+    warehouse = pyreports.manager('postgresql', host='pssql1.local', database='warehouse', username='reader_wh', password='pwd0000')
+
+    # filters
+    household = ['plates', 'glass', 'fork']
+    clothes = ['shorts', 'tshirt', 'socks']
+
+    # Create sales Report objects
+    sales_by_household= pyreports.Report(sales.fetchall(), filter=household, title='household sold items')
+    sales_by_clothes = pyreports.Report(sales.fetchall(), filter=clothes, title='clothes sold items')
+
+    # Create warehouse Report objects
+    warehouse_by_household= pyreports.Report(warehouse.fetchall(), filter=household, title='household items in warehouse')
+    warehouse_by_clothes = pyreports.Report(warehouse.fetchall(), filter=clothes, title='clothes items in warehouse')
+
+    # Create a ReportBook objects
+    sales_book = pyreports.ReportBook([sales_by_household, sales_by_clothes], filter='Total sold')
+    warehouse_book = pyreports.ReportBook([warehouse_by_household, warehouse_by_clothes], filter='Total remained')
+
+    # Save reports
+    sales_book.export('/home/report/sales.xlsx')
+    warehouse_book.export('/home/report/warehouse.xlsx')
+
+    # Other report: combine two book
+    all = sales_book + warehouse_book
+    all.export('/home/report/all.xlsx')
+
+    # Now print to stdout all data
+    all.export()
