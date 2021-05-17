@@ -150,3 +150,56 @@ In this example, we use a Report type object to create and filter the data throu
     print(one_office.count)     # Row count
 
 
+Advanced usage
+**************
+
+From here on, the examples will be a bit more complex; we will process the data in order to modify it, filter it,
+combine it and merge it before exporting or parsing it in another object.
+
+Report apache log
+-----------------
+
+In this example we will analyze and capture parts of a web server log. For each error code present in the log, we will
+create a report that will be inserted in a book, where each sheet will contain the details of the error code.
+In the last sheet, there will be an element counter for every single error present in the report.
+
+.. code-block:: python
+
+    import pyreports
+    import tablib
+    import re
+
+    # Get apache log data: this is a FileManager object
+    apache_log = pyreports.manager('file', '/var/log/httpd/error.log').read()
+    # apache log format: regex
+    regex = '([(\d\.)]+) - - \[(.*?)\] "(.*?)" (\d+) - "(.*?)" "(.*?)"'
+
+    # Function than receive Dataset and return a new Dataset
+    def format_dataset_log(data_input):
+        data = tablib.Dataset(headers=['ip', 'date', 'operation', 'code', 'client'])
+        for row in data_input:
+            log_parts = re.match(regex, row[0]).groups()
+            new_row = list(log_parts[:4])
+            new_row.append(log_parts[5])
+            data.append(new_row)
+        return data
+
+    # Create a collection of Report objects
+    all_apache_error = pyreports.ReportBook(title='Apache error on my site')
+
+    # Create a Report object based on error code
+    apache_error_log = format_dataset_log(apache_log)
+    all_error = set(apache_error_log['code'])
+    for code in all_error:
+        all_apache_error.add(pyreports.Report(apache_error_log, filters=[code], title=f'Error {code}'))
+
+    # Count all error code
+    counter = pyreports.counter(apache_error_log, 'code')
+    # Append new Report on ReportBook with error code counters
+    error_counter = tablib.Dataset(counter.values(), headers=counter)
+    all_apache_error.add(pyreports.Report(error_counter))
+
+    # Save ReportBook on Excel
+    all_apache_error.export('/home/report/apache_log_error_code.xlsx')
+
+We now have a script that parses and breaks an apache httpd log file by error code.
