@@ -117,3 +117,36 @@ In this example, we will take two different inputs, and combine them to export a
     # Save report: this is a FileManager object
     output = pyreports.manager('xlsx', '/home/report/all_admins.xlsx')
     output.write(all_console_admins.get_data())
+
+Simple report
+-------------
+
+In this example, we use a Report type object to create and filter the data through a function and save it in a csv file, printing the number of lines in total.
+
+.. code-block:: python
+
+    import pyreports
+
+    OFFICE_FILTER = 'Customer'
+
+    # Function: filter by office
+    def filter_by_office(value):
+        if value == OFFICE_FILTER:
+            return True
+
+    # Connect to database
+    mydb = pyreports.manager('postgresql', host='pssql1.local', database='employees', username='admin', password='pwd0000')
+    all_employees = mydb.fetchall()
+    # Output to csv
+    output = pyreports.manager('csv', f'/home/report/office_{OFFICE_FILTER}.csv')
+    # All customer employees: Report object
+    one_office = pyreports.Report(all_employees,
+                                 filters=filter_by_office,
+                                 title=f'All employees in {OFFICE_FILTER}',
+                                 count=True,
+                                 output=output)
+    # Run and save report
+    one_office.export()
+    print(one_office.count)     # Row count
+
+
