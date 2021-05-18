@@ -286,3 +286,27 @@ Now we can read the db directly from the command line.
 
     $ python performance.py
     $ python performance.py | grep -G "12.*"
+
+.. note::
+    The examples we can give are almost endless. This library has such flexible python objects that we can adapt them to any use case.
+    You can also use it as a simple database data reader.
+
+Use cases
+*********
+
+As you may have noticed, there are many use cases for this library. The ``manager`` objects are so flexible that you
+can read and write data from any source.
+Furthermore, thanks to the ``Executor`` objects you can filter and modify the data on-demand when you want and restore
+it at a later time, and then channel it into the ``Report`` objects and then into the ``ReportBook`` collection objects.
+
+Below, I'll list other use cases common to both package users and developers:
+
+- Export LDAP users and insert them into a database
+- Read a log file and write it into a database
+- Find out which LDAP users are present in a web server log file
+- Backup configuration files by exporting them in yaml format (passwd, httpd.conf, etc)
+- Calculate access rates of a database
+- Count how many times an ip address is present in a log file
+
+I could go on indefinitely; anything you can think of about a file, a database and an LDAP server and you need to
+manipulate or verify the data, this is the library for you.
