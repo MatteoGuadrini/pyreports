@@ -135,7 +135,8 @@ In this example, we use a Report type object to create and filter the data throu
             return True
 
     # Connect to database
-    mydb = pyreports.manager('postgresql', host='pssql1.local', database='employees', username='admin', password='pwd0000')
+    mydb = pyreports.manager('postgresql', host='pssql1.local', database='users', username='admin', password='pwd0000')
+    mydb.execute('SELECT * FROM employees')
     all_employees = mydb.fetchall()
     # Output to csv
     output = pyreports.manager('csv', f'/home/report/office_{OFFICE_FILTER}.csv')
@@ -216,20 +217,23 @@ Then once saved, we will create an additional report that combines both of the p
     import pyreports
 
     # Get data from database: a DatabaseManager object
-    sales = pyreports.manager('postgresql', host='pssql1.local', database='sales', username='reader_sales', password='pwd0000')
-    warehouse = pyreports.manager('postgresql', host='pssql1.local', database='warehouse', username='reader_wh', password='pwd0000')
+    mydb = pyreports.manager('postgresql', host='pssql1.local', database='ecommerce', username='reader', password='pwd0000')
+    mydb.execute('SELECT * FROM sales')
+    sales = mydb.fetchall()
+    mydb.execute('SELECT * FROM warehouse')
+    warehouse = mydb.fetchall()
 
     # filters
     household = ['plates', 'glass', 'fork']
     clothes = ['shorts', 'tshirt', 'socks']
 
     # Create sales Report objects
-    sales_by_household= pyreports.Report(sales.fetchall(), filter=household, title='household sold items')
-    sales_by_clothes = pyreports.Report(sales.fetchall(), filter=clothes, title='clothes sold items')
+    sales_by_household= pyreports.Report(sales, filter=household, title='household sold items')
+    sales_by_clothes = pyreports.Report(sales, filter=clothes, title='clothes sold items')
 
     # Create warehouse Report objects
-    warehouse_by_household= pyreports.Report(warehouse.fetchall(), filter=household, title='household items in warehouse')
-    warehouse_by_clothes = pyreports.Report(warehouse.fetchall(), filter=clothes, title='clothes items in warehouse')
+    warehouse_by_household= pyreports.Report(warehouse, filter=household, title='household items in warehouse')
+    warehouse_by_clothes = pyreports.Report(warehouse, filter=clothes, title='clothes items in warehouse')
 
     # Create a ReportBook objects
     sales_book = pyreports.ReportBook([sales_by_household, sales_by_clothes], filter='Total sold')
@@ -245,3 +249,40 @@ Then once saved, we will create an additional report that combines both of the p
 
     # Now print to stdout all data
     all.export()
+
+Command line report
+-------------------
+
+In this example, we're going to create a script that doesn't save any files. We will read from a database, modify the data
+so that it is more readable and print it in standard output. We will also see how to use our script with other command line tools.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Get data from database: a DatabaseManager object
+    mydb = pyreports.manager('sqllite', database='/var/myapp/myapp.db')
+    mydb.execute('SELECT * FROM performance')
+    performance = mydb.fetchall()
+
+    # Transform data for command line reader
+    cmd = pyreports.Executor(performance)
+
+    def number_to_second(seconds):
+        if isinstance(seconds, int):
+            ret = float(int)
+            return f'{ret:.2f} s'
+        else:
+            return seconds
+
+    cmd.map(number_to_second)
+
+    # Print data
+    print(cmd.get_data())
+
+Now we can read the db directly from the command line.
+
+.. code-block:: console
+
+    $ python performance.py
+    $ python performance.py | grep -G "12.*"
