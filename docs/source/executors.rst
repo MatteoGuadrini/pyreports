@@ -6,8 +6,7 @@ This type of object is the first core object we will see and the basis for all t
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+
 
 
 

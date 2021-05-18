@@ -11,8 +11,7 @@ This will follow the workflows of each *Report* it contains, except for the outp
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+
 
 
 

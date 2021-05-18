@@ -5,8 +5,7 @@ The manager objects are responsible for managing inputs or outputs. We can have 
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+
 
 
 

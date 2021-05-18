@@ -4,8 +4,7 @@ pyreports example
 Example scripts using ``pyreports`` module.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+
 
 
 

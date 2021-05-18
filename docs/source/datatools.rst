@@ -6,8 +6,7 @@ In this section we will see all these functions contained in the **datatools** m
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+
 
 
 
