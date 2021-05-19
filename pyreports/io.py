@@ -498,7 +498,7 @@ def create_database_manager(dbtype, host=None, port=None, database=None, usernam
     :param password: password of username of database connection
     :return: DatabaseManager
     """
-    # Create connection
+    # Create DatabaseManager object
     connection = DBTYPE[dbtype](host=host, port=port, database=database, username=username, password=password)
     return DatabaseManager(connection=connection)
 
@@ -511,6 +511,7 @@ def create_file_manager(filetype, filename):
     :param filename: path of file
     :return: FileManager
     """
+    # Create FileManager object
     file = FILETYPE[filetype](filename=filename)
     return FileManager(file=file)
 
@@ -525,6 +526,7 @@ def create_ldap_manager(server, username, password, ssl=False, tls=True):
     :param ssl: disable or enable SSL. Default is False.
     :param tls: disable or enable TLS. Default is True.
     """
+    # Create LdapManager object
     return LdapManager(server, username, password, ssl=ssl, tls=tls)
 
 
@@ -535,7 +537,7 @@ def manager(datatype, *args, **kwargs):
     :param datatype: type of manager
     :param args: various positional arguments
     :param kwargs: various keyword arguments
-    :return:
+    :return: Manager object
     """
     # Choose manager type
     if datatype in DBTYPE:

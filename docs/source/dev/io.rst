@@ -24,27 +24,17 @@ respectively.
     Each argument to the ``__init__`` method defaults to ``None`` and saves the value in the instance.
 
 
-
-.. autoclass:: pyreports.io.Connection
-    :members:
-
-
+.. literalinclude:: ../../../pyreports/io.py
+    :language: python
+    :pyobject: Connection
 
 
 Example ``Connection`` based class:
 
-.. code-block:: python
 
-    class SQLliteConnection(Connection):
-        """Connection sqlite class"""
-
-        def connect(self):
-            self.connection = sqlite3.connect(database=self.database)
-            self.cursor = self.connection.cursor()
-
-        def close(self):
-            self.connection.close()
-            self.cursor.close()
+.. literalinclude:: ../../../pyreports/io.py
+    :language: python
+    :pyobject: SQLliteConnection
 
 File
 ****
@@ -63,31 +53,9 @@ It contains only the ``file`` attribute, where the path of the file is saved dur
 
 Example ``File`` based class:
 
-.. code-block:: python
-
-    class CsvFile(File):
-    """CSV file class"""
-
-    def write(self, data):
-        """
-        Write data on csv file
-
-        :param data: data to write on csv file
-        :return: None
-        """
-        if not isinstance(data, tablib.Dataset):
-            data = tablib.Dataset(data)
-        with open(self.file, mode='w') as file:
-            file.write(data.export('csv'))
-
-    def read(self, **kwargs):
-        """
-        Read csv format
-
-        :return: Dataset object
-        """
-        with open(self.file) as file:
-            return tablib.Dataset().load(file, **kwargs)
+.. literalinclude:: ../../../pyreports/io.py
+    :language: python
+    :pyobject: CsvFile
 
 Alias
 *****
@@ -98,4 +66,35 @@ If you have created a new ``Connection`` class, you will need to enter your alia
 enter it in the ``FILETYPE`` *dict*. Here is an example: ``'ods': ODSFile``
 
 
+
+Manager
+*******
+
+Managers are classes that represent an input and output manager. For example, the ``DatabaseManager`` class accepts a
+``Connection`` object and implements methods on these types of objects representing database connections.
+
+
+
+.. autoclass:: pyreports.io.DatabaseManager
+    :members:
+
+
+Manager function
+----------------
+
+Each ``*Manager`` class has associated a function of type ``create_<type of manager>_manager(*args, **kwargs)``.
+This function will then be used by the ``manager`` function to create the corresponding ``*Manager`` object based on its alias.
+
+For example, the ``DatabaseManager`` class has associated the ``create_database_manager`` function which will be called by the
+``manager`` function to create the object based on the type of alias passed.
+
+
+
+.. autofunction:: pyreports.io.manager
+
+
+
+.. literalinclude:: ../../../pyreports/io.py
+    :language: python
+    :pyobject: create_database_manager
 
