@@ -98,3 +98,28 @@ For example, the ``DatabaseManager`` class has associated the ``create_database_
     :language: python
     :pyobject: create_database_manager
 
+Example
+*******
+
+Here we will see how to create your own ``*Connection`` class to access a specific database.
+
+.. code-block:: python
+
+    import pyreports
+    import ibm_db
+
+    # class for connect DB2 database
+    class DB2Connection(pyreports.io.Connection):
+
+        def connect(self):
+            self.connection = ibm_db.connect(self.database, self.username, self.password)
+            self.cursor = self.connection
+
+        def close(self):
+            self.connection.close()
+
+    # Create an alias for DB2Connection object
+    pyreports.io.DBTYPE['db2'] = DB2Connection
+
+    # Create my DatabaseManager object
+    mydb2 = pyreports.manager(database="database", username="username", password="password")
