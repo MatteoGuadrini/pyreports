@@ -23,8 +23,12 @@ respectively.
 .. note::
     Each argument to the ``__init__`` method defaults to ``None`` and saves the value in the instance.
 
+
+
 .. autoclass:: pyreports.io.Connection
-    :noindex:
+    :members:
+
+
 
 Example ``Connection`` based class:
 
@@ -40,3 +44,43 @@ Example ``Connection`` based class:
         def close(self):
             self.connection.close()
             self.cursor.close()
+
+File
+****
+
+The ``File`` is the class that the other ``*File`` classes are based on.
+It contains only the ``file`` attribute, where the path of the file is saved during the creation of the object and two methods:
+``read`` to read the contents of the file (must return a Dataset object) and write (accept a Dataset) and writes to the destination file.
+
+
+.. autoclass:: pyreports.io.File
+    :members:
+
+
+Example ``File`` based class:
+
+.. code-block:: python
+
+    class CsvFile(File):
+    """CSV file class"""
+
+    def write(self, data):
+        """
+        Write data on csv file
+
+        :param data: data to write on csv file
+        :return: None
+        """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
+        with open(self.file, mode='w') as file:
+            file.write(data.export('csv'))
+
+    def read(self, **kwargs):
+        """
+        Read csv format
+
+        :return: Dataset object
+        """
+        with open(self.file) as file:
+            return tablib.Dataset().load(file, **kwargs)
