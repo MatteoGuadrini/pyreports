@@ -30,6 +30,7 @@ respectively.
 
 
 
+
 Example ``Connection`` based class:
 
 .. code-block:: python
@@ -53,8 +54,11 @@ It contains only the ``file`` attribute, where the path of the file is saved dur
 ``read`` to read the contents of the file (must return a Dataset object) and write (accept a Dataset) and writes to the destination file.
 
 
+
 .. autoclass:: pyreports.io.File
     :members:
+
+
 
 
 Example ``File`` based class:
@@ -84,3 +88,14 @@ Example ``File`` based class:
         """
         with open(self.file) as file:
             return tablib.Dataset().load(file, **kwargs)
+
+Alias
+*****
+
+When creating a ``Connection`` or ``File`` class, if you want to use the ``manager`` function to create the returning ``*Manager`` object,
+you need to create an alias. There are two dicts in the ``io`` module, which represent the aliases of these objects.
+If you have created a new ``Connection`` class, you will need to enter your alias in the ``DBTYPE`` *dict* while for File-type classes,
+enter it in the ``FILETYPE`` *dict*. Here is an example: ``'ods': ODSFile``
+
+
+
