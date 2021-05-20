@@ -53,3 +53,23 @@ There may be a need to apply the function on the entire row. Personalization cou
 
     exec.map(stringify)
 
+Add method
+----------
+
+You can also add new functionality to the ``Executor`` object. We are going to add a method to view the data content of an ``Executor``.
+
+
+.. code-block:: python
+
+    import pyreports
+
+    # Define my Executor class
+    class MyExecutor(pyreports.Executor):
+
+        def __str__(self):
+            return self.data
+
+
+    # Print data
+    exec = MyExecutor([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], header=['name', 'surname', 'salary'])
+    print(exec)
