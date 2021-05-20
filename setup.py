@@ -1,5 +1,6 @@
 from setuptools import setup
-from pyreports import __version__
+
+__version__ = '0.0.9'
 
 with open("README.md") as fh:
     long_description = fh.read()

@@ -22,9 +22,13 @@
 
 """Build complex pyreports from/to various formats."""
 
+from pkg_resources import get_distribution, DistributionNotFound
 from .io import manager
 from .core import Executor, Report, ReportBook
 from .exception import ReportDataError, ReportManagerError
 from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge
 
-__version__ = '0.0.9'
+try:
+    __version__ = get_distribution('pyreports').version
+except DistributionNotFound:
+    __version__ = 'version not found'

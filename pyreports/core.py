@@ -387,7 +387,6 @@ class ReportBook:
                 f.write(book.export('xlsx'))
         else:
             for report in self:
-                report.exec()
                 report.export()
 
 # endregion
