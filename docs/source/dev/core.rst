@@ -73,3 +73,44 @@ You can also add new functionality to the ``Executor`` object. We are going to a
     # Print data
     exec = MyExecutor([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], header=['name', 'surname', 'salary'])
     print(exec)
+
+Expand Report
+*************
+
+The ``Report`` object is really versatile. It is a representation of the report's workflow in full. However, there may be greater needs.
+For example, before saving the output, make a certain request or save the output before and after processing.
+
+To "break" the working process of the *Report* object, you need to expand it and re-implement its methods.
+
+Save the origin
+---------------
+
+As anticipated, sometimes we need to save the data before it is processed.
+To do this, we need to implement a new method to augment or modify the workflow.
+In this way, we are going to run this worklow:
+``[INPUT] -> [SAVE ORIGIN] -> [PROCESS] -> [OUTPUT]``
+
+.. code-block:: python
+
+    import pyreports
+    import tablib
+    import os
+
+    # Define my Executor class
+    class MyReport(pyreports.Report):
+
+        def save_origin(self):
+            # Save origin in origin file
+            if self.output:
+                self.output.write(self.data)
+                os.rename(self.output.file, 'origin_' + self.output.file)
+            # Process report
+            self.export()
+
+    # Test MyReport
+    salary55k = pyreports.manager('csv', '/tmp/salary55k.csv')
+    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    report_only_55k = MyReport(mydata, filters=[55000], title='Report salary 55k', output=salary55k)
+
+    # My workflow report: [INPUT] -> [SAVE ORIGIN] -> [PROCESS] -> [OUTPUT]
+    report_only_55k.save_origin()

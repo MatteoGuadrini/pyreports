@@ -1,4 +1,4 @@
-Data Tools
+Data tools
 ##########
 
 The package comes with utility functions to work directly with *Datasets*.
