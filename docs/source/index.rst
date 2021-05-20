@@ -56,6 +56,7 @@ Features
    :caption: API:
 
    dev/io
+   dev/core
 
 
 Indices and tables
