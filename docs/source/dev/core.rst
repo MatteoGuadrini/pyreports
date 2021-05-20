@@ -114,3 +114,33 @@ In this way, we are going to run this worklow:
 
     # My workflow report: [INPUT] -> [SAVE ORIGIN] -> [PROCESS] -> [OUTPUT]
     report_only_55k.save_origin()
+
+
+Always print
+------------
+
+Another highly requested feature is to save and print at the same time. Much like the Unix ``tee`` shell command,
+we will implement the new functionality in our custom *Report* object.
+
+.. code-block:: python
+
+    import pyreports
+    import tablib
+    import os
+
+    # Define my Executor class
+    class MyReport(pyreports.Report):
+
+        def tee(self):
+            # Print data...
+            print(self)
+            # ...and save!
+            self.export()
+
+    # Test MyReport
+    salary55k = pyreports.manager('csv', '/tmp/salary55k.csv')
+    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    report_only_55k = MyReport(mydata, filters=[55000], title='Report salary 55k', output=salary55k)
+
+    # Print and export
+    report_only_55k.tee()
