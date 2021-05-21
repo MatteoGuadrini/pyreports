@@ -39,15 +39,12 @@ from abc import ABC, abstractmethod
 class Connection(ABC):
     """Connection base class"""
 
-    def __init__(self, host=None, port=None, database=None, username=None, password=None):
+    def __init__(self, *args, **kwargs):
         """Connection base object"""
         self.connection = None
-        self.host = host
-        self.port = port
-        self.database = database
-        self.username = username
-        self.password = password
         self.cursor = None
+        self.args = args
+        self.kwargs = kwargs
 
     @abstractmethod
     def connect(self):
@@ -198,7 +195,7 @@ class SQLliteConnection(Connection):
     """Connection sqlite class"""
 
     def connect(self):
-        self.connection = sqlite3.connect(database=self.database)
+        self.connection = sqlite3.connect(*self.args, **self.kwargs)
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -210,7 +207,7 @@ class MSSQLConnection(Connection):
     """Connection microsoft sql class"""
 
     def connect(self):
-        self.connection = pymssql.connect(self.host, self.username, self.password, self.database, port=self.port)
+        self.connection = pymssql.connect(*self.args, **self.kwargs)
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -222,7 +219,7 @@ class MySQLConnection(Connection):
     """Connection mysql class"""
 
     def connect(self):
-        self.connection = mdb.connect(self.host, self.username, self.password, self.database, port=self.port)
+        self.connection = mdb.connect(*self.args, **self.kwargs)
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -234,13 +231,7 @@ class PostgreSQLConnection(Connection):
     """Connection postgresql class"""
 
     def connect(self):
-        self.connection = psycopg2.connect(
-            self.host,
-            self.username,
-            self.password,
-            database=self.database,
-            port=self.port
-        )
+        self.connection = psycopg2.connect(*self.args, **self.kwargs)
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -320,7 +311,8 @@ class DatabaseManager:
         """
         header = [field[0] for field in self.description]
         self.data = tablib.Dataset(headers=header)
-        self.data.append(list(data) for data in self.connector.cursor.fetchall())
+        for row in self.connector.cursor.fetchall():
+            self.data.append(list(row))
         return self.data
 
     def fetchone(self):
@@ -342,7 +334,8 @@ class DatabaseManager:
         """
         header = [field[0] for field in self.description]
         self.data = tablib.Dataset(headers=header)
-        self.data.append(list(data) for data in self.connector.cursor.fetchmany(size))
+        for row in self.connector.cursor.fetchmany(size):
+            self.data.append(list(row))
         return self.data
 
     def callproc(self, proc_name, params=None):
@@ -351,9 +344,13 @@ class DatabaseManager:
 
         :param proc_name: name of store procedure
         :param params: sequence of parameters must contain one entry for each argument that the procedure expects
-        :return: sequence of parameters with modified output and input/output parameters
+        :return: Dataset object
         """
-        return self.connector.cursor.callproc(proc_name, params)
+        header = [field[0] for field in self.description]
+        self.data = tablib.Dataset(headers=header)
+        for row in self.connector.cursor.callproc(proc_name, params):
+            self.data.append(list(row))
+        return self.data
 
     def commit(self):
         """
@@ -486,20 +483,15 @@ FILETYPE = {
 
 
 # region Functions
-def create_database_manager(dbtype, host=None, port=None, database=None, username=None, password=None):
+def create_database_manager(dbtype, *args, **kwargs):
     """
     Creates a DatabaseManager object
 
     :param dbtype: type of database connection
-    :param host: server host name
-    :param port: port on server
-    :param database: name of database
-    :param username: username of database connection
-    :param password: password of username of database connection
     :return: DatabaseManager
     """
     # Create DatabaseManager object
-    connection = DBTYPE[dbtype](host=host, port=port, database=database, username=username, password=password)
+    connection = DBTYPE[dbtype](*args, **kwargs)
     return DatabaseManager(connection=connection)
 
 
