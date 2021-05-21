@@ -126,7 +126,6 @@ we will implement the new functionality in our custom *Report* object.
 
     import pyreports
     import tablib
-    import os
 
     # Define my Executor class
     class MyReport(pyreports.Report):
@@ -144,3 +143,38 @@ we will implement the new functionality in our custom *Report* object.
 
     # Print and export
     report_only_55k.tee()
+
+Extend ReportBook
+*****************
+
+The ``ReportBook`` object is a collection of ``Report`` type objects.
+When you iterate over an object of this type, you get a generator that returns the *Report* objects it contains one at a time.
+
+.. note::
+    Nothing prevents that you can also insert the ``MyReport`` classes created previously. They are also subclasses of ``Reports``.
+
+Book to dict
+------------
+
+One of the features that might interest you is to export a *ReportBook* as if it were a dictionary.
+
+.. code-block:: python
+
+    import pyreports
+    import tablib
+
+
+    # Instantiate the Report objects
+    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    report_only_55k = pyreports.Report(mydata, filters=[55000], title='Report salary 55k')
+    report_only_65k = pyreports.Report(mydata, filters=[65000], title='Report salary 65k')
+
+    class MyReportBook(pyreports.ReportBook):
+
+        def to_dict(self):
+            return {report.title: report for report in self if report.title}
+
+    # Test my book
+    salary = MyReportBook([report_only_55k, report_only_65k])
+    salary.to_dict()            # {'Report salary 55k': <Report object, title=Report salary 55k>, 'Report salary 65k': <Report object, title=Report salary 65k>}
+
