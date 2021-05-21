@@ -34,9 +34,9 @@ Each type of manager is managed by micro types; Below is the complete list:
 
     # DatabaseManager object
     sqllite_db = pyreports.manager('sqllite', database='/tmp/mydb.db')
-    mssql_db = pyreports.manager('mssql', host='mssql1.local', database='test', username='dba', password='dba0000')
-    mysql_db = pyreports.manager('mysql', host='mysql1.local', database='test', username='dba', password='dba0000')
-    postgresql_db = pyreports.manager('postgresql', host='postgresql1.local', database='test', username='dba', password='dba0000')
+    mssql_db = pyreports.manager('mssql', server='mssql1.local', database='test', username='dba', password='dba0000')
+    mysql_db = pyreports.manager('mysql', host='mysql1.local', database='test', user='dba', password='dba0000')
+    postgresql_db = pyreports.manager('postgresql', host='postgresql1.local', database='test', user='dba', password='dba0000')
 
     # FileManager object
     file = pyreports.manager('file', '/tmp/log.log')
