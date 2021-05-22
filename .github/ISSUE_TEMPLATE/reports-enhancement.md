@@ -1,7 +1,7 @@
 ---
-name: reports enhancement
-about: reports enhancement template
-title: reports enhancement
+name: pyreports enhancement
+about: pyreports enhancement template
+title: pyreports enhancement
 labels: enhancement
 assignees: MatteoGuadrini
 ---

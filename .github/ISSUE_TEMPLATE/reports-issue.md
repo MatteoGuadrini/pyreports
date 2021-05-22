@@ -1,7 +1,7 @@
 ---
-name: reports bug
-about: reports bug template
-title: reports bug
+name: pyreports bug
+about: pyreports bug template
+title: pyreports bug
 labels: bug
 assignees: MatteoGuadrini
 ---
@@ -20,7 +20,7 @@ Description of what is expected
 
 ## Your Environment
 
-* reports version used:
+* pyreports version used:
 * Operating System and version:
 
 Additional context
