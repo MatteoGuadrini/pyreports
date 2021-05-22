@@ -8,6 +8,9 @@ jobs:
     executor: python/default
     steps:
       - checkout
+      - run: sudo python setup.py install
+      - run: sudo chmod -R 777 /tmp
+      - run: python -m unittest discover tests
 
 
 workflows:
