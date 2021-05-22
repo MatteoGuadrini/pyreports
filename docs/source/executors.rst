@@ -21,7 +21,7 @@ which represents the data. Let's see how to instantiate an *Executor* object.
     import pyreports
 
     # Create a data source
-    mydb = pyreports.manager('mysql', host='mysql1.local', database='test', username='dba', password='dba0000')
+    mydb = pyreports.manager('mysql', host='mysql1.local', database='test', user='dba', password='dba0000')
 
     # Get data
     mydb.execute('SELECT * FROM salary')

@@ -28,13 +28,17 @@ Each type of manager is managed by micro types; Below is the complete list:
 #. LDAP
     #. ldap (Active Directory Server, OpenLDAP, FreeIPA, etc.)
 
+.. note::
+    The connection arguments of a ``DatabaseManager`` vary according to the type of database being accessed.
+    Look at the manuals and documentation of each type of database to find out more.
+
 .. code-block:: python
 
     import pyreports
 
     # DatabaseManager object
     sqllite_db = pyreports.manager('sqllite', database='/tmp/mydb.db')
-    mssql_db = pyreports.manager('mssql', server='mssql1.local', database='test', username='dba', password='dba0000')
+    mssql_db = pyreports.manager('mssql', server='mssql1.local', database='test', user='dba', password='dba0000')
     mysql_db = pyreports.manager('mysql', host='mysql1.local', database='test', user='dba', password='dba0000')
     postgresql_db = pyreports.manager('postgresql', host='postgresql1.local', database='test', user='dba', password='dba0000')
 
@@ -66,7 +70,7 @@ DatabaseManager
     import pyreports
 
     # DatabaseManager object
-    mysql_db = pyreports.manager('mysql', host='mysql1.local', database='test', username='dba', password='dba0000')
+    mysql_db = pyreports.manager('mysql', host='mysql1.local', database='test', user='dba', password='dba0000')
 
     # Reconnect to database
     mysql_db.reconnect()

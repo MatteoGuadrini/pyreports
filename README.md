@@ -11,8 +11,8 @@ and then export or write them in various formats or in databases.
 To test the package, follow these instructions:
 
 ```console
-$ git clone https://github.com/MatteoGuadrini/reports.git
-$ cd reports
+$ git clone https://github.com/MatteoGuadrini/pyreports.git
+$ cd pyreports
 $ python -m unittest discover tests
 ```
 
@@ -21,10 +21,10 @@ $ python -m unittest discover tests
 To install package, follow these instructions:
 
 ```console
-$ pip install reports #from pypi
+$ pip install pyreports #from pypi
 
-$ git clone https://github.com/MatteoGuadrini/reports.git #from official repo
-$ cd reports
+$ git clone https://github.com/MatteoGuadrini/pyreports.git #from official repo
+$ cd pyreports
 $ python setup.py install
 ```
 
@@ -44,7 +44,7 @@ I take the data from a database table, filter the data I need and save it in a c
 import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', user='dba', password='dba0000')
 
 # Get data
 mydb.execute('SELECT * FROM site_login')
@@ -68,7 +68,7 @@ I take the data from a database table, and a log file, and save the report in js
 import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', user='dba', password='dba0000')
 # Select another source: this is a FileManager object
 mylog = pyreports.manager('file', '/var/log/httpd/error.log')
 
@@ -103,7 +103,7 @@ output.write(myreport)
 import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', user='dba', password='dba0000')
 output = pyreports.manager('xlsx', '/home/report/error_login.xlsx', mode='w')
 
 # Get data
@@ -125,7 +125,7 @@ report.export()
 import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', user='dba', password='dba0000')
 
 # Get data
 mydb.execute('SELECT * FROM site_login')
@@ -153,7 +153,7 @@ Here are some practical examples of data manipulation.
 import pyreports
 
 # Select source: this is a DatabaseManager object
-mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', user='dba', password='dba0000')
 
 # Get data
 mydb.execute('SELECT * FROM site_login')
@@ -171,6 +171,17 @@ print(percentage_error_404)   # 16.088264794 (percent)
 count_error_code = pyreports.counter(site_login, 'code')  # args: Dataset, column name
 print(count_error_code)   # Counter({200: 4032, 201: 42, 202: 1, 400: 40, 401: 38, 403: 27, 404: 802, 500: 3})
 ```
+
+## Official docs
+
+In the following links there is the [official documentation](https://pyreports.readthedocs.io/en/latest/), for the use and development of the library.
+
+* Managers: [doc](https://pyreports.readthedocs.io/en/latest/managers.html)
+* Executor: [doc](https://pyreports.readthedocs.io/en/latest/executors.html)
+* Report: [doc](https://pyreports.readthedocs.io/en/latest/report.html)
+* data tools: [doc](https://pyreports.readthedocs.io/en/latest/datatools.html)
+* examples: [doc](https://pyreports.readthedocs.io/en/latest/example.html)
+* API: [io](https://pyreports.readthedocs.io/en/latest/dev/io.html), [core](https://pyreports.readthedocs.io/en/latest/dev/core.html)
 
 ## Open source
 _pyreports_ is an open source project. Any contribute, It's welcome.

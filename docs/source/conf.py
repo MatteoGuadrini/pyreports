@@ -18,7 +18,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../..'))
 
-from pyreports import __version__
+__version__ = '0.0.9'
 
 # -- Project information -----------------------------------------------------
 

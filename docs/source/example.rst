@@ -25,7 +25,7 @@ In this example, we extract the data from a mysql database, filter it by error c
     # INPUT
 
     # Select source: this is a DatabaseManager object
-    mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', username='dba', password='dba0000')
+    mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', user='dba', password='dba0000')
 
     # Get data
     mydb.execute('SELECT * FROM site_login')
@@ -77,7 +77,7 @@ In this example I have a json file as input, received from a web server, I proce
     # OUTPUT
 
     # Save report: this is a DatabaseManager object
-    mydb = pyreports.manager('mysql', host='mysql1.local', database='users', username='dba', password='dba0000')
+    mydb = pyreports.manager('mysql', host='mysql1.local', database='users', user='dba', password='dba0000')
 
     # Write to database
     mydb.executemany("INSERT INTO internal_users(name, surname, employeeType) VALUES(%s, %s, %s)", list(user_int))
@@ -99,7 +99,7 @@ In this example, we will take two different inputs, and combine them to export a
     # Config Unix application file: this is a FileManager object
     config_file = pyreports.manager('yaml', '/home/myapp.yml')
     # Console admin: this is a DatabaseManager object
-    mydb = pyreports.manager('mssql', host='mssql1.local', database='admins', username='sa', password='sa0000')
+    mydb = pyreports.manager('mssql', server='mssql1.local', database='admins', user='sa', password='sa0000')
     # Get data
     admin_app = config_file.read()                  # return Dataset object: three column (name, shell, login)
     mydb.execute('SELECT * FROM console_admins')
@@ -134,7 +134,7 @@ In this example, we use a Report type object to create and filter the data throu
             return True
 
     # Connect to database
-    mydb = pyreports.manager('postgresql', host='pssql1.local', database='users', username='admin', password='pwd0000')
+    mydb = pyreports.manager('postgresql', host='pssql1.local', database='users', user='admin', password='pwd0000')
     mydb.execute('SELECT * FROM employees')
     all_employees = mydb.fetchall()
     # Output to csv
@@ -216,7 +216,7 @@ Then once saved, we will create an additional report that combines both of the p
     import pyreports
 
     # Get data from database: a DatabaseManager object
-    mydb = pyreports.manager('postgresql', host='pssql1.local', database='ecommerce', username='reader', password='pwd0000')
+    mydb = pyreports.manager('postgresql', host='pssql1.local', database='ecommerce', user='reader', password='pwd0000')
     mydb.execute('SELECT * FROM sales')
     sales = mydb.fetchall()
     mydb.execute('SELECT * FROM warehouse')
