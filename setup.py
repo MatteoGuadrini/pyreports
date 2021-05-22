@@ -9,7 +9,7 @@ setup(
     name='pyreports',
     version=__version__,
     packages=['pyreports'],
-    url='https://github.com/MatteoGuadrini/reports',
+    url='https://github.com/MatteoGuadrini/pyreports',
     license='GNU General Public License v3.0',
     author='Matteo Guadrini',
     author_email='matteo.guadrini@hotmail.it',
