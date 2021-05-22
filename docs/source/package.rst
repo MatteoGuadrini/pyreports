@@ -5,6 +5,6 @@ The package includes python modules for creating reports, from input to output t
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Package:
 
    pyreports

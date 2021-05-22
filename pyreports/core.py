@@ -128,15 +128,17 @@ class Executor:
         :param column: select column name or index number
         :return: None
         """
-        ret_data = tablib.Dataset(headers=self.data.headers)
-        for row in self:
-            # Apply function to data
-            if key and callable(key):
+        if callable(key):
+            ret_data = tablib.Dataset(headers=self.data.headers)
+            for row in self:
+                # Apply function to data
                 new_row = list()
                 for field in row:
                     new_row.append(key(field))
                 ret_data.append(new_row)
-        self.data = ret_data
+            self.data = ret_data
+        else:
+            raise ValueError(f"{key} isn't function object")
         # Return all data or single column
         if column and self.data.headers:
             self.data = self.select_column(column)
@@ -279,10 +281,13 @@ class Report:
 
     def export(self):
         """
-        Save data on output
+        Process and save data on output
 
         :return: if count is True, return row count
         """
+        # Process data before export
+        self.exec()
+        # Verify if output is FileManager object
         if isinstance(self.output, FileManager) or self.output is None:
             if self.output:
                 self.output.write(self.report)
@@ -382,7 +387,6 @@ class ReportBook:
                 f.write(book.export('xlsx'))
         else:
             for report in self:
-                report.exec()
                 report.export()
 
 # endregion

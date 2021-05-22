@@ -51,6 +51,13 @@ Features
    example
    package
 
+.. toctree::
+   :maxdepth: 2
+   :caption: API:
+
+   dev/io
+   dev/core
+
 
 Indices and tables
 ==================

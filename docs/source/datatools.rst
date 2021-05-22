@@ -1,4 +1,4 @@
-Data Tools
+Data tools
 ##########
 
 The package comes with utility functions to work directly with *Datasets*.
@@ -6,8 +6,7 @@ In this section we will see all these functions contained in the **datatools** m
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+
 
 
 

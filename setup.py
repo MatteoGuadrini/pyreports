@@ -1,5 +1,6 @@
 from setuptools import setup
-from pyreports import __version__
+
+__version__ = '0.0.9'
 
 with open("README.md") as fh:
     long_description = fh.read()
@@ -8,7 +9,7 @@ setup(
     name='pyreports',
     version=__version__,
     packages=['pyreports'],
-    url='https://github.com/MatteoGuadrini/reports',
+    url='https://github.com/MatteoGuadrini/pyreports',
     license='GNU General Public License v3.0',
     author='Matteo Guadrini',
     author_email='matteo.guadrini@hotmail.it',

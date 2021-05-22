@@ -11,8 +11,7 @@ This will follow the workflows of each *Report* it contains, except for the outp
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+
 
 
 
@@ -223,3 +222,25 @@ This means that you can use it in a for loop or in a list comprehension.
 
     # List comprehension
     my_list_of_report = [report for report in salary]
+
+Merge
+-----
+
+ReportBook objects can be joined together, using the `+` operator.
+
+.. code-block:: python
+
+    # ReportBook
+    book1 = pyreports.ReportBook([report1, report2])
+    book2 = pyreports.ReportBook([report3, report4])
+    # Merge ReportBook
+    tot_book = book1 + book2
+    tot_book = book1.__add__(book2)
+
+    print(tot_book)
+
+    # ReportBook None
+    #   Report1
+    #   Report2
+    #   Report3
+    #   Report4
