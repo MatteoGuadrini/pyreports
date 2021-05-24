@@ -346,6 +346,8 @@ class DatabaseManager:
         :param params: sequence of parameters must contain one entry for each argument that the procedure expects
         :return: Dataset object
         """
+        if params is None:
+            params = []
         header = [field[0] for field in self.description]
         self.data = tablib.Dataset(headers=header)
         for row in self.connector.cursor.callproc(proc_name, params):
