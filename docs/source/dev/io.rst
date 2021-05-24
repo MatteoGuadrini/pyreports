@@ -11,17 +11,11 @@ Connection
 Each ``*Connection`` object inherits from the abstract ``Connection`` class, which forces each type of connection object to
 accept these arguments when creating the object:
 
-- ``host``, *hostname* of the machine where the database is hosted
-- ``port``, *port* number of database server
-- ``database``, *database* name
-- ``username``, *username* who has access permissions
-- ``password``, *password* of the *username* specified
+- ``args``, various positional arguments
+- ``kwargs``, various keyword arguments
 
 Besides this, the class must have a ``connect`` and a ``close`` method, respectively to connect to the database and one to close the connection,
 respectively.
-
-.. note::
-    Each argument to the ``__init__`` method defaults to ``None`` and saves the value in the instance.
 
 
 .. literalinclude:: ../../../pyreports/io.py
@@ -35,6 +29,9 @@ Example ``Connection`` based class:
 .. literalinclude:: ../../../pyreports/io.py
     :language: python
     :pyobject: SQLliteConnection
+
+.. warning::
+    All connections are `DBAPI 2.0 <https://www.python.org/dev/peps/pep-0249/>`_ compliant. If you need to create your own, it must adhere to these APIs.
 
 File
 ****
@@ -106,20 +103,21 @@ Here we will see how to create your own ``*Connection`` class to access a specif
 .. code-block:: python
 
     import pyreports
-    import ibm_db
+    import DB2
 
     # class for connect DB2 database
     class DB2Connection(pyreports.io.Connection):
 
         def connect(self):
-            self.connection = ibm_db.connect(self.database, self.username, self.password)
+            self.connection = DB2.connect(*self.args, **self.kwargs)
             self.cursor = self.connection
 
         def close(self):
             self.connection.close()
+            self.cursor.close()
 
     # Create an alias for DB2Connection object
     pyreports.io.DBTYPE['db2'] = DB2Connection
 
     # Create my DatabaseManager object
-    mydb2 = pyreports.manager(database="database", username="username", password="password")
+    mydb2 = pyreports.manager(dsn='sample', uid='db2inst1', pwd='ibmdb2')
