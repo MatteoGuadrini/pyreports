@@ -1,17 +1,17 @@
 from setuptools import setup
-import pyreports.__info__
+import __info__
 
 with open("README.md") as fh:
     long_description = fh.read()
 
 setup(
     name='pyreports',
-    version=pyreports.__info__.__version__,
+    version=__info__.__version__,
     packages=['pyreports'],
-    url=pyreports.__info__.__homepage__,
+    url=__info__.__homepage__,
     license='GNU General Public License v3.0',
-    author=pyreports.__info__.__author__,
-    author_email=pyreports.__info__.__email__,
+    author=__info__.__author__,
+    author_email=__info__.__email__,
     keywords='pyreports reports report csv yaml export excel database ldap dataset file executor book',
     maintainer='Matteo Guadrini',
     maintainer_email='matteo.guadrini@hotmail.it',

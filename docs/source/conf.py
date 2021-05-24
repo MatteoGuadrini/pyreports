@@ -17,16 +17,16 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
-import pyreports.__info__
+import __info__
 
 # -- Project information -----------------------------------------------------
 
 project = 'pyreports'
 copyright = '2021, Matteo Guadrini'
-author = pyreports.__info__.__author__
+author = __info__.__author__
 
 # The full version, including alpha/beta/rc tags
-release = pyreports.__info__.__version__
+release = __info__.__version__
 
 # -- General configuration ---------------------------------------------------
 
