@@ -443,7 +443,7 @@ class LdapManager:
             for result in self.bind.response:
                 if result.get('attributes'):
                     for index, attribute in enumerate(attributes):
-                        data.append(result.get('attributes').get(attributes[attribute]))
+                        data.append(result.get('attributes').get(attributes[index]))
             # Return object
             return data
 
