@@ -1,5 +1,8 @@
 # pyreports
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2bad30d308414c83836f22f012c98649)](https://www.codacy.com/gh/MatteoGuadrini/pyreports/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MatteoGuadrini/pyreports&amp;utm_campaign=Badge_Grade)
+[![CircleCI](https://circleci.com/gh/MatteoGuadrini/pyreports.svg?style=svg)](https://circleci.com/gh/MatteoGuadrini/pyreports)
+
 _pyreports_ is a python library that allows you to create complex reports from various sources such as databases, 
 text files, ldap, etc. and perform processing, filters, counters, etc. 
 and then export or write them in various formats or in databases.
