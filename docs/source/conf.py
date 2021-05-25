@@ -58,6 +58,6 @@ html_static_path = ['_static']
 html_theme_options = {
     'logo_only': False
 }
-# html_logo = "_static/nope"
+html_logo = "_static/pyreports.svg"
 
 master_doc = 'index'
