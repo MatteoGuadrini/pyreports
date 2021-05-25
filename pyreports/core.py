@@ -33,11 +33,11 @@ from .exception import ReportManagerError, ReportDataError
 # region Classes
 
 class Executor:
+
     """Executor receives, processes, transforms and writes data"""
 
     def __init__(self, data, header=None):
-        """
-        Create Executor object
+        """Create Executor object
 
         :param data: everything type of data
         :param header: list header of data
@@ -50,32 +50,28 @@ class Executor:
         self.origin.extend(self.data)
 
     def __len__(self):
-        """
-        Count data
+        """Count data
 
         :return: integer
         """
         return self.count_rows()
 
     def __iter__(self):
-        """
-        Iterate over dataset
+        """Iterate over dataset
 
         :return: next value
         """
         return (row for row in self.data)
 
     def get_data(self):
-        """
-        Get dataset
+        """Get dataset
 
         :return: dataset
         """
         return self.data
 
     def reset(self):
-        """
-        Reset data to original data
+        """Reset data to original data
 
         :return: None
         """
@@ -83,8 +79,7 @@ class Executor:
         self.data.extend(self.origin)
 
     def headers(self, header):
-        """
-        Set header
+        """Set header
 
         :param header: header of data
         :return: None
@@ -92,8 +87,7 @@ class Executor:
         self.data.headers = header
 
     def filter(self, flist=None, key=None, column=None):
-        """
-        Filter data through a list of strings (equal operator) and/or function key
+        """Filter data through a list of strings (equal operator) and/or function key
 
         :param flist: list of strings
         :param key: function that takes a single argument and returns data
@@ -121,8 +115,7 @@ class Executor:
             self.data = self.select_column(column)
 
     def map(self, key, column=None):
-        """
-        Apply function to data
+        """Apply function to data
 
         :param key: function that takes a single argument
         :param column: select column name or index number
@@ -144,8 +137,7 @@ class Executor:
             self.data = self.select_column(column)
 
     def select_column(self, column):
-        """
-        Filter dataset by column
+        """Filter dataset by column
 
         :param column: name or index of column
         :return: Dataset object
@@ -156,8 +148,7 @@ class Executor:
             return self.data[column]
 
     def add_column(self, column, value):
-        """
-        Add column to data
+        """Add column to data
 
         :param column: column name
         :param value: list value for column, or function with no arguments that returns a value
@@ -166,8 +157,7 @@ class Executor:
         self.data.append_col(value, header=column)
 
     def del_column(self, column):
-        """
-        Delete column
+        """Delete column
 
         :param column: column name
         :return: None
@@ -175,24 +165,21 @@ class Executor:
         del self.data[column]
 
     def count_rows(self):
-        """
-        Count all rows
+        """Count all rows
 
         :return: integer
         """
         return len(self.data)
 
     def count_columns(self):
-        """
-        Count all column
+        """Count all column
 
         :return: integer
         """
         return len(self.data.headers)
 
     def clone(self):
-        """
-        Clone Executor object
+        """Clone Executor object
 
         :return: executor
         """
@@ -200,6 +187,7 @@ class Executor:
 
 
 class Report:
+
     """Report represents the workflow for generating a report"""
 
     def __init__(self,
@@ -210,8 +198,7 @@ class Report:
                  column=None,
                  count=False,
                  output: FileManager = None):
-        """
-        Create Report object
+        """Create Report object
 
         :param input_data: Dataset object
         :param title: title of Report object
@@ -240,14 +227,21 @@ class Report:
         self.report = None
 
     def __repr__(self):
+        """Representation of Report object
+
+        :return: string
+        """
         return f"<Report object, title={self.title if self.title else None}>"
 
     def __str__(self):
+        """Pretty representation of Report object
+
+        :return: string
+        """
         return self._print_data()
 
     def _print_data(self):
-        """
-        Print data and count
+        """Print data and count
 
         :return: data and count
         """
@@ -258,8 +252,7 @@ class Report:
             return self.report
 
     def exec(self):
-        """
-        Create Executor object to apply filters and map function to input data
+        """Create Executor object to apply filters and map function to input data
 
         :return: None
         """
@@ -280,8 +273,7 @@ class Report:
         self.report = ex.get_data()
 
     def export(self):
-        """
-        Process and save data on output
+        """Process and save data on output
 
         :return: if count is True, return row count
         """
@@ -298,11 +290,11 @@ class Report:
 
 
 class ReportBook:
+
     """ReportBook represent a collection of Report's object"""
 
     def __init__(self, reports=None, title=None):
-        """
-        Create a ReportBook object
+        """Create a ReportBook object
 
         :param reports: Report's object list
         :param title: title of report book
@@ -315,8 +307,7 @@ class ReportBook:
         self.title = title
 
     def __add__(self, other):
-        """
-        Add report object
+        """Add report object
 
         :param other: Report object
         :return: ReportBook
@@ -327,28 +318,38 @@ class ReportBook:
         return self
 
     def __iter__(self):
-        """
-        Return report iterator
+        """Return report iterator
 
         :return: iterable object
         """
         return (report for report in self.reports)
 
     def __len__(self):
+        """Number of Report objects
+
+        :return: int
+        """
         return len(self.reports)
 
     def __str__(self):
+        """Pretty representation of ReportBook object
+
+        :return: string
+        """
         output = f'ReportBook {self.title if self.title else None}\n'
         output += '\n'.join('\t' + str(report.title)
                             for report in self.reports)
         return output
 
     def __repr__(self):
+        """Representation of ReportBook object
+
+        :return: string
+        """
         return f"<ReportBook object, title={self.title if self.title else None}>"
 
     def add(self, report: Report):
-        """
-        Add report object
+        """Add report object
 
         :param report: Report object
         :return: None
@@ -358,8 +359,7 @@ class ReportBook:
         self.reports.append(report)
 
     def remove(self, index: int = None):
-        """
-        Remove Report object, last added or index specified
+        """Remove Report object, last added or index specified
 
         :param index: report number to remove
         :return: None
@@ -370,8 +370,7 @@ class ReportBook:
             self.reports.pop(-1)
 
     def export(self, output=None):
-        """
-        Save data on report output or an Excel workbook
+        """Save data on report output or an Excel workbook
 
         :param output: output path for report export
         :return: None

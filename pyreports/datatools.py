@@ -32,8 +32,7 @@ from tablib import Dataset, InvalidDimensions
 
 # region Functions
 def _select_column(data, column):
-    """
-    Select Dataset column
+    """Select Dataset column
 
     :param data: Dataset object
     :param column: column name or index
