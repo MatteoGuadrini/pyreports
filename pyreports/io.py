@@ -442,8 +442,10 @@ class LdapManager:
             data.headers = attributes
             for result in self.bind.response:
                 if result.get('attributes'):
-                    for index, attribute in enumerate(attributes):
-                        data.append(result.get('attributes').get(attributes[index]))
+                    row = list()
+                    for index, _ in enumerate(attributes):
+                        row.append(result.get('attributes').get(attributes[index]))
+                    data.append(row)
             # Return object
             return data
 
