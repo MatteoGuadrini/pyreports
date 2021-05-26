@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>pyreports</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#ffffff">
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> 
+    <!-- FontAwesome JS-->
+	<script defer src="assets/fontawesome/js/all.min.js"></script>
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Plugins CSS -->    
+    <link rel="stylesheet" href="assets/plugins/prism/prism.css">
+    <!-- Theme CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/theme-1.css">
+    <!-- GitHub Button -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script> 
+</head> 
+
+<body data-spy="scroll">
+	
+   
+
+    <!---//Facebook button code-->
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    
+    <!-- ******HEADER****** --> 
+    <header id="header" class="header">  
+        <div class="container">            
+            <h1 class="logo float-left">
+                <a class="scrollto" href="#promo">
+                    <span class="logo-title">pyreports</span>
+                </a>
+            </h1><!--//logo-->              
+            <nav id="main-nav" class="main-nav navbar-expand-md float-right" role="navigation">
+                
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button><!--//nav-toggle-->
+                           
+                <div class="navbar-collapse collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item sr-only"><a class="nav-link scrollto" href="#promo">Home</a></li>
+                        <li class="nav-item"><a class="nav-link scrollto" href="#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link scrollto" href="#features">Features</a></li>
+                        <li class="nav-item"><a class="nav-link scrollto" href="#docs">Docs</a></li>
+                        <li class="nav-item"><a class="nav-link scrollto" href="#license">License</a></li>                        
+                        <li class="nav-item last"><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                    </ul><!--//nav-->
+                </div><!--//navabr-collapse-->
+            </nav><!--//main-nav-->
+        </div>
+    </header><!--//header-->
+    
+    <!-- ******PROMO****** -->
+    <section id="promo" class="promo section offset-header">
+        <div class="container text-center">
+            <img src="https://pyreports.readthedocs.io/en/latest/_static/pyreports.svg" alt="pyreports" title="pyreports" width="300" height="300" />
+            <h2 class="title">py<span class="highlight">reports</span></h2>
+            <p class="intro">pyreports is a python library that allows you to create complex report from various sources</p>
+            <div class="btns">
+                <a class="btn btn-cta-secondary" href="https://github.com/MatteoGuadrini/pyreports#how-does-it-work" target="_blank">Usage</a>
+                <a class="btn btn-cta-primary" href="https://pyreports.readthedocs.io/en/latest" target="_blank">Docs</a>
+            </div>
+            <ul class="meta list-inline">
+                <li class="list-inline-item"><a href="https://github.com/MatteoGuadrini/pyreports" target="_blank">View on GitHub</a></li>
+                <li class="list-inline-item">Created by: <a href="https://github.com/MatteoGuadrini" target="_blank">Matteo Guadrini</a></li>
+            </ul><!--//meta-->
+        </div><!--//container-->
+        <div class="social-media">
+            <div class="social-media-inner container text-center">
+                <ul class="list-inline mb-2">
+                    <!--// Generate github buttons: https://github.com/mdo/github-buttons -->
+                    <li class="list-inline-item github-star">
+<a class="github-button" href="https://github.com/MatteoGuadrini/pyreports" data-icon="octicon-star" aria-label="Star MatteoGuadrini/pyreports on GitHub">Star</a></li>
+                    <li class="list-inline-item github-follow"><!-- Place this tag where you want the button to render. -->
+<a class="github-button" href="https://github.com/MatteoGuadrini" aria-label="Follow @MatteoGuadrini on GitHub">Follow @MatteoGuadrini</a></li>
+                </ul>
+            </div>
+        </div>
+    </section><!--//promo-->
+    
+    <!-- ******ABOUT****** --> 
+    <section id="about" class="about section">
+        <div class="container">
+            <h2 class="title text-center">What is pyreports?</h2>
+            <p class="intro text-center">
+                pyreports wants to be a library that simplifies the collection of data from multiple sources such as databases,
+                files and directory servers (through LDAP), the processing of them through built-in and customized functions,
+                and the saving in various formats (or, by inserting the data in a database).
+            </p>
+            <div class="row">
+                <div class="item col-lg-4 col-md-6 col-12">
+                    <div class="icon-holder">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">Designed for a data scientist</h3>
+                        <p>
+                            Simplifying the life of those who collect and process data
+                        </p>
+                    </div><!--//content-->
+                </div><!--//data scientist-->
+                <div class="item col-lg-4 col-md-6 col-12">
+                    <div class="icon-holder">
+                        <i class="far fa-clock"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">Time saver</h3>
+                        <p>It saves time, without worrying about creating connections or managing files manually.</p>
+                    </div><!--//content-->
+                </div><!--//time-->
+                <div class="item col-lg-4 col-md-6 col-12">
+                    <div class="icon-holder">
+                        <i class="fas fa-crosshairs"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">PEP 8</h3>
+                        <p>Each row of code is PEP 8 compliant</p>
+                    </div><!--//content-->
+                </div><!--//pep-->
+                <div class="clearfix visible-md"></div>
+            </div><!--//row-->            
+        </div><!--//container-->
+    </section><!--//about-->
+    
+    <!-- ******FEATURES****** --> 
+    <section id="features" class="features section">
+        <div class="container text-center">
+            <h2 class="title">Features</h2>
+            <ul class="feature-list list-unstyled">
+                <li><i class="fas fa-check"></i> Write for Python 3.6 and high</li>
+                <li><i class="fas fa-check"></i> Each database connection is DBAPI 2.0 compliant</li>
+                <li><i class="fas fa-check"></i> Work with <a class="list-inline-item" href="https://tablib.readthedocs.io/en/stable/api/#dataset-object">Dataset objects</a></li>
+                <li><i class="fas fa-check"></i> All objects are extensible/li>
+                <li><i class="fas fa-check"></i> Functions that support data modification</li>
+                <li><i class="fas fa-check"></i> Data exports to Excel, CSV, YAML, Json and more.</li>
+            </ul>
+        </div><!--//container-->
+    </section><!--//features-->
+    
+    <!-- ******DOCS****** --> 
+    <section id="docs" class="docs section">
+        <div class="container">
+            <div class="docs-inner">
+            <h2 class="title text-center">Get Started</h2>            
+            <div class="block">
+                <h3 class="sub-title text-center">Installation</h3>
+                <p>Install pyreports is easy with pip.</p>
+                <div class="code-block">
+                    <!--//Use Prismjs - http://prismjs.com/index.html#basic-usage -->
+                    <pre><code class="language-python">
+    $ pip install pyreports
+                     </code></pre>
+                </div><!--//code-block-->
+            </div><!--//block-->
+            
+            <div class="block">
+                <h3 class="sub-title text-center">Basic usage</h3>
+                <p>I take the data from a database table, filter the data I need and save it in a csv file.</p>
+                
+                <div class="code-block">
+                    <!--//Use Prismjs - http://prismjs.com/index.html#basic-usage -->
+                    <pre>
+    <code class="language-python">
+import pyreports
+
+# Select source: this is a DatabaseManager object
+mydb = pyreports.manager('mysql', host='mysql1.local', database='login_users', user='dba', password='dba0000')
+
+# Get data
+mydb.execute('SELECT * FROM site_login')
+site_login = mydb.fetchall()
+
+# Filter data
+error_login = pyreports.Executor(site_login)
+error_login.filter([400, 401, 403, 404, 500])
+
+# Save report: this is a FileManager object
+output = pyreports.manager('csv', '/home/report/error_login.csv')
+output.write(error_login.get_data())
+    </code></pre>
+                </div><!--//code-block-->
+            </div><!--//block-->
+            
+            <div class="block">
+                <h3 class="sub-title text-center">Advanced usage</h3>
+                <p>In this example we will analyze and capture parts of a web server log.
+                    For each error code present in the log, we will create a report that will be inserted in a book,
+                    where each sheet will contain the details of the error code. In the last sheet,
+                    there will be an element counter for every single error present in the report.</p>
+                <div class="code-block">
+                    <pre><code class="language-python">
+import pyreports
+import tablib
+import re
+
+# Get apache log data: this is a FileManager object
+apache_log = pyreports.manager('file', '/var/log/httpd/error.log').read()
+# apache log format: regex
+regex = '([(\d\.)]+) - - \[(.*?)\] "(.*?)" (\d+) - "(.*?)" "(.*?)"'
+
+# Function than receive Dataset and return a new Dataset
+def format_dataset_log(data_input):
+    data = tablib.Dataset(headers=['ip', 'date', 'operation', 'code', 'client'])
+    for row in data_input:
+        log_parts = re.match(regex, row[0]).groups()
+        new_row = list(log_parts[:4])
+        new_row.append(log_parts[5])
+        data.append(new_row)
+    return data
+
+# Create a collection of Report objects
+all_apache_error = pyreports.ReportBook(title='Apache error on my site')
+
+# Create a Report object based on error code
+apache_error_log = format_dataset_log(apache_log)
+all_error = set(apache_error_log['code'])
+for code in all_error:
+    all_apache_error.add(pyreports.Report(apache_error_log, filters=[code], title=f'Error {code}'))
+
+# Count all error code
+counter = pyreports.counter(apache_error_log, 'code')
+# Append new Report on ReportBook with error code counters
+error_counter = tablib.Dataset(counter.values(), headers=counter)
+all_apache_error.add(pyreports.Report(error_counter))
+
+# Save ReportBook on Excel
+all_apache_error.export('/home/report/apache_log_error_code.xlsx')
+                    </code></pre>
+                </div><!--//code-block-->
+            </div><!--//block-->   
+            <div class="block">
+                <h3 class="sub-title text-center">Full Documentation</h3>
+                <p>The complete documentation is much more comprehensive and can be found by clicking the button below.</p>
+                <p class="text-center">
+                    <a class="btn btn-cta-primary" href="https://pyreports.readthedocs.io/en/latest/" target="_blank">More on ReadTheDocs</a>
+                </p>
+            </div><!--//block-->
+            
+            </div><!--//docs-inner-->         
+        </div><!--//container-->
+    </section><!--//features-->
+    
+    <!-- ******LICENSE****** --> 
+    <section id="license" class="license section">
+        <div class="container">
+            <div class="license-inner">
+            <h2 class="title text-center">License</h2>
+                <div class="info">
+                    <p>pyreports is <strong>free</strong> and <strong>open source</strong>.</p>
+                    <p>The license is GPLv3 and you can consult it directly here: <a href="https://github.com/MatteoGuadrini/pyreports/blob/master/LICENSE.md" target="_blank">Github License</a></p></p>
+                    <p><strong>Donate:</strong> <a href="https://www.paypal.me/guos" target="_blank">PayPal</a></p>
+                </div><!--//info-->
+                <div class="cta-container">
+                    <div class="speech-bubble">                    
+                        <p class="intro">If you are interested in improvements or have innovation proposals, or simply want to help improve the library, you can fork the project from here! Thank you for your support!</p>
+                        <div class="icon-holder  text-center"><i class="far fa-smile"></i></div>
+                    </div><!--//speech-bubble-->
+                    <div class="btn-container  text-center">
+                        <a class="btn btn-cta-secondary" href="https://github.com/MatteoGuadrini/pyreports/fork" target="_blank">Fork</a>
+                    </div><!--//btn-container-->
+                </div><!--//cta-container-->
+            </div><!--//license-inner-->
+        </div><!--//container-->
+    </section><!--//how-->
+    
+    <!-- ******CONTACT****** --> 
+    <section id="contact" class="contact section has-pattern">
+        <div class="container">
+            <div class="contact-inner">
+                <h2 class="title  text-center">Contact</h2>
+                <p class="intro  text-center">I hope you find this python library useful. <br />Feel free to get in touch if you have any questions or suggestions.</p>
+                <div class="author-message">                      
+                    <div class="profile">
+                        <img class="img-fluid" src="https://avatars.githubusercontent.com/u/29921418?v=4" alt="Matteo Guadrini aka GU" />
+                    </div><!--//profile-->
+                    <div class="speech-bubble">
+                        <h3 class="sub-title">Love <strong>pyreports</strong>?</h3>
+                        <p>If you are interested in other projects, follow me on Github or Linkedin. You can also email me if you like!</p>
+                        <div class="source">
+                            <span class="name"><a href="https://twitter.com/3rdwave_themes" target="_blank">Matteo Guadrini</a></span>
+                            <br />
+                            <span class="title">DevOps and Python developer</span>
+                        </div><!--//source-->
+                    </div><!--//speech-bubble-->                        
+                </div><!--//author-message-->
+                <div class="clearfix"></div>
+                <div class="info text-center">
+                    <h4 class="sub-title">Get Connected</h4>
+                    <ul class="social-icons list-inline">
+                        <li class="list-inline-item"><a href="https://github.com/MatteoGuadrini" target="_blank"><i class="fab fa-github"></i></a></li>
+                        <li class="list-inline-item"><a href="https://www.linkedin.com/in/matteo-guadrini/" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+                        <li class="list-inline-item last"><a href="mailto:matteo.guadrini@hotmail.it" target="_blank"><i class="fas fa-envelope"></i></a></li>
+                    </ul>
+                </div><!--//info-->
+            </div><!--//contact-inner-->
+        </div><!--//container-->
+    </section><!--//contact-->  
+      
+    <!-- ******FOOTER****** --> 
+    <footer class="footer">
+        <div class="container text-center">
+            <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
+            <small class="copyright">Designed with <i class="fas fa-heart"></i> and <i class="fas fa-coffee"></i></small>
+        </div><!--//container-->
+    </footer><!--//footer-->
+     
+    <!-- Javascript -->          
+    <script type="text/javascript" src="assets/plugins/jquery-3.4.1.min.js"></script>   
+    <script type="text/javascript" src="assets/plugins/jquery.easing.1.3.js"></script>   
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>     
+    <script type="text/javascript" src="assets/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script> 
+    <script type="text/javascript" src="assets/plugins/prism/prism.js"></script>    
+    <script type="text/javascript" src="assets/js/main.js"></script>  
+    
+        
+</body>
+</html> 
+

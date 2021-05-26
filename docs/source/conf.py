@@ -15,19 +15,18 @@
 # sys.path.insert(0, os.path.abspath('.'))
 import os
 import sys
-
 sys.path.insert(0, os.path.abspath('../..'))
 
-__version__ = '0.0.9'
+import __info__
 
 # -- Project information -----------------------------------------------------
 
 project = 'pyreports'
 copyright = '2021, Matteo Guadrini'
-author = 'Matteo Guadrini'
+author = __info__.__author__
 
 # The full version, including alpha/beta/rc tags
-release = __version__
+release = __info__.__version__
 
 # -- General configuration ---------------------------------------------------
 
@@ -59,6 +58,6 @@ html_static_path = ['_static']
 html_theme_options = {
     'logo_only': False
 }
-# html_logo = "_static/nope"
+html_logo = "_static/pyreports.svg"
 
 master_doc = 'index'

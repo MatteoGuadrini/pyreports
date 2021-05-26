@@ -37,10 +37,12 @@ from abc import ABC, abstractmethod
 
 # region Classes
 class Connection(ABC):
+
     """Connection base class"""
 
     def __init__(self, *args, **kwargs):
-        """Connection base object"""
+        """Connection base object."""
+
         self.connection = None
         self.cursor = None
         self.args = args
@@ -56,19 +58,18 @@ class Connection(ABC):
 
 
 class File:
+
     """File base class"""
 
     def __init__(self, filename):
-        """
-        File base object
+        """File base object
 
         :param filename: file path
         """
         self.file = filename
 
     def write(self, data):
-        """
-        Write data on file
+        """Write data on file
 
         :param data: data to write on file
         :return: None
@@ -79,8 +80,7 @@ class File:
             file.write('\n'.join(str(line) for row in data for line in row))
 
     def read(self, **kwargs):
-        """
-        Read with format
+        """Read with format
 
         :return: Dataset object
         """
@@ -92,11 +92,11 @@ class File:
 
 
 class CsvFile(File):
+
     """CSV file class"""
 
     def write(self, data):
-        """
-        Write data on csv file
+        """Write data on csv file
 
         :param data: data to write on csv file
         :return: None
@@ -107,8 +107,7 @@ class CsvFile(File):
             file.write(data.export('csv'))
 
     def read(self, **kwargs):
-        """
-        Read csv format
+        """Read csv format
 
         :return: Dataset object
         """
@@ -117,11 +116,11 @@ class CsvFile(File):
 
 
 class JsonFile(File):
+
     """JSON file class"""
 
     def write(self, data):
-        """
-        Write data on json file
+        """Write data on json file
 
         :param data: data to write on json file
         :return: None
@@ -132,8 +131,7 @@ class JsonFile(File):
             file.write(data.export('json'))
 
     def read(self, **kwargs):
-        """
-        Read json format
+        """Read json format
 
         :return: Dataset object
         """
@@ -142,11 +140,11 @@ class JsonFile(File):
 
 
 class YamlFile(File):
+
     """YAML file class"""
 
     def write(self, data):
-        """
-        Write data on yaml file
+        """Write data on yaml file
 
         :param data: data to write on yaml file
         :return: None
@@ -157,8 +155,7 @@ class YamlFile(File):
             file.write(data.export('yaml'))
 
     def read(self, **kwargs):
-        """
-        Read yaml format
+        """Read yaml format
 
         :return: Dataset object
         """
@@ -167,11 +164,11 @@ class YamlFile(File):
 
 
 class ExcelFile(File):
+
     """Excel file class"""
 
     def write(self, data):
-        """
-        Write data on xlsx file
+        """Write data on xlsx file
 
         :param data: data to write on yaml file
         :return: None
@@ -182,8 +179,7 @@ class ExcelFile(File):
             file.write(data.export('xlsx'))
 
     def read(self, **kwargs):
-        """
-        Read xlsx format
+        """Read xlsx format
 
         :return: Dataset object
         """
@@ -192,6 +188,7 @@ class ExcelFile(File):
 
 
 class SQLliteConnection(Connection):
+
     """Connection sqlite class"""
 
     def connect(self):
@@ -204,6 +201,7 @@ class SQLliteConnection(Connection):
 
 
 class MSSQLConnection(Connection):
+
     """Connection microsoft sql class"""
 
     def connect(self):
@@ -216,6 +214,7 @@ class MSSQLConnection(Connection):
 
 
 class MySQLConnection(Connection):
+
     """Connection mysql class"""
 
     def connect(self):
@@ -228,6 +227,7 @@ class MySQLConnection(Connection):
 
 
 class PostgreSQLConnection(Connection):
+
     """Connection postgresql class"""
 
     def connect(self):
@@ -240,11 +240,11 @@ class PostgreSQLConnection(Connection):
 
 
 class DatabaseManager:
+
     """Database manager class for SQL connection"""
 
     def __init__(self, connection: Connection):
-        """
-        Database manager object for SQL connection
+        """Database manager object for SQL connection
 
         :param connection: Connection based object
         """
@@ -260,8 +260,7 @@ class DatabaseManager:
         self.rowcount = 0
 
     def reconnect(self):
-        """
-        Close and start connection
+        """Close and start connection
 
         :return: None
         """
@@ -271,8 +270,7 @@ class DatabaseManager:
         self.connector.connect()
 
     def execute(self, query, params=None):
-        """
-        Execute query on database cursor
+        """Execute query on database cursor
 
         :param query: SQL query language
         :param params: parameters of the query
@@ -287,8 +285,7 @@ class DatabaseManager:
         self.description = self.connector.cursor.description
 
     def executemany(self, query, params):
-        """
-        Execute query on database cursor with many parameters
+        """Execute query on database cursor with many parameters
 
         :param query: SQL query language
         :param params: list of parameters of the query
@@ -304,8 +301,7 @@ class DatabaseManager:
         self.description = self.connector.cursor.description
 
     def fetchall(self):
-        """
-        Fetches all (or all remaining) rows of a query result set
+        """Fetches all (or all remaining) rows of a query result set
 
         :return: Dataset object
         """
@@ -316,8 +312,7 @@ class DatabaseManager:
         return self.data
 
     def fetchone(self):
-        """
-        Retrieves the next row of a query result set
+        """Retrieves the next row of a query result set
 
         :return: Dataset object
         """
@@ -326,8 +321,7 @@ class DatabaseManager:
         return self.data
 
     def fetchmany(self, size=1):
-        """
-        Fetches the next set of rows of a query result
+        """Fetches the next set of rows of a query result
 
         :param size: the number of rows returned
         :return: Dataset object
@@ -339,13 +333,14 @@ class DatabaseManager:
         return self.data
 
     def callproc(self, proc_name, params=None):
-        """
-        Calls the stored procedure named
+        """Calls the stored procedure named
 
         :param proc_name: name of store procedure
         :param params: sequence of parameters must contain one entry for each argument that the procedure expects
         :return: Dataset object
         """
+        if params is None:
+            params = []
         header = [field[0] for field in self.description]
         self.data = tablib.Dataset(headers=header)
         for row in self.connector.cursor.callproc(proc_name, params):
@@ -353,8 +348,7 @@ class DatabaseManager:
         return self.data
 
     def commit(self):
-        """
-        This method sends a COMMIT statement to the server
+        """This method sends a COMMIT statement to the server
 
         :return: None
         """
@@ -362,11 +356,11 @@ class DatabaseManager:
 
 
 class FileManager:
+
     """File manager class for various readable file format"""
 
     def __init__(self, file: File):
-        """
-        File manager object for various readable file format
+        """File manager object for various readable file format
 
         :param file: file object
         """
@@ -374,8 +368,7 @@ class FileManager:
         self.data = file
 
     def write(self, data):
-        """
-        Write data on file
+        """Write data on file
 
         :param data: data to write on file
         :return: None
@@ -383,8 +376,7 @@ class FileManager:
         self.data.write(data)
 
     def read(self, **kwargs):
-        """
-        Read file
+        """Read file
 
         :return: Dataset object
         """
@@ -392,11 +384,11 @@ class FileManager:
 
 
 class LdapManager:
+
     """LDAP manager class"""
 
     def __init__(self, server, username, password, ssl=False, tls=True):
-        """
-        LDAP manager object
+        """LDAP manager object
 
         :param server: fqdn server name or ip address
         :param username: username for bind operation
@@ -416,8 +408,7 @@ class LdapManager:
         self.bind.bind()
 
     def rebind(self, username, password):
-        """
-        Re-bind with specified username and password
+        """Re-bind with specified username and password
 
         :param username: username for bind operation
         :param password: password of the username used for bind operation
@@ -430,16 +421,14 @@ class LdapManager:
         self.bind.bind()
 
     def unbind(self):
-        """
-        Unbind LDAP connection
+        """Unbind LDAP connection
 
         :return: None
         """
         self.bind.unbind()
 
     def query(self, base_search, search_filter, attributes):
-        """
-        Search LDAP element on subtree base search directory
+        """Search LDAP element on subtree base search directory
 
         :param base_search: distinguishedName of LDAP base search
         :param search_filter: LDAP query language
@@ -453,8 +442,10 @@ class LdapManager:
             data.headers = attributes
             for result in self.bind.response:
                 if result.get('attributes'):
-                    for attribute in range(len(attributes)):
-                        data.append(result.get('attributes').get(attributes[attribute]))
+                    row = list()
+                    for index, _ in enumerate(attributes):
+                        row.append(result.get('attributes').get(attributes[index]))
+                    data.append(row)
             # Return object
             return data
 
@@ -484,8 +475,7 @@ FILETYPE = {
 
 # region Functions
 def create_database_manager(dbtype, *args, **kwargs):
-    """
-    Creates a DatabaseManager object
+    """Creates a DatabaseManager object
 
     :param dbtype: type of database connection
     :return: DatabaseManager
@@ -496,8 +486,7 @@ def create_database_manager(dbtype, *args, **kwargs):
 
 
 def create_file_manager(filetype, filename):
-    """
-    Creates a FileManager object
+    """Creates a FileManager object
 
     :param filetype: type of file
     :param filename: path of file
@@ -509,8 +498,7 @@ def create_file_manager(filetype, filename):
 
 
 def create_ldap_manager(server, username, password, ssl=False, tls=True):
-    """
-    Creates a LdapManager object
+    """Creates a LdapManager object
 
     :param server: fqdn server name or ip address
     :param username: username for bind operation
@@ -523,8 +511,7 @@ def create_ldap_manager(server, username, password, ssl=False, tls=True):
 
 
 def manager(datatype, *args, **kwargs):
-    """
-    Creates manager object based on datatype
+    """Creates manager object based on datatype
 
     :param datatype: type of manager
     :param args: various positional arguments
