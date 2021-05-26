@@ -22,7 +22,7 @@
 
 """Information variable used by modules on this package."""
 
-__version__ = '0.0.9'
+__version__ = '1.0.0'
 __author__ = 'Matteo Guadrini'
 __email__ = 'matteo.guadrini@hotmail.it'
 __homepage__ = 'https://github.com/MatteoGuadrini/pyreports'
