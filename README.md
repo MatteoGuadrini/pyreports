@@ -31,11 +31,13 @@ $ cd pyreports
 $ python setup.py install
 ```
 
-## How does it work
+## Why choose this library?
 
 _pyreports_ wants to be a library that simplifies the collection of data from multiple sources such as databases, 
 files and directory servers (through LDAP), the processing of them through built-in and customized functions, 
 and the saving in various formats (or, by inserting the data in a database).
+
+## How does it work
 
 _pyreports_ uses the [**tablib**](https://tablib.readthedocs.io/en/stable/) library to organize the data into _Dataset_ object.
 
