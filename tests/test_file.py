@@ -29,7 +29,7 @@ class TestFile(unittest.TestCase):
                 result = rf.read()
         self.assertEqual(read_data, result)
         # Real pyreports.io.File object
-        file_real = pyreports.io.File(f'{tmp_folder}/test_file.txt')
+        file_real = pyreports.io.TextFile(f'{tmp_folder}/test_file.txt')
         real_data = file_real.read()
         self.assertIsInstance(real_data, Dataset)
         file_real.write(real_data)

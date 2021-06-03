@@ -57,7 +57,7 @@ class Connection(ABC):
         pass
 
 
-class File:
+class File(ABC):
 
     """File base class"""
 
@@ -67,6 +67,28 @@ class File:
         :param filename: file path
         """
         self.file = filename
+
+    @abstractmethod
+    def write(self, data):
+        """Write data on file
+
+        :param data: data to write on file
+        :return: None
+        """
+        pass
+
+    @abstractmethod
+    def read(self, **kwargs):
+        """Read with format
+
+        :return: Dataset object
+        """
+        pass
+
+
+class TextFile(File):
+
+    """Text file class"""
 
     def write(self, data):
         """Write data on file
@@ -462,7 +484,7 @@ DBTYPE = {
 }
 
 FILETYPE = {
-    'file': File,
+    'file': TextFile,
     'csv': CsvFile,
     'json': JsonFile,
     'yaml': YamlFile,
