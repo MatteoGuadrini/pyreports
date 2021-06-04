@@ -443,6 +443,15 @@ class LdapManager:
                                      auto_bind=self.auto_bind, raise_exceptions=True)
         self.bind.bind()
 
+    def __repr__(self):
+        """Representation of LdapManager object
+
+        :return: string
+        """
+        obj_repr = f"<{self.__class__.__name__} object, "
+        obj_repr += f"server={self.connector.host}, ssl={self.connector.ssl}, tls={self.connector.tls}>"
+        return obj_repr
+
     def rebind(self, username, password):
         """Re-bind with specified username and password
 
