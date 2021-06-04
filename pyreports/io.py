@@ -286,7 +286,7 @@ class DatabaseManager:
 
         :return: string
         """
-        return f"<DatabaseManager object, connection={self.connector.__class__.__name__}>"
+        return f"<{self.__class__.__name__} object, connection={self.connector.__class__.__name__}>"
 
     def reconnect(self):
         """Close and start connection
@@ -395,6 +395,13 @@ class FileManager:
         """
         self.type = 'file'
         self.data = file
+
+    def __repr__(self):
+        """Representation of FileManager object
+
+        :return: string
+        """
+        return f"<{self.__class__.__name__} object, file={self.data.file}>"
 
     def write(self, data):
         """Write data on file
