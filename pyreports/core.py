@@ -63,6 +63,13 @@ class Executor:
         """
         return (row for row in self.data)
 
+    def __str__(self):
+        """Pretty representation of Executor object
+
+        :return: string
+        """
+        return str(self.data)
+
     def get_data(self):
         """Get dataset
 
