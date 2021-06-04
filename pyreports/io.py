@@ -281,6 +281,13 @@ class DatabaseManager:
         self.lastrowid = None
         self.rowcount = 0
 
+    def __repr__(self):
+        """Representation of DatabaseManager object
+
+        :return: string
+        """
+        return f"<DatabaseManager object, connection={self.connector.__class__.__name__}>"
+
     def reconnect(self):
         """Close and start connection
 
