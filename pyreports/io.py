@@ -57,7 +57,7 @@ class Connection(ABC):
         pass
 
 
-class File:
+class File(ABC):
 
     """File base class"""
 
@@ -67,6 +67,28 @@ class File:
         :param filename: file path
         """
         self.file = filename
+
+    @abstractmethod
+    def write(self, data):
+        """Write data on file
+
+        :param data: data to write on file
+        :return: None
+        """
+        pass
+
+    @abstractmethod
+    def read(self, **kwargs):
+        """Read with format
+
+        :return: Dataset object
+        """
+        pass
+
+
+class TextFile(File):
+
+    """Text file class"""
 
     def write(self, data):
         """Write data on file
@@ -259,6 +281,13 @@ class DatabaseManager:
         self.lastrowid = None
         self.rowcount = 0
 
+    def __repr__(self):
+        """Representation of DatabaseManager object
+
+        :return: string
+        """
+        return f"<{self.__class__.__name__} object, connection={self.connector.__class__.__name__}>"
+
     def reconnect(self):
         """Close and start connection
 
@@ -367,6 +396,13 @@ class FileManager:
         self.type = 'file'
         self.data = file
 
+    def __repr__(self):
+        """Representation of FileManager object
+
+        :return: string
+        """
+        return f"<{self.__class__.__name__} object, file={self.data.file}>"
+
     def write(self, data):
         """Write data on file
 
@@ -406,6 +442,15 @@ class LdapManager:
         self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
                                      auto_bind=self.auto_bind, raise_exceptions=True)
         self.bind.bind()
+
+    def __repr__(self):
+        """Representation of LdapManager object
+
+        :return: string
+        """
+        obj_repr = f"<{self.__class__.__name__} object, "
+        obj_repr += f"server={self.connector.host}, ssl={self.connector.ssl}, tls={self.connector.tls}>"
+        return obj_repr
 
     def rebind(self, username, password):
         """Re-bind with specified username and password
@@ -462,7 +507,7 @@ DBTYPE = {
 }
 
 FILETYPE = {
-    'file': File,
+    'file': TextFile,
     'csv': CsvFile,
     'json': JsonFile,
     'yaml': YamlFile,

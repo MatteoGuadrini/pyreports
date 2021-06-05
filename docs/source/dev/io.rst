@@ -36,14 +36,15 @@ Example ``Connection`` based class:
 File
 ****
 
-The ``File`` is the class that the other ``*File`` classes are based on.
+The ``File`` is the abstract class that the other ``*File`` classes are based on.
 It contains only the ``file`` attribute, where the path of the file is saved during the creation of the object and two methods:
-``read`` to read the contents of the file (must return a Dataset object) and write (accept a Dataset) and writes to the destination file.
+``read`` to read the contents of the file (must return a Dataset object) and ``write`` (accept a Dataset) and writes to the destination file.
 
 
 
-.. autoclass:: pyreports.io.File
-    :members:
+.. literalinclude:: ../../../pyreports/io.py
+    :language: python
+    :pyobject: File
 
 
 
