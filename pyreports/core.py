@@ -245,7 +245,7 @@ class Report:
 
         :return: string
         """
-        return self._print_data()
+        return str(self._print_data())
 
     def _print_data(self):
         """Print data and count
