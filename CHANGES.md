@@ -1,5 +1,13 @@
 # Release notes
 
+## 1.2.0
+Aug 5, 2021
+
+- Added _fill_value_ argument on **aggregate** function; this value also is callable without arguments
+- Added _send_ method on **Report** class; with this method you send report via email
+- Added _send_ method on **ReportBook** class; with this method you send report via email
+- Fix \*__str__* method on **Report** class
+
 ## 1.1.0
 Jun 5, 2021
 

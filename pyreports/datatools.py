@@ -109,12 +109,13 @@ def counter(data, column):
     return Counter((item for item in data))
 
 
-def aggregate(*columns, fill_empty: bool = False):
+def aggregate(*columns, fill_empty: bool = False, fill_value=None):
     """
     Aggregate in a new Dataset the columns
 
     :param columns: columns added
-    :param fill_empty: fill the empty field of data with None
+    :param fill_empty: fill the empty field of data with "fill_value" argument
+    :param fill_value: fill value for empty field if "fill_empty" argument is specified
     :return: Dataset
     """
     if len(columns) >= 2:
@@ -124,7 +125,7 @@ def aggregate(*columns, fill_empty: bool = False):
         for list_ in columns[1:]:
             if fill_empty:
                 while len(last_list) != len(list_):
-                    list_.append(None)
+                    list_.append(fill_value() if callable(fill_value) else fill_value)
             else:
                 if len(last_list) != len(list_):
                     raise InvalidDimensions('the columns are not the same length')
