@@ -337,7 +337,7 @@ class Report:
 
         # Prepare attachment
         self.export()
-        attach_file_name = self.output.file
+        attach_file_name = self.output.data.file
         attach_file = open(attach_file_name, 'rb')
         payload = MIMEBase('application', 'octate-stream')
         payload.set_payload(attach_file.read())
