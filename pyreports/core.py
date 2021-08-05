@@ -24,6 +24,12 @@
 
 # region Imports
 import tablib
+import smtplib
+import ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email import encoders
+from email.mime.base import MIMEBase
 from .io import FileManager
 from .exception import ReportManagerError, ReportDataError
 
@@ -294,6 +300,50 @@ class Report:
                 print(self)
         else:
             raise ReportManagerError('the output object must be FileManager or NoneType object')
+
+    def send(self, server, _from, to, cc=None, bcc=None, subject=None, body=None, auth=None, _ssl=True, headers=None):
+        if not self.output:
+            raise ReportDataError('if you want send a mail with a report in attachment, must be specified output')
+
+        # Prepare mail header
+        message = MIMEMultipart("alternative")
+        message["Subject"] = self.title if not subject else subject
+        message["From"] = _from
+        message["To"] = to
+        if cc:
+            message["Cc"] = cc
+        if bcc:
+            message["Bcc"] = bcc
+        if headers:
+            message.add_header(*headers)
+
+        # Prepare body
+        part = MIMEText(body, "html")
+        message.attach(part)
+
+        # Prepare attachment
+        self.export()
+        attach_file_name = self.output.file
+        attach_file = open(attach_file_name, 'rb')
+        payload = MIMEBase('application', 'octate-stream')
+        payload.set_payload(attach_file.read())
+        encoders.encode_base64(payload)
+        payload.add_header('Content-Disposition', 'attachment', filename=attach_file_name)
+        message.attach(payload)
+
+        # Prepare SMTP connection
+        if _ssl:
+            port = smtplib.SMTP_SSL_PORT
+            protocol = smtplib.SMTP_SSL
+            kwargs = {'context': ssl.create_default_context()}
+        else:
+            port = smtplib.SMTP_PORT
+            protocol = smtplib.SMTP
+            kwargs = {}
+        with protocol(server, port, **kwargs) as srv:
+            if auth:
+                srv.login(*auth)
+            srv.sendmail(_from, to, message.as_string())
 
 
 class ReportBook:
