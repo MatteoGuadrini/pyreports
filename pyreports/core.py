@@ -301,7 +301,21 @@ class Report:
         else:
             raise ReportManagerError('the output object must be FileManager or NoneType object')
 
-    def send(self, server, _from, to, cc=None, bcc=None, subject=None, body=None, auth=None, _ssl=True, headers=None):
+    def send(self, server, _from, to, cc=None, bcc=None, subject=None, body='', auth=None, _ssl=True, headers=None):
+        """Send saved report to email
+
+        :param server: server SMTP
+        :param _from: email address 'from:'
+        :param to: email address 'to:'
+        :param cc: email address 'cc:'
+        :param bcc: email address 'bcc:'
+        :param subject: email subject. Default is report title
+        :param body: email body
+        :param auth: authorization tuple "(user, password)"
+        :param _ssl: boolean, if True port is 465 else 25
+        :param headers: more header value "(header_name, key, value)"
+        :return: None
+        """
         if not self.output:
             raise ReportDataError('if you want send a mail with a report in attachment, must be specified output')
 
@@ -444,5 +458,24 @@ class ReportBook:
         else:
             for report in self:
                 report.export()
+
+    def send(self, server, _from, to, cc=None, bcc=None, subject=None, body='', auth=None, _ssl=True, headers=None):
+        """Send saved report to email
+
+        :param server: server SMTP
+        :param _from: email address 'from:'
+        :param to: email address 'to:'
+        :param cc: email address 'cc:'
+        :param bcc: email address 'bcc:'
+        :param subject: email subject. Default is report title
+        :param body: email body
+        :param auth: authorization tuple "(user, password)"
+        :param _ssl: boolean, if True port is 465 else 25
+        :param headers: more header value "(header_name, key, value)"
+        :return: None
+        """
+        for report in self:
+            report.send(server, _from, to, cc=cc, bcc=bcc, subject=subject, body=body, auth=auth,
+                        _ssl=_ssl, headers=headers)
 
 # endregion
