@@ -29,6 +29,7 @@ import mysql.connector as mdb
 import psycopg2
 import tablib
 import ldap3
+from nosqlapi import Manager
 from abc import ABC, abstractmethod
 
 
@@ -382,6 +383,13 @@ class DatabaseManager:
         :return: None
         """
         self.connector.connection.commit()
+
+
+class NOSQLManager(Manager):
+
+    """Database manager class for NOSQL connection"""
+
+    pass
 
 
 class FileManager:
