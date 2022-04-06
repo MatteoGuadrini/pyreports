@@ -24,6 +24,8 @@
 
 # region Imports
 import sqlite3
+from typing import Union, List
+import nosqlapi
 import pymssql
 import mysql.connector as mdb
 import psycopg2
@@ -385,11 +387,27 @@ class DatabaseManager:
         self.connector.connection.commit()
 
 
-class NOSQLManager(Manager):
+class NoSQLManager(Manager):
 
     """Database manager class for NOSQL connection"""
 
-    pass
+    @staticmethod
+    def _response_to_dataset(obj: Union[List[tuple], List[list], dict, nosqlapi.Response]) -> tablib.Dataset:
+        """Transform receive data into Dataset object"""
+        data = tablib.Dataset()
+        if isinstance(obj, (list, tuple)):
+            data = tablib.Dataset([row for row in obj])
+        elif isinstance(obj, dict):
+            data = tablib.Dataset([obj[key] for key in obj], headers=list(obj.keys()))
+        elif isinstance(obj, nosqlapi.Response):
+            if isinstance(obj.data, (list, tuple)):
+                data = tablib.Dataset([row for row in obj.data])
+            elif isinstance(obj.data, dict):
+                data = tablib.Dataset([obj.data[key] for key in obj], headers=list(obj.data.keys()))
+        else:
+            data.append(obj)
+
+        return data
 
 
 class FileManager:
