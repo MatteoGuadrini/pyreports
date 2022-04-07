@@ -127,6 +127,9 @@ class TestNoSQLManager(unittest.TestCase):
         # Test nosql database manager
         nosql_manager = pyreports.io.NoSQLManager(connection=self.conn)
         self.assertIsInstance(nosql_manager, pyreports.io.NoSQLManager)
+        # Test get data
+        data = nosql_manager.get('doc1')
+        self.assertIsInstance(data, Dataset)
 
 
 class TestLDAPManager(unittest.TestCase):

@@ -409,6 +409,10 @@ class NoSQLManager(Manager):
 
         return data
 
+    def get(self, *args, **kwargs) -> tablib.Dataset:
+        """Get data from database session"""
+        return self._response_to_dataset(self.session.get(*args, **kwargs))
+
 
 class FileManager:
 
