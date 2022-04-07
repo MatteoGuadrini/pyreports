@@ -111,6 +111,24 @@ class TestDBManager(unittest.TestCase):
         self.assertIsInstance(data, Dataset)
 
 
+class TestNoSQLManager(unittest.TestCase):
+
+    conn = MagicMock()
+    with patch(target='nosqlapi.Connection') as mock:
+        conn.connection = mock.return_value
+        conn.session = conn.connection.connect()
+        conn.connection.host = 'mongodb.local'
+        conn.connection.database = 'mydb'
+        conn.connection.username = 'username'
+        conn.connection.password = 'password'
+        conn.connection.port = 27017
+
+    def test_nosql_manager(self):
+        # Test nosql database manager
+        nosql_manager = pyreports.io.NoSQLManager(connection=self.conn)
+        self.assertIsInstance(nosql_manager, pyreports.io.NoSQLManager)
+
+
 class TestLDAPManager(unittest.TestCase):
 
     conn = MagicMock()
