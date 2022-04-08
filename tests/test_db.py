@@ -130,6 +130,9 @@ class TestNoSQLManager(unittest.TestCase):
         # Test get data
         data = nosql_manager.get('doc1')
         self.assertIsInstance(data, Dataset)
+        # Test find data
+        data = nosql_manager.find({"name": "Arthur"})
+        self.assertIsInstance(data, Dataset)
 
 
 class TestLDAPManager(unittest.TestCase):
