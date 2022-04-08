@@ -332,7 +332,7 @@ class DatabaseManager:
         # Set description
         self.description = self.connector.cursor.description
 
-    def fetchall(self):
+    def fetchall(self) -> tablib.Dataset:
         """Fetches all (or all remaining) rows of a query result set
 
         :return: Dataset object
@@ -343,7 +343,7 @@ class DatabaseManager:
             self.data.append(list(row))
         return self.data
 
-    def fetchone(self):
+    def fetchone(self) -> tablib.Dataset:
         """Retrieves the next row of a query result set
 
         :return: Dataset object
@@ -352,7 +352,7 @@ class DatabaseManager:
         self.data = tablib.Dataset(list(self.connector.cursor.fetchone()), headers=header)
         return self.data
 
-    def fetchmany(self, size=1):
+    def fetchmany(self, size=1) -> tablib.Dataset:
         """Fetches the next set of rows of a query result
 
         :param size: the number of rows returned
@@ -364,7 +364,7 @@ class DatabaseManager:
             self.data.append(list(row))
         return self.data
 
-    def callproc(self, proc_name, params=None):
+    def callproc(self, proc_name, params=None) -> tablib.Dataset:
         """Calls the stored procedure named
 
         :param proc_name: name of store procedure
@@ -445,7 +445,7 @@ class FileManager:
         """
         self.data.write(data)
 
-    def read(self, **kwargs):
+    def read(self, **kwargs) -> tablib.Dataset:
         """Read file
 
         :return: Dataset object
@@ -506,7 +506,7 @@ class LdapManager:
         """
         self.bind.unbind()
 
-    def query(self, base_search, search_filter, attributes):
+    def query(self, base_search, search_filter, attributes) -> tablib.Dataset:
         """Search LDAP element on subtree base search directory
 
         :param base_search: distinguishedName of LDAP base search
