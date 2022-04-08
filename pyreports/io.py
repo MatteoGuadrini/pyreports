@@ -617,6 +617,10 @@ def manager(datatype, *args, **kwargs):
         return create_file_manager(datatype, *args, **kwargs)
     elif datatype == 'ldap':
         return create_ldap_manager(*args, **kwargs)
+    elif datatype == 'nosql':
+        connection = args[0]
+        nargs = args[1:]
+        return create_nosql_manager(connection, *nargs, **kwargs)
     else:
         raise ValueError(f"data type {datatype} doesn't exists!")
 
