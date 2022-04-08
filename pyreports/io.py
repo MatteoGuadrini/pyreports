@@ -589,6 +589,19 @@ def create_ldap_manager(server, username, password, ssl=False, tls=True):
     return LdapManager(server, username, password, ssl=ssl, tls=tls)
 
 
+def create_nosql_manager(connection, *args, **kwargs):
+    """Creates a NoSQLManager object
+
+    :param connection: Connection object
+    :return: NoSQLManager
+    """
+    # Check if connection class is API compliant with nosqlapi
+    if not hasattr(connection, 'get') and not hasattr(connection, 'find'):
+        raise nosqlapi.ConnectError('the connection class is not API compliant. see https://nosqlapi.rtfd.io/')
+    # Create NoSQLManager object
+    return NoSQLManager(connection=connection(*args, **kwargs))
+
+
 def manager(datatype, *args, **kwargs):
     """Creates manager object based on datatype
 
