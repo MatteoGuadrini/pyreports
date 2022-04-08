@@ -599,7 +599,7 @@ def create_nosql_manager(connection, *args, **kwargs):
     if not hasattr(connection, 'get') and not hasattr(connection, 'find'):
         raise nosqlapi.ConnectError('the connection class is not API compliant. see https://nosqlapi.rtfd.io/')
     # Create NoSQLManager object
-    return NoSQLManager(connection=connection(*args, **kwargs))
+    return NoSQLManager(connection=connection, *args, **kwargs)
 
 
 def manager(datatype, *args, **kwargs):
