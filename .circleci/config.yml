@@ -1,16 +1,17 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@0.2.1
-
 jobs:
   build-and-test:
-    executor: python/default
+    docker:
+      - image: cimg/python:3.10.4
     steps:
       - checkout
-      - run: sudo python setup.py install
+      - run: sudo apt-get update -q
+      - run: sudo apt-get install -q -y python3-pip
+      - run: sudo pip install Cython
+      - run: sudo python3 setup.py install
       - run: sudo chmod -R 777 /tmp
-      - run: python -m unittest discover tests
+      - run: sudo python3 -m unittest discover tests
 
 
 workflows:
