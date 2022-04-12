@@ -31,6 +31,7 @@ import mysql.connector as mdb
 import psycopg2
 import tablib
 import ldap3
+import re
 from nosqlapi import Manager
 from abc import ABC, abstractmethod
 
@@ -113,6 +114,34 @@ class TextFile(File):
         with open(self.file) as file:
             for line in file:
                 data.append([line.strip('\n')])
+        return data
+
+
+class LogFile(File):
+
+    """Log file class"""
+
+    def write(self, data):
+        """Write data on file
+
+        :param data: data to write on file
+        :return: None
+        """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
+        with open(self.file, mode='w') as file:
+            file.write('\n'.join(' '.join(line) for row in data for line in row))
+
+    def read(self, pattern='\n', **kwargs):
+        """Read with format
+
+        :param pattern: regular expression pattern
+        :return: Dataset object
+        """
+        data = tablib.Dataset(**kwargs)
+        with open(self.file) as file:
+            for line in file:
+                data.append(re.split(pattern, line))
         return data
 
 
