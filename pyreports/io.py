@@ -132,7 +132,7 @@ class LogFile(File):
         with open(self.file, mode='w') as file:
             file.write('\n'.join(' '.join(line) for row in data for line in row))
 
-    def read(self, pattern='\n', **kwargs):
+    def read(self, pattern='\s+', **kwargs):
         """Read with format
 
         :param pattern: regular expression pattern
@@ -141,7 +141,7 @@ class LogFile(File):
         data = tablib.Dataset(**kwargs)
         with open(self.file) as file:
             for line in file:
-                data.append(re.split(pattern, line))
+                data.append(re.split(pattern, line.strip('\n'), flags=re.MULTILINE))
         return data
 
 
