@@ -60,6 +60,9 @@ class Connection(ABC):
     def close(self):
         pass
 
+    def __bool__(self):
+        return True if self.connection and self.cursor else False
+
 
 class File(ABC):
 
@@ -88,6 +91,9 @@ class File(ABC):
         :return: Dataset object
         """
         pass
+
+    def __bool__(self):
+        return True if self.file else False
 
 
 class TextFile(File):
