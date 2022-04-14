@@ -63,6 +63,9 @@ class Connection(ABC):
     def __bool__(self):
         return True if self.connection and self.cursor else False
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} object, connection={self.connection}, cursor={self.cursor}>"
+
 
 class File(ABC):
 
@@ -94,6 +97,9 @@ class File(ABC):
 
     def __bool__(self):
         return True if self.file else False
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} object, file={self.file}>"
 
 
 class TextFile(File):
