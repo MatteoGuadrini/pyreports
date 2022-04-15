@@ -1,5 +1,15 @@
 # Release notes
 
+## 1.3.0
+Apr 15, 2022
+
+- Added **NoSQLManager** class; this class extend _Manager_ class on the [nosqlapi](https://github.com/MatteoGuadrini/nosqlapi) package
+- Added **LogFile** class; this class load a log file and _read_ method accept regular expression
+- Added **\__bool\__** and **\__repr\__** method on _File_ and _Connection_ abstract classes
+- Fix documentation API section
+- Fix tests package
+- Fix CircleCi docker image
+
 ## 1.2.0
 Aug 5, 2021
 

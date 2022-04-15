@@ -121,4 +121,4 @@ Here we will see how to create your own ``*Connection`` class to access a specif
     pyreports.io.DBTYPE['db2'] = DB2Connection
 
     # Create my DatabaseManager object
-    mydb2 = pyreports.manager(dsn='sample', uid='db2inst1', pwd='ibmdb2')
+    mydb2 = pyreports.manager('db2', dsn='sample', uid='db2inst1', pwd='ibmdb2')

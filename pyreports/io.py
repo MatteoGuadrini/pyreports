@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # inputs -- pyreports
 #
-#     Copyright (C) 2021 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -24,11 +24,15 @@
 
 # region Imports
 import sqlite3
+from typing import Union, List
+import nosqlapi
 import pymssql
 import mysql.connector as mdb
 import psycopg2
 import tablib
 import ldap3
+import re
+from nosqlapi import Manager
 from abc import ABC, abstractmethod
 
 
@@ -55,6 +59,12 @@ class Connection(ABC):
     @abstractmethod
     def close(self):
         pass
+
+    def __bool__(self):
+        return True if self.connection and self.cursor else False
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} object, connection={self.connection}, cursor={self.cursor}>"
 
 
 class File(ABC):
@@ -85,6 +95,12 @@ class File(ABC):
         """
         pass
 
+    def __bool__(self):
+        return True if self.file else False
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} object, file={self.file}>"
+
 
 class TextFile(File):
 
@@ -110,6 +126,38 @@ class TextFile(File):
         with open(self.file) as file:
             for line in file:
                 data.append([line.strip('\n')])
+        return data
+
+
+class LogFile(File):
+
+    """Log file class"""
+
+    def write(self, data):
+        """Write data on file
+
+        :param data: data to write on file
+        :return: None
+        """
+        if not isinstance(data, tablib.Dataset):
+            data = tablib.Dataset(data)
+        with open(self.file, mode='w') as file:
+            file.write('\n'.join(' '.join(line) for row in data for line in row))
+
+    def read(self, pattern=r'\S+', **kwargs):
+        """Read with format
+
+        :param pattern: regular expression pattern
+        :return: Dataset object
+        """
+        data = tablib.Dataset(**kwargs)
+        with open(self.file) as file:
+            for line in file:
+                result = re.findall(pattern, line.strip('\n'))
+                if all([isinstance(e, (list, tuple)) for e in result]):
+                    data.append(*result)
+                else:
+                    data.append(result)
         return data
 
 
@@ -329,7 +377,7 @@ class DatabaseManager:
         # Set description
         self.description = self.connector.cursor.description
 
-    def fetchall(self):
+    def fetchall(self) -> tablib.Dataset:
         """Fetches all (or all remaining) rows of a query result set
 
         :return: Dataset object
@@ -340,7 +388,7 @@ class DatabaseManager:
             self.data.append(list(row))
         return self.data
 
-    def fetchone(self):
+    def fetchone(self) -> tablib.Dataset:
         """Retrieves the next row of a query result set
 
         :return: Dataset object
@@ -349,7 +397,7 @@ class DatabaseManager:
         self.data = tablib.Dataset(list(self.connector.cursor.fetchone()), headers=header)
         return self.data
 
-    def fetchmany(self, size=1):
+    def fetchmany(self, size=1) -> tablib.Dataset:
         """Fetches the next set of rows of a query result
 
         :param size: the number of rows returned
@@ -361,7 +409,7 @@ class DatabaseManager:
             self.data.append(list(row))
         return self.data
 
-    def callproc(self, proc_name, params=None):
+    def callproc(self, proc_name, params=None) -> tablib.Dataset:
         """Calls the stored procedure named
 
         :param proc_name: name of store procedure
@@ -382,6 +430,37 @@ class DatabaseManager:
         :return: None
         """
         self.connector.connection.commit()
+
+
+class NoSQLManager(Manager):
+
+    """Database manager class for NOSQL connection"""
+
+    @staticmethod
+    def _response_to_dataset(obj: Union[List[tuple], List[list], dict, nosqlapi.Response]) -> tablib.Dataset:
+        """Transform receive data into Dataset object"""
+        data = tablib.Dataset()
+        if isinstance(obj, (list, tuple)):
+            data = tablib.Dataset([row for row in obj])
+        elif isinstance(obj, dict):
+            data = tablib.Dataset([obj[key] for key in obj], headers=list(obj.keys()))
+        elif isinstance(obj, nosqlapi.Response):
+            if isinstance(obj.data, (list, tuple)):
+                data = tablib.Dataset([row for row in obj.data])
+            elif isinstance(obj.data, dict):
+                data = tablib.Dataset([obj.data[key] for key in obj], headers=list(obj.data.keys()))
+        else:
+            data.append(obj)
+
+        return data
+
+    def get(self, *args, **kwargs) -> tablib.Dataset:
+        """Get data from database session"""
+        return self._response_to_dataset(self.session.get(*args, **kwargs))
+
+    def find(self, *args, **kwargs) -> tablib.Dataset:
+        """Find data from database session"""
+        return self._response_to_dataset(self.session.find(*args, **kwargs))
 
 
 class FileManager:
@@ -411,7 +490,7 @@ class FileManager:
         """
         self.data.write(data)
 
-    def read(self, **kwargs):
+    def read(self, **kwargs) -> tablib.Dataset:
         """Read file
 
         :return: Dataset object
@@ -472,7 +551,7 @@ class LdapManager:
         """
         self.bind.unbind()
 
-    def query(self, base_search, search_filter, attributes):
+    def query(self, base_search, search_filter, attributes) -> tablib.Dataset:
         """Search LDAP element on subtree base search directory
 
         :param base_search: distinguishedName of LDAP base search
@@ -508,6 +587,7 @@ DBTYPE = {
 
 FILETYPE = {
     'file': TextFile,
+    'log': LogFile,
     'csv': CsvFile,
     'json': JsonFile,
     'yaml': YamlFile,
@@ -555,6 +635,19 @@ def create_ldap_manager(server, username, password, ssl=False, tls=True):
     return LdapManager(server, username, password, ssl=ssl, tls=tls)
 
 
+def create_nosql_manager(connection, *args, **kwargs):
+    """Creates a NoSQLManager object
+
+    :param connection: Connection object
+    :return: NoSQLManager
+    """
+    # Check if connection class is API compliant with nosqlapi
+    if not hasattr(connection, 'connect'):
+        raise nosqlapi.ConnectError('the connection class is not API compliant. see https://nosqlapi.rtfd.io/')
+    # Create NoSQLManager object
+    return NoSQLManager(connection=connection, *args, **kwargs)
+
+
 def manager(datatype, *args, **kwargs):
     """Creates manager object based on datatype
 
@@ -570,6 +663,10 @@ def manager(datatype, *args, **kwargs):
         return create_file_manager(datatype, *args, **kwargs)
     elif datatype == 'ldap':
         return create_ldap_manager(*args, **kwargs)
+    elif datatype == 'nosql':
+        connection = args[0]
+        nargs = args[1:]
+        return create_nosql_manager(connection, *nargs, **kwargs)
     else:
         raise ValueError(f"data type {datatype} doesn't exists!")
 

@@ -1,8 +1,9 @@
 import unittest
-import pyreports
-from tablib import Dataset
 from tempfile import gettempdir
 from unittest.mock import MagicMock, mock_open, patch
+
+from tablib import Dataset
+import pyreports
 
 tmp_folder = gettempdir()
 
@@ -35,37 +36,60 @@ class TestFile(unittest.TestCase):
         file_real.write(real_data)
         self.assertEqual(file_real.read()[0][0], 'Matteo')
 
-    def test_csv(self):
-        csv_real = pyreports.io.CsvFile(f'{tmp_folder}/test_csv.csv')
+    def test_log(self):
+        log_real = pyreports.io.LogFile(f'{tmp_folder}/test_log.log')
         # Write data
-        csv_real.write(['Matteo', 'Guadrini', 35])
+        log_real.write(
+            (["111.222.333.123", "HOME", "- [01/Feb/1998:01:08:39 -0800]", "GET", "/bannerad/ad.htm", "HTTP/1.0", "200",
+              "198", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"],
+             ["111.222.333.123", "AWAY", "- [01/Feb/1998:01:08:39 -0800]", "GET", "/bannerad/ad7.gif", "HTTP/1.0",
+              "200",
+              "9332", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"],
+             ["111.222.333.123", "AWAY", "- [01/Feb/1998:01:08:39 -0800]", "GET", "/bannerad/click.htm", "HTTP/1.0",
+              "200",
+              "28083", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"]
+             ))
         # Read data
-        real_data = csv_real.read()
+        real_data = log_real.read("([(\d\.)]+) (.*) \[(.*?)\] (.*?) (\d+) (\d+) (.*?) (.*?) (\(.*?\))",
+                                  headers=('ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser', 'host')
+                                  )
         self.assertIsInstance(real_data, Dataset)
 
-    def test_json(self):
-        json_real = pyreports.io.JsonFile(f'{tmp_folder}/test_json.json')
-        # Write data
-        json_real.write(['Matteo', 'Guadrini', 35])
-        # Read data
-        real_data = json_real.read()
-        self.assertIsInstance(real_data, Dataset)
 
-    def test_yaml(self):
-        yaml_real = pyreports.io.YamlFile(f'{tmp_folder}/test_yaml.yml')
-        # Write data
-        yaml_real.write(['Matteo', 'Guadrini', 35])
-        # Read data
-        real_data = yaml_real.read()
-        self.assertIsInstance(real_data, Dataset)
+def test_csv(self):
+    csv_real = pyreports.io.CsvFile(f'{tmp_folder}/test_csv.csv')
+    # Write data
+    csv_real.write(['Matteo', 'Guadrini', 35])
+    # Read data
+    real_data = csv_real.read()
+    self.assertIsInstance(real_data, Dataset)
 
-    def test_excel(self):
-        excel_real = pyreports.io.ExcelFile(f'{tmp_folder}/test_excel.xlsx')
-        # Write data
-        excel_real.write(['Matteo', 'Guadrini', 35])
-        # Read data
-        real_data = excel_real.read()
-        self.assertIsInstance(real_data, Dataset)
+
+def test_json(self):
+    json_real = pyreports.io.JsonFile(f'{tmp_folder}/test_json.json')
+    # Write data
+    json_real.write(['Matteo', 'Guadrini', 35])
+    # Read data
+    real_data = json_real.read()
+    self.assertIsInstance(real_data, Dataset)
+
+
+def test_yaml(self):
+    yaml_real = pyreports.io.YamlFile(f'{tmp_folder}/test_yaml.yml')
+    # Write data
+    yaml_real.write(['Matteo', 'Guadrini', 35])
+    # Read data
+    real_data = yaml_real.read()
+    self.assertIsInstance(real_data, Dataset)
+
+
+def test_excel(self):
+    excel_real = pyreports.io.ExcelFile(f'{tmp_folder}/test_excel.xlsx')
+    # Write data
+    excel_real.write(['Matteo', 'Guadrini', 35])
+    # Read data
+    real_data = excel_real.read()
+    self.assertIsInstance(real_data, Dataset)
 
 
 class TestFileManager(unittest.TestCase):

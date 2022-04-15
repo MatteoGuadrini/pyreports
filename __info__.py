@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # __info__
 #
-#     Copyright (C) 2021 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 """Information variable used by modules on this package."""
 
-__version__ = '1.2.1'
+__version__ = '1.3.0'
 __author__ = 'Matteo Guadrini'
 __email__ = 'matteo.guadrini@hotmail.it'
 __homepage__ = 'https://github.com/MatteoGuadrini/pyreports'

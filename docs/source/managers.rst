@@ -27,6 +27,8 @@ Each type of manager is managed by micro types; Below is the complete list:
     #. xlsx (Microsoft Excel file)
 #. LDAP
     #. ldap (Active Directory Server, OpenLDAP, FreeIPA, etc.)
+#. NoSQL
+    #. nosql (MongoDB, CouchDB, RavenDB, Redis, Neo4j, Cassandra, etc.)
 
 .. note::
     The connection arguments of a ``DatabaseManager`` vary according to the type of database being accessed.
@@ -51,6 +53,9 @@ Each type of manager is managed by micro types; Below is the complete list:
 
     # LdapManager object
     ldap = pyreports.manager('ldap', server='ldap.local', username='user', password='password', ssl=False, tls=True)
+
+    # NoSQLManager object (nosql api compliant https://nosqlapi.rtfd.io/)
+    nosql = pyreports.manager('nosql', MongoDBConnection, host='mongo1.local', database='test', user='dba', password='dba0000')
 
 Managers at work
 ****************
@@ -156,3 +161,24 @@ LdapManager
 
 .. warning::
     *LdapManager* should only be used for inputs. An ldap manager has no write methods.
+
+NoSQLManager
+------------
+
+**NoSQLManager** is an object that allows you to interface and get data from a NoSQL database server.
+
+.. code-block:: python
+
+    import pyreports
+
+    # LdapManager object
+    nosql = pyreports.manager('nosql', MongoDBConnection, host='mongo1.local', database='test', user='dba', password='dba0000')
+
+    # Get data
+    nosql.get('doc1')                   # Dataset object
+
+    # Find data
+    nosql.find('{"name": "Matteo"}')    # Dataset object
+
+.. note::
+    *NoSQLManager* object accept connection that must be compliant of `nosqlapi <https://nosqlapi.rtfd.io/>`_.
