@@ -587,6 +587,7 @@ DBTYPE = {
 
 FILETYPE = {
     'file': TextFile,
+    'log': LogFile,
     'csv': CsvFile,
     'json': JsonFile,
     'yaml': YamlFile,
