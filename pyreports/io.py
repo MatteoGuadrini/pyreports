@@ -641,7 +641,7 @@ def create_nosql_manager(connection, *args, **kwargs):
     :return: NoSQLManager
     """
     # Check if connection class is API compliant with nosqlapi
-    if not hasattr(connection, 'get') and not hasattr(connection, 'find'):
+    if not hasattr(connection, 'connect'):
         raise nosqlapi.ConnectError('the connection class is not API compliant. see https://nosqlapi.rtfd.io/')
     # Create NoSQLManager object
     return NoSQLManager(connection=connection, *args, **kwargs)
