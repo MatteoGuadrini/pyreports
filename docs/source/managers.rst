@@ -20,7 +20,8 @@ Each type of manager is managed by micro types; Below is the complete list:
     #. mysql (MySQL or MariaDB)
     #. postgresql (PostgreSQL or EnterpriseDB)
 #. File
-    #. file (standard text file or log)
+    #. file (standard text file)
+    #. log (log file)
     #. csv (Comma Separated Value file)
     #. json (JSON file)
     #. yaml (YAML file)
@@ -45,7 +46,8 @@ Each type of manager is managed by micro types; Below is the complete list:
     postgresql_db = pyreports.manager('postgresql', host='postgresql1.local', database='test', user='dba', password='dba0000')
 
     # FileManager object
-    file = pyreports.manager('file', '/tmp/log.log')
+    file = pyreports.manager('file', '/tmp/text.txt')
+    log = pyreports.manager('log', '/tmp/log.log')
     csv = pyreports.manager('csv', '/tmp/csv.csv')
     json = pyreports.manager('json', '/tmp/json.json')
     yaml = pyreports.manager('yaml', '/tmp/yaml.yml')

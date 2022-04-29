@@ -144,7 +144,7 @@ class LogFile(File):
         with open(self.file, mode='w') as file:
             file.write('\n'.join(' '.join(line) for row in data for line in row))
 
-    def read(self, pattern=r'\S+', **kwargs):
+    def read(self, pattern=r'(.*\n)', **kwargs):
         """Read with format
 
         :param pattern: regular expression pattern
@@ -152,12 +152,12 @@ class LogFile(File):
         """
         data = tablib.Dataset(**kwargs)
         with open(self.file) as file:
-            for line in file:
-                result = re.findall(pattern, line.strip('\n'))
-                if all([isinstance(e, (list, tuple)) for e in result]):
-                    data.append(*result)
+            result = re.findall(pattern, file.read())
+            for line in result:
+                if isinstance(line, (tuple, list)):
+                    data.append(line)
                 else:
-                    data.append(result)
+                    data.append([line])
         return data
 
 
@@ -490,12 +490,16 @@ class FileManager:
         """
         self.data.write(data)
 
-    def read(self, **kwargs) -> tablib.Dataset:
+    def read(self, pattern=None, **kwargs) -> tablib.Dataset:
         """Read file
 
         :return: Dataset object
         """
-        return self.data.read(**kwargs)
+        if pattern:
+            data = self.data.read(pattern=pattern, **kwargs)
+        else:
+            data = self.data.read(**kwargs)
+        return data
 
 
 class LdapManager:
