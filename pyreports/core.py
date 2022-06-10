@@ -23,9 +23,10 @@
 """Contains all business logic and data processing."""
 
 # region Imports
+import os
+import ssl
 import tablib
 import smtplib
-import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
@@ -342,7 +343,7 @@ class Report:
         payload = MIMEBase('application', 'octate-stream')
         payload.set_payload(attach_file.read())
         encoders.encode_base64(payload)
-        payload.add_header('Content-Disposition', 'attachment', filename=attach_file_name)
+        payload.add_header('Content-Disposition', 'attachment', filename=os.path.basename(attach_file_name))
         message.attach(payload)
 
         # Prepare SMTP connection
