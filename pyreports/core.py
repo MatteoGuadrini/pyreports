@@ -254,6 +254,13 @@ class Report:
         """
         return str(self._print_data())
 
+    def __bool__(self):
+        """Boolenan value
+
+        :return: bool
+        """
+        return True if self.report else False
+
     def _print_data(self):
         """Print data and count
 
