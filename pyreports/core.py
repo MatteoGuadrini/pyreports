@@ -255,7 +255,7 @@ class Report:
         return str(self._print_data())
 
     def __bool__(self):
-        """Boolenan value
+        """Boolean value
 
         :return: bool
         """
@@ -426,6 +426,13 @@ class ReportBook:
         :return: string
         """
         return f"<ReportBook object, title={self.title if self.title else None}>"
+
+    def __bool__(self):
+        """Boolean value
+
+        :return: bool
+        """
+        return True if self.reports else False
 
     def add(self, report: Report):
         """Add report object
