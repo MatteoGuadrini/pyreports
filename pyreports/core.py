@@ -261,6 +261,13 @@ class Report:
         """
         return True if self.report else False
 
+    def __iter__(self):
+        """Return report iterator
+
+        :return: iterable object
+        """
+        return (row for row in self.report)
+
     def _print_data(self):
         """Print data and count
 
