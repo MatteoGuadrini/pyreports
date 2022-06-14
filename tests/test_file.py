@@ -50,9 +50,10 @@ class TestFile(unittest.TestCase):
               "28083", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"]
              ))
         # Read data
-        real_data = log_real.read("([(\d\.)]+) (.*) \[(.*?)\] (.*?) (\d+) (\d+) (.*?) (.*?) (\(.*?\))",
-                                  headers=('ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser', 'host')
-                                  )
+        #real_data = log_real.read("([(\d\.)]+) (.*) \[(.*?)\] (.*?) (\d+) (\d+) (.*?) (.*?) (\(.*?\))",
+        #                          headers=('ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser', 'host')
+        #                          )
+        real_data = log_real.read()
         self.assertIsInstance(real_data, Dataset)
 
     def test_csv(self):
@@ -114,7 +115,9 @@ class TestFileManager(unittest.TestCase):
              ))
         # Read file
         self.assertIsInstance(log_manager.read("([(\d\.)]+) (.*) \[(.*?)\] (.*?) (\d+) (\d+) (.*?) (.*?) (\(.*?\))",
-                                  headers=('ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser', 'host')),
+                                               headers=(
+                                                   'ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser',
+                                                   'host')),
                               Dataset)
 
     def test_csv_manager(self):
