@@ -144,7 +144,7 @@ class LogFile(File):
         with open(self.file, mode='w') as file:
             file.write('\n'.join(' '.join(line) for row in data for line in row))
 
-    def read(self, pattern=r'(.*\n)', **kwargs):
+    def read(self, pattern=r'(.*\n|.*$)', **kwargs):
         """Read with format
 
         :param pattern: regular expression pattern
@@ -152,12 +152,13 @@ class LogFile(File):
         """
         data = tablib.Dataset(**kwargs)
         with open(self.file) as file:
-            result = re.findall(pattern, file.read())
-            for line in result:
-                if isinstance(line, (tuple, list)):
-                    data.append(line)
-                else:
-                    data.append([line])
+            for line in file:
+                result = re.findall(pattern, line)
+                if result:
+                    if isinstance(result[0], (tuple, list)):
+                        data.append(*result)
+                    else:
+                        data.append([result])
         return data
 
 
