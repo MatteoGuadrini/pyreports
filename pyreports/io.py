@@ -140,9 +140,9 @@ class LogFile(File):
         :return: None
         """
         if not isinstance(data, tablib.Dataset):
-            data = tablib.Dataset(data)
+            data = tablib.Dataset(*data)
         with open(self.file, mode='w') as file:
-            file.write('\n'.join(' '.join(field) for row in data for field in row))
+            file.write('\n'.join([' '.join(row) for row in data]))
 
     def read(self, pattern=r'(.*\n|.*$)', **kwargs):
         """Read with format

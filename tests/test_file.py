@@ -43,16 +43,14 @@ class TestFile(unittest.TestCase):
             (["111.222.333.123", "HOME", "- [01/Feb/1998:01:08:39 -0800]", "GET", "/bannerad/ad.htm", "HTTP/1.0", "200",
               "198", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"],
              ["111.222.333.123", "AWAY", "- [01/Feb/1998:01:08:39 -0800]", "GET", "/bannerad/ad7.gif", "HTTP/1.0",
-              "200",
-              "9332", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"],
+              "200", "9332", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"],
              ["111.222.333.123", "AWAY", "- [01/Feb/1998:01:08:39 -0800]", "GET", "/bannerad/click.htm", "HTTP/1.0",
-              "200",
-              "28083", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"]
+              "200", "28083", "http://www.referrer.com/bannerad/ba_intro.htm", "Mozilla/4.01", "(Macintosh; I; PPC)"]
              ))
         # Read data
         real_data = log_real.read("([(\d\.)]+) (.*) \[(.*?)\] (.*?) (\d+) (\d+) (.*?) (.*?) (\(.*?\))",
                                   headers=('ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser', 'host')
-                                 )
+                                  )
         self.assertIsInstance(real_data, Dataset)
 
     def test_csv(self):
