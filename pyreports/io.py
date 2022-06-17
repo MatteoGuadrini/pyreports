@@ -142,7 +142,7 @@ class LogFile(File):
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(*data)
         with open(self.file, mode='w') as file:
-            file.write('\n'.join([' '.join(row) for row in data]))
+            file.write('\n'.join([' '.join(row).strip('\n') for row in data]))
 
     def read(self, pattern=r'(.*\n|.*$)', **kwargs):
         """Read with format
