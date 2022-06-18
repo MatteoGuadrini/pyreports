@@ -66,6 +66,12 @@ class Connection(ABC):
     def __repr__(self):
         return f"<{self.__class__.__name__} object, connection={self.connection}, cursor={self.cursor}>"
 
+    def __iter__(self):
+        if self.cursor:
+            return (e for e in self.cursor)
+        else:
+            return iter([])
+
 
 class File(ABC):
 
@@ -100,6 +106,9 @@ class File(ABC):
 
     def __repr__(self):
         return f"<{self.__class__.__name__} object, file={self.file}>"
+
+    def __iter__(self):
+        return (line for line in open(self.file))
 
 
 class TextFile(File):
