@@ -60,6 +60,9 @@ class TestFile(unittest.TestCase):
         # Read data
         real_data = csv_real.read()
         self.assertIsInstance(real_data, Dataset)
+        # Iterate csv
+        for row in csv_real:
+            self.assertIsInstance(row, str)
 
     def test_json(self):
         json_real = pyreports.io.JsonFile(f'{tmp_folder}/test_json.json')
