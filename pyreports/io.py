@@ -108,7 +108,9 @@ class File(ABC):
         return f"<{self.__class__.__name__} object, file={self.file}>"
 
     def __iter__(self):
-        return (line for line in open(self.file))
+        with open(self.file) as file:
+            for line in file:
+                yield line
 
 
 class TextFile(File):
