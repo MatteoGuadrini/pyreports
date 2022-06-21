@@ -494,6 +494,11 @@ class FileManager:
         """
         return f"<{self.__class__.__name__} object, file={self.data.file}>"
 
+    def __iter__(self):
+        with open(self.data.file) as file:
+            for line in file:
+                yield line
+
     def write(self, data):
         """Write data on file
 
