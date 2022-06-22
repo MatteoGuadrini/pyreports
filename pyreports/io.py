@@ -348,6 +348,12 @@ class DatabaseManager:
         """
         return f"<{self.__class__.__name__} object, connection={self.connector.__class__.__name__}>"
 
+    def __iter__(self):
+        if self.connector.cursor:
+            return (e for e in self.connector.cursor)
+        else:
+            return iter([])
+
     def reconnect(self):
         """Close and start connection
 
