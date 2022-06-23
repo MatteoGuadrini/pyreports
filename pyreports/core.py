@@ -77,6 +77,14 @@ class Executor:
         """
         return str(self.data)
 
+    def __getitem__(self, item):
+        """Get item into Dataset
+
+        :param item: row (int)
+        :return: row
+        """
+        return self.data[item]
+
     def get_data(self):
         """Get dataset
 
