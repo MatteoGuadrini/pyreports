@@ -78,12 +78,20 @@ class Executor:
         return str(self.data)
 
     def __getitem__(self, item):
-        """Get item into Dataset
+        """Get row into Dataset object
 
         :param item: row (int)
         :return: row
         """
         return self.data[item]
+
+    def __delitem__(self, key):
+        """Delete row into Dataset object
+
+        :param key: row (int)
+        :return: None
+        """
+        del self.data[key]
 
     def get_data(self):
         """Get dataset
