@@ -1,5 +1,19 @@
 # Release notes
 
+## 1.4.0
+Jun 27, 2022
+
+- Added **\__bool\__** method on _Report_ class
+- Added **\__iter\__** method on _Report_ class
+- Added **\__bool\__** method on _ReportBook_ class
+- Added **\__iter\__** method on _Connection_ and _File_ classes
+- Added **\__iter\__** method on _FileManager_ class
+- Added **\__iter\__** method on _DatabaseManager_ class
+- Added **\__getitem\__** on _Executor_ class
+- Added **\__delitem\__** on _Executor_ class
+- Fix name of attachment on **send** method of _Report_ class
+- Fix **write** method on _LogFile_ class
+
 ## 1.3.0
 Apr 15, 2022
 
