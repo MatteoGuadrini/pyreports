@@ -23,9 +23,10 @@
 """Contains all business logic and data processing."""
 
 # region Imports
+import os
+import ssl
 import tablib
 import smtplib
-import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
@@ -75,6 +76,22 @@ class Executor:
         :return: string
         """
         return str(self.data)
+
+    def __getitem__(self, item):
+        """Get row into Dataset object
+
+        :param item: row (int)
+        :return: row
+        """
+        return self.data[item]
+
+    def __delitem__(self, key):
+        """Delete row into Dataset object
+
+        :param key: row (int)
+        :return: None
+        """
+        del self.data[key]
 
     def get_data(self):
         """Get dataset
@@ -253,6 +270,20 @@ class Report:
         """
         return str(self._print_data())
 
+    def __bool__(self):
+        """Boolean value
+
+        :return: bool
+        """
+        return True if self.report else False
+
+    def __iter__(self):
+        """Return report iterator
+
+        :return: iterable object
+        """
+        return (row for row in self.report)
+
     def _print_data(self):
         """Print data and count
 
@@ -342,7 +373,7 @@ class Report:
         payload = MIMEBase('application', 'octate-stream')
         payload.set_payload(attach_file.read())
         encoders.encode_base64(payload)
-        payload.add_header('Content-Disposition', 'attachment', filename=attach_file_name)
+        payload.add_header('Content-Disposition', 'attachment', filename=os.path.basename(attach_file_name))
         message.attach(payload)
 
         # Prepare SMTP connection
@@ -418,6 +449,13 @@ class ReportBook:
         :return: string
         """
         return f"<ReportBook object, title={self.title if self.title else None}>"
+
+    def __bool__(self):
+        """Boolean value
+
+        :return: bool
+        """
+        return True if self.reports else False
 
     def add(self, report: Report):
         """Add report object

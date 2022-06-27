@@ -66,6 +66,12 @@ class Connection(ABC):
     def __repr__(self):
         return f"<{self.__class__.__name__} object, connection={self.connection}, cursor={self.cursor}>"
 
+    def __iter__(self):
+        if self.cursor:
+            return (e for e in self.cursor)
+        else:
+            return iter([])
+
 
 class File(ABC):
 
@@ -100,6 +106,11 @@ class File(ABC):
 
     def __repr__(self):
         return f"<{self.__class__.__name__} object, file={self.file}>"
+
+    def __iter__(self):
+        with open(self.file) as file:
+            for line in file:
+                yield line
 
 
 class TextFile(File):
@@ -140,11 +151,11 @@ class LogFile(File):
         :return: None
         """
         if not isinstance(data, tablib.Dataset):
-            data = tablib.Dataset(data)
+            data = tablib.Dataset(*data)
         with open(self.file, mode='w') as file:
-            file.write('\n'.join(' '.join(line) for row in data for line in row))
+            file.write('\n'.join([' '.join(row).strip('\n') for row in data]))
 
-    def read(self, pattern=r'(.*\n)', **kwargs):
+    def read(self, pattern=r'(.*\n|.*$)', **kwargs):
         """Read with format
 
         :param pattern: regular expression pattern
@@ -152,12 +163,13 @@ class LogFile(File):
         """
         data = tablib.Dataset(**kwargs)
         with open(self.file) as file:
-            result = re.findall(pattern, file.read())
-            for line in result:
-                if isinstance(line, (tuple, list)):
-                    data.append(line)
-                else:
-                    data.append([line])
+            for line in file:
+                result = re.findall(pattern, line)
+                if result:
+                    if isinstance(result[0], (tuple, list)):
+                        data.append(*result)
+                    else:
+                        data.append([result])
         return data
 
 
@@ -336,6 +348,12 @@ class DatabaseManager:
         """
         return f"<{self.__class__.__name__} object, connection={self.connector.__class__.__name__}>"
 
+    def __iter__(self):
+        if self.connector.cursor:
+            return (e for e in self.connector.cursor)
+        else:
+            return iter([])
+
     def reconnect(self):
         """Close and start connection
 
@@ -481,6 +499,11 @@ class FileManager:
         :return: string
         """
         return f"<{self.__class__.__name__} object, file={self.data.file}>"
+
+    def __iter__(self):
+        with open(self.data.file) as file:
+            for line in file:
+                yield line
 
     def write(self, data):
         """Write data on file
