@@ -23,11 +23,29 @@
 """Command line interface"""
 
 # region imports
+import sys
 import yaml
+import argparse
+
 
 # endregion
 
 # region functions
+def get_args():
+    """Get command-line arguments"""
 
+    parser = argparse.ArgumentParser(
+        description='pyreports command line interface (CLI)',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument('config',
+                        metavar='CONFIG_FILE',
+                        default=sys.stdin,
+                        type=argparse.FileType('rt'),
+                        help='Config file')
+
+    args = parser.parse_args()
+
+    return args
 
 # endregion
