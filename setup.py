@@ -16,7 +16,7 @@ setup(
     maintainer='Matteo Guadrini',
     maintainer_email='matteo.guadrini@hotmail.it',
     install_requires=['ldap3', 'pymssql', 'mysql-connector-python',
-                      'psycopg2-binary', 'tablib', 'tablib[all]', 'nosqlapi'],
+                      'psycopg2-binary', 'tablib', 'tablib[all]', 'nosqlapi', 'pyyaml'],
     description='pyreports is a python library that allows you to create complex report from various sources',
     long_description=long_description,
     long_description_content_type="text/markdown",
