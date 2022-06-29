@@ -41,11 +41,21 @@ def get_args():
     parser.add_argument('config',
                         metavar='CONFIG_FILE',
                         default=sys.stdin,
-                        type=argparse.FileType('rt'),
+                        type=argparse.FileType('rt', encoding="utf-8"),
                         help='Config file')
 
     args = parser.parse_args()
 
     return args
+
+
+def load_config(yaml_file):
+    """Load configuration file
+
+    :param yaml_file: opened yaml file
+    :return: Any
+    """
+    with yaml_file as file:
+        return yaml.safe_load(file)
 
 # endregion
