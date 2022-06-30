@@ -58,4 +58,13 @@ def load_config(yaml_file):
     with yaml_file as file:
         return yaml.safe_load(file)
 
+
+def validate_config(config):
+    """Validate config object
+
+    :param config: YAML config object
+    :return: bool
+    """
+    return True if config.get('reports') else False
+
 # endregion
