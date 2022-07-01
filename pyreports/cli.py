@@ -67,4 +67,16 @@ def validate_config(config):
     """
     return True if config.get('reports') else False
 
+
+def main():
+    """Main logic"""
+
+    # Get command line args
+    args = get_args()
+    config = args.config
+
+    # Validate config file
+    if not validate_config(config):
+        raise yaml.YAMLError('there is no "reports" section')
+
 # endregion
