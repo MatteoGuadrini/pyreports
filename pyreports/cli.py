@@ -23,7 +23,6 @@
 """Command line interface"""
 
 # region imports
-import os
 import sys
 import yaml
 import argparse
@@ -46,14 +45,6 @@ def get_args():
                         help='Config file')
 
     args = parser.parse_args()
-
-    # Check if file exists
-    if not os.path.exists(args.config):
-        parser.error(f'{args.config} does not exists')
-
-    # Check if config is a file
-    if not os.path.isfile(args.config):
-        parser.error(f'{args.config} is not a file')
 
     # Check if file is a YAML file
     try:
@@ -93,5 +84,12 @@ def main():
     # Validate config file
     if not validate_config(config):
         raise yaml.YAMLError('there is no "reports" section')
+
+
+# endregion
+
+# region main
+if __name__ == '__main__':
+    main()
 
 # endregion
