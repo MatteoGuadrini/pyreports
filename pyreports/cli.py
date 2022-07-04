@@ -69,9 +69,14 @@ def validate_config(config):
     """Validate config object
 
     :param config: YAML config object
-    :return: bool
+    :return: None
     """
-    return True if config.get('reports') else False
+    try:
+        reports = config['reports']
+        if reports is None or not isinstance(reports, list):
+            raise yaml.YAMLError('"reports" section have not "report" list sections')
+    except KeyError as err:
+        raise yaml.YAMLError(f'there is no "{err}" section')
 
 
 def main():
@@ -82,8 +87,9 @@ def main():
     config = args.config
 
     # Validate config file
-    if not validate_config(config):
-        raise yaml.YAMLError('there is no "reports" section')
+    validate_config(config)
+
+    print(config)
 
 
 # endregion
