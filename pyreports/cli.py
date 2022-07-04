@@ -52,6 +52,9 @@ def get_args():
     except yaml.YAMLError as err:
         parser.error(f'file {args.config} is not a valid YAML file: {err}')
 
+    # Validate config file
+    validate_config(args.config)
+
     return args
 
 
@@ -85,11 +88,6 @@ def main():
     # Get command line args
     args = get_args()
     config = args.config
-
-    # Validate config file
-    validate_config(config)
-
-    print(config)
 
 
 # endregion
