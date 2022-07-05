@@ -53,7 +53,10 @@ def get_args():
         parser.error(f'file {args.config} is not a valid YAML file: {err}')
 
     # Validate config file
-    validate_config(args.config)
+    try:
+        validate_config(args.config)
+    except yaml.YAMLError as err:
+        parser.error(str(err))
 
     return args
 
