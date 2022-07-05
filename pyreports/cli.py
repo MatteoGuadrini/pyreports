@@ -26,6 +26,7 @@
 import sys
 import yaml
 import argparse
+from pyreports import manager
 
 
 # endregion
@@ -81,6 +82,9 @@ def validate_config(config):
         reports = config['reports']
         if reports is None or not isinstance(reports, list):
             raise yaml.YAMLError('"reports" section have not "report" list sections')
+        datas = all([bool(report.get('report').get('input')) for report in reports])
+        if not datas:
+            raise yaml.YAMLError('one of "report" section does not have "input" section')
     except KeyError as err:
         raise yaml.YAMLError(f'there is no "{err}" section')
 
@@ -91,6 +95,18 @@ def main():
     # Get command line args
     args = get_args()
     config = args.config
+
+    # Build the data and report
+    for report in config.get('reports', ()):
+        # Get data
+        input_ = report.get('report').get('input')
+        manager_ = manager(input_.get('manager'), input_.get('filename', ()))
+        if manager_.type == 'file':
+            data = manager_.read(*input_.get('params', ()))
+        elif manager_.type == 'database':
+            data = manager_.execute(*input_.get('params', ()))
+        else:
+            data = manager_.find(*input_.get('params', ()))
 
 
 # endregion
