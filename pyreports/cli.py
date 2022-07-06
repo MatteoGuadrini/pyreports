@@ -87,6 +87,8 @@ def validate_config(config):
             raise yaml.YAMLError('one of "report" section does not have "input" section')
     except KeyError as err:
         raise yaml.YAMLError(f'there is no "{err}" section')
+    except AttributeError:
+        raise yaml.YAMLError('correctly indents the "report" section or "report" section not exists')
 
 
 def make_manager(input_config):
@@ -106,18 +108,60 @@ def make_manager(input_config):
     return manager
 
 
+def get_data(manager, params=None):
+    """Get Dataset from source
+
+    :param manager: Manager object
+    :param params: parameter used into call of method in Manager object
+    :return: Dataset
+    """
+    if params is None:
+        params = ()
+    data = None
+    # FileManager
+    if manager.type == 'file':
+        if params and isinstance(params, (list, tuple)):
+            data = manager.read(*params)
+        elif params and isinstance(params, dict):
+            data = manager.read(**params)
+    # DatabaseManager
+    elif manager.type == 'database':
+        if params and isinstance(params, (list, tuple)):
+            data = manager.execute(*params)
+        elif params and isinstance(params, dict):
+            data = manager.execute(**params)
+    # LdapManager
+    elif manager.type == 'ldap':
+        if params and isinstance(params, (list, tuple)):
+            data = manager.query(*params)
+        elif params and isinstance(params, dict):
+            data = manager.query(**params)
+    # NosqlManager
+    else:
+        if params and isinstance(params, (list, tuple)):
+            data = manager.find(*params)
+        elif params and isinstance(params, dict):
+            data = manager.find(**params)
+
+    return data
+
+
 def main():
     """Main logic"""
 
     # Get command line args
     args = get_args()
+    # Take reports
     config = args.config
+    reports = config.get('reports', ())
 
     # Build the data and report
-    for report in config.get('reports', ()):
+    for report in reports:
         # Make a manager
         input_ = report.get('report').get('input')
         manager = make_manager(input_)
+        # Get data
+        data = get_data(manager, input_.get('params'))
 
 
 # endregion
