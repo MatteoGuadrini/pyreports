@@ -26,7 +26,7 @@
 import sys
 import yaml
 import argparse
-from pyreports import manager
+import pyreports
 
 
 # endregion
@@ -89,6 +89,23 @@ def validate_config(config):
         raise yaml.YAMLError(f'there is no "{err}" section')
 
 
+def make_manager(input_config):
+    """Make Manager object
+
+    :param input_config: file, sql or nosql report configuration
+    :return: manager
+    """
+
+    type_ = input_config.get('manager')
+
+    if type_ in pyreports.io.FILETYPE:
+        manager = pyreports.manager(input_config.get('manager'), input_config.get('filename', ()))
+    else:
+        manager = pyreports.manager(input_config.get('manager'), **input_config.get('source', {}))
+
+    return manager
+
+
 def main():
     """Main logic"""
 
@@ -98,15 +115,9 @@ def main():
 
     # Build the data and report
     for report in config.get('reports', ()):
-        # Get data
+        # Make a manager
         input_ = report.get('report').get('input')
-        manager_ = manager(input_.get('manager'), input_.get('filename', ()))
-        if manager_.type == 'file':
-            data = manager_.read(*input_.get('params', ()))
-        elif manager_.type == 'database':
-            data = manager_.execute(*input_.get('params', ()))
-        else:
-            data = manager_.find(*input_.get('params', ()))
+        manager = make_manager(input_)
 
 
 # endregion
