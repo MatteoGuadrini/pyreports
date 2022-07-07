@@ -124,6 +124,8 @@ def get_data(manager, params=None):
             data = manager.read(*params)
         elif params and isinstance(params, dict):
             data = manager.read(**params)
+        else:
+            data = manager.read()
     # DatabaseManager
     elif manager.type == 'database':
         if params and isinstance(params, (list, tuple)):
@@ -157,11 +159,21 @@ def main():
 
     # Build the data and report
     for report in reports:
-        # Make a manager
+        # Make a manager object
         input_ = report.get('report').get('input')
         manager = make_manager(input_)
         # Get data
         data = get_data(manager, input_.get('params'))
+        # Make a report object
+        report_ = pyreports.Report(
+            input_data=data,
+            title=report.get('report').get('title'),
+            filters=report.get('report').get('filters'),
+            map_func=report.get('report').get('map'),
+            column=report.get('report').get('column'),
+            count=report.get('report').get('count', False),
+            output=make_manager(report.get('report').get('output'))
+        )
 
 
 # endregion
