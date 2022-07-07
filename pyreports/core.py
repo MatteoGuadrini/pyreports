@@ -289,8 +289,8 @@ class Report:
 
         :return: data and count
         """
-        if isinstance(self.report, tuple):
-            out = f'{self.report[0]}\nrows: {self.report[1]}'
+        if self.count:
+            out = f'{self.report}\nrows: {int(self.count)}'
             return out
         else:
             return self.report
