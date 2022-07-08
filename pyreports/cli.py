@@ -174,6 +174,27 @@ def main():
             count=report.get('report').get('count', False),
             output=make_manager(report.get('report').get('output'))
         )
+        # Check output
+        if report_.output:
+            # Check if export or send report
+            if report.get('report').get('mail'):
+                report_.send(
+                    server=report.get('report').get('mail').get('server'),
+                    _from=report.get('report').get('mail').get('from'),
+                    to=report.get('report').get('mail').get('to'),
+                    cc=report.get('report').get('mail').get('cc'),
+                    bcc=report.get('report').get('mail').get('bcc'),
+                    subject=report.get('report').get('mail').get('subject'),
+                    body=report.get('report').get('mail').get('body'),
+                    auth=tuple(report.get('report').get('mail').get('auth')),
+                    _ssl=bool(report.get('report').get('mail').get('ssl')),
+                    headers=report.get('report').get('mail').get('headers')
+                )
+            else:
+                report_.export()
+        else:
+            # Print report in stdout
+            print(report_)
 
 
 # endregion
