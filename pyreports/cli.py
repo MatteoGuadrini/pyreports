@@ -194,6 +194,8 @@ def main():
                 report_.export()
         else:
             # Print report in stdout
+            title = report.get('report').get('title')
+            print(f"{title}\n{'=' * len(title)}\n")
             print(report_)
 
 
