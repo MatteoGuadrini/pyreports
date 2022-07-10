@@ -44,6 +44,7 @@ def get_args():
                         default=sys.stdin,
                         type=argparse.FileType('rt', encoding="utf-8"),
                         help='Config file')
+    parser.add_argument('-v', '--verbose', help='Enable verbose mode')
 
     args = parser.parse_args()
 
@@ -146,6 +147,17 @@ def get_data(manager, params=None):
             data = manager.find(**params)
 
     return data
+
+
+def print_verbose(*messages, verbose=False):
+    """Print messages if verbose is True
+
+    :param messages: some string messages
+    :param verbose: enable or disable verbosity
+    :return: None
+    """
+    if verbose:
+        print('info:', *messages)
 
 
 def main():
