@@ -44,9 +44,10 @@ def get_args():
                         default=sys.stdin,
                         type=argparse.FileType('rt', encoding="utf-8"),
                         help='Config file')
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode')
+    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
 
     args = parser.parse_args()
+    filename = args.config.name
 
     # Check if file is a YAML file
     try:
@@ -59,6 +60,8 @@ def get_args():
         validate_config(args.config)
     except yaml.YAMLError as err:
         parser.error(str(err))
+
+    print_verbose(f'parsed YAML file {filename}', verbose=args.verbose)
 
     return args
 
@@ -169,12 +172,16 @@ def main():
     config = args.config
     reports = config.get('reports', ())
 
+    print_verbose(f'found {len(config.get("reports", ()))} report(s)', verbose=args.verbose)
+
     # Build the data and report
     for report in reports:
         # Make a manager object
         input_ = report.get('report').get('input')
+        print_verbose(f'make an input manager of type {input_.get("manager")}', verbose=args.verbose)
         manager = make_manager(input_)
         # Get data
+        print_verbose(f'get data from manager {manager}', verbose=args.verbose)
         data = get_data(manager, input_.get('params'))
         # Make a report object
         report_ = pyreports.Report(
@@ -186,10 +193,12 @@ def main():
             count=report.get('report').get('count', False),
             output=make_manager(report.get('report').get('output'))
         )
+        print_verbose(f'created report {report_.title}', verbose=args.verbose)
         # Check output
         if report_.output:
             # Check if export or send report
             if report.get('report').get('mail'):
+                print_verbose(f'send report to {report.get("report").get("mail").get("to")}', verbose=args.verbose)
                 report_.send(
                     server=report.get('report').get('mail').get('server'),
                     _from=report.get('report').get('mail').get('from'),
@@ -203,9 +212,11 @@ def main():
                     headers=report.get('report').get('mail').get('headers')
                 )
             else:
+                print_verbose(f'export report to {report_.output.data.file}', verbose=args.verbose)
                 report_.export()
         else:
             # Print report in stdout
+            print_verbose(f'print report to stdout', verbose=args.verbose)
             title = report.get('report').get('title')
             print(f"{title}\n{'=' * len(title)}\n")
             print(report_)
