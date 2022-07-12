@@ -28,6 +28,11 @@ import yaml
 import argparse
 import pyreports
 
+# endregion
+
+# region globals
+__version__ = '1.4.0'
+
 
 # endregion
 
@@ -45,6 +50,7 @@ def get_args():
                         type=argparse.FileType('rt', encoding="utf-8"),
                         help='Config file')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+    parser.add_argument('-V', '--version', help='Print version', version=__version__)
 
     args = parser.parse_args()
     filename = args.config.name
