@@ -58,6 +58,12 @@ Features
    dev/io
    dev/core
 
+.. toctree::
+   :maxdepth: 2
+   :caption: CLI:
+
+   dev/cli
+
 
 Indices and tables
 ==================
