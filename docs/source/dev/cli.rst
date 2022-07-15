@@ -13,3 +13,15 @@ Command arguments
 
 The only mandatory argument is the `YAML <https://yaml.org/>`_ language configuration file.
 
+Optional arguments
+------------------
+
+Here are all the optional flags that the command line interface has.
+
++---------------+----------------------+
+| flags         | description          |
++===============+======================+
+| -v/--verbose  | Enable verbose mode  |
+| -V/--version  | Print version        |
+| -h/--help     | Print help           |
++---------------+----------------------+
