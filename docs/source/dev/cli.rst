@@ -22,6 +22,19 @@ Here are all the optional flags that the command line interface has.
 | flags         | description          |
 +===============+======================+
 | -v/--verbose  | Enable verbose mode  |
++---------------+----------------------+
 | -V/--version  | Print version        |
++---------------+----------------------+
 | -h/--help     | Print help           |
 +---------------+----------------------+
+
+Report configuration
+********************
+
+The *YAML* file representing your reports begins with a **reports** key.
+
+.. code-block:: yaml
+
+    reports:
+        # ...
+
