@@ -38,3 +38,13 @@ The *YAML* file representing your reports begins with a **reports** key.
     reports:
         # ...
 
+
+Each report you want to define is a **report** key inside *reports*.
+
+.. code-block:: yaml
+
+    # My reports collection
+    reports:
+        # My single report
+        report:
+
