@@ -45,6 +45,69 @@ Each report you want to define is a **report** key inside *reports*.
 
     # My reports collection
     reports:
-        # My single report
-        report:
+      # My single report
+      report:
 
+input section
+-------------
+
+The report section must have a data **input**, which can be file, sql database, LDAP or NoSql database.
+
+.. code-block:: yaml
+   :caption: FileManager
+
+    reports:
+      report:
+        # My input
+        input:
+          manager: 'log'
+          filename: '/tmp/test_log.log'
+          # Apache http log format
+          params:
+            pattern: '([(\d\.)]+) (.*) \[(.*?)\] (.*?) (\d+) (\d+) (.*?) (.*?) (\(.*?\))'
+            headers: ['ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser', 'host']
+
+.. note::
+   Only *log* type has a ``pattern`` params.
+
+
+.. code-block:: yaml
+   :caption: DatabaseManager
+
+    reports:
+      report:
+        # My input
+        input:
+          manager: 'mysql'
+          source:
+          # Connection parameters of my mysql database
+            host: 'mysql1.local'
+            database: 'cars'
+            user: 'admin'
+            password: 'dba0000'
+          params:
+            query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
+            params: ['ford', 'red']
+
+.. attention::
+   For complete list of *source* parameters see the various python package for the providers databases.
+
+.. code-block:: yaml
+   :caption: LdapManager
+
+    reports:
+      report:
+        # My input
+        input:
+          manager: 'ldap'
+          source:
+          # Connection parameters of my ldap server
+            server: 'ldap.local'
+            username: 'user'
+            password: 'password'
+            ssl: False
+            tls: True
+          params:
+            base_search: 'DC=test,DC=local'
+            search_filter: '(&(objectClass=user)(objectCategory=person))'
+            attributes: ['name', 'mail', 'phone']
