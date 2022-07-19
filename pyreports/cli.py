@@ -24,6 +24,7 @@
 
 # region imports
 import sys
+import tablib
 import yaml
 import argparse
 import pyreports
@@ -189,17 +190,22 @@ def main():
         # Get data
         print_verbose(f'get data from manager {manager}', verbose=args.verbose)
         data = get_data(manager, input_.get('params'))
-        # Make a report object
-        report_ = pyreports.Report(
-            input_data=data,
-            title=report.get('report').get('title'),
-            filters=report.get('report').get('filters'),
-            map_func=report.get('report').get('map'),
-            column=report.get('report').get('column'),
-            count=report.get('report').get('count', False),
-            output=make_manager(report.get('report').get('output'))
-        )
-        print_verbose(f'created report {report_.title}', verbose=args.verbose)
+        try:
+            # Make a report object
+            report_ = pyreports.Report(
+                input_data=data,
+                title=report.get('report').get('title'),
+                filters=report.get('report').get('filters'),
+                map_func=report.get('report').get('map'),
+                column=report.get('report').get('column'),
+                count=report.get('report').get('count', False),
+                output=make_manager(report.get('report').get('output'))
+            )
+            print_verbose(f'created report {report_.title}', verbose=args.verbose)
+        except pyreports.exception.ReportException as err:
+            exit(f'error: {err}')
+        finally:
+            report_ = pyreports.Report(tablib.Dataset())
         # Check output
         if report_.output:
             # Check if export or send report
