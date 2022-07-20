@@ -130,3 +130,32 @@ output section
         output:
           manager: 'csv'
           filename: '/tmp/test_csv.csv'
+
+other section
+-------------
+
+*report* section has multiple key/value.
+
+.. code-block:: yaml
+
+    reports:
+      report:
+        # My input
+        input:
+          # ...
+        output:
+          # ...
+        title: "One report"
+        filters: ['string_filter', 42]
+        map: |
+          def stringify_int(integer):
+              if isinstance(integer, int):
+                  return str(integer)
+        column: "column_name"
+        count: True
+
+.. warning::
+   **map** section accept any python code. Specify only a function that accept only one argument.
+
+.. note::
+   **filters** could accept also a function that accept only one argument and return a ``bool`` value.
