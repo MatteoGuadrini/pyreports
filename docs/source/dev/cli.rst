@@ -51,7 +51,7 @@ Each report you want to define is a **report** key inside *reports*.
 input section
 -------------
 
-The report section must have a data **input**, which can be file, sql database, LDAP or NoSql database.
+The report section must have a data **input**, which can be file, sql database or LDAP.
 
 .. code-block:: yaml
    :caption: FileManager
@@ -111,3 +111,22 @@ The report section must have a data **input**, which can be file, sql database, 
             base_search: 'DC=test,DC=local'
             search_filter: '(&(objectClass=user)(objectCategory=person))'
             attributes: ['name', 'mail', 'phone']
+
+output section
+--------------
+
+**output** is a *FileManager* object where save your report data.
+
+.. attention::
+   If *output* is null or absent, the output of data is *stdout*.
+
+.. code-block:: yaml
+
+    reports:
+      report:
+        # My input
+        input:
+          # ...
+        output:
+          manager: 'csv'
+          filename: '/tmp/test_csv.csv'
