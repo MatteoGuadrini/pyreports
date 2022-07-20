@@ -159,3 +159,30 @@ other section
 
 .. note::
    **filters** could accept also a function that accept only one argument and return a ``bool`` value.
+
+mail settings
+-------------
+
+Reports can also be sent by email. Just specify the **mail** section.
+
+.. code-block:: yaml
+
+    reports:
+      report:
+        # My input
+        input:
+          # ...
+        output:
+          # ...
+        # Other sections
+        mail:
+          server: 'smtp.local'
+          from: 'ARTHUR DENT <arthur.dent@hitchhikers.com'
+          to: 'ford.prefect@hitchhikers.com'
+          cc: 'startiblast@hitchhikers.com'
+          bcc: 'allmouse@hitchhikers.com'
+          subject: 'New report mail'
+          body: 'Report in attachment'
+          auth: ['user', 'password']
+          ssl: true
+          headers: ['key', 'value']
