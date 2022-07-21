@@ -192,11 +192,12 @@ def main():
         data = get_data(manager, input_.get('params'))
         try:
             # Make a report object
+            map_func = exec(report.get('report').get('map'))
             report_ = pyreports.Report(
                 input_data=data,
                 title=report.get('report').get('title'),
                 filters=report.get('report').get('filters'),
-                map_func=report.get('report').get('map'),
+                map_func=map_func,
                 column=report.get('report').get('column'),
                 count=report.get('report').get('count', False),
                 output=make_manager(report.get('report').get('output'))
