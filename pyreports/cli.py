@@ -192,7 +192,8 @@ def main():
         data = get_data(manager, input_.get('params'))
         try:
             # Make a report object
-            map_func = exec(report.get('report').get('map'))
+            exec(report.get('report').get('map'))
+            map_func = globals()['map_func']
             report_ = pyreports.Report(
                 input_data=data,
                 title=report.get('report').get('title'),

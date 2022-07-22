@@ -148,14 +148,14 @@ other section
         title: "One report"
         filters: ['string_filter', 42]
         map: |
-          def stringify_int(integer):
+          def map_func(integer):
               if isinstance(integer, int):
                   return str(integer)
         column: "column_name"
         count: True
 
 .. warning::
-   **map** section accept any python code. Specify only a function that accept only one argument.
+   **map** section accept any python code. Specify only a function that accept only one argument and with name ``map_func``.
 
 .. note::
    **filters** could accept also a function that accept only one argument and return a ``bool`` value.
