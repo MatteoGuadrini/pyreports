@@ -193,7 +193,7 @@ def main():
         try:
             # Make a report object
             exec(report.get('report').get('map'))
-            map_func = globals()['map_func']
+            map_func = globals().get('map_func')
             report_ = pyreports.Report(
                 input_data=data,
                 title=report.get('report').get('title'),
