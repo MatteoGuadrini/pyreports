@@ -204,7 +204,7 @@ def main():
                 output=make_manager(report.get('report').get('output'))
             )
             print_verbose(f'created report {report_.title}', verbose=args.verbose)
-        except pyreports.exception.ReportException as err:
+        except Exception as err:
             exit(f'error: {err}')
         finally:
             report_ = pyreports.Report(tablib.Dataset())
