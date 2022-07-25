@@ -31,7 +31,7 @@ To instantiate an object, you basically need three things:
     import tablib
 
     # Instantiate a simple Report object
-    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    mydata = tablib.Dataset(*[('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
     myrep = pyreports.Report(mydata)
 
     # View report
@@ -51,7 +51,7 @@ This object enables a series of features for data processing.
 
     # Instantiate a Report object
     salary55k = pyreports.manager('csv', '/tmp/salary55k.csv')
-    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    mydata = tablib.Dataset(*[('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
     report_only_55k = pyreports.Report(mydata, filters=[55000], title='Report salary 55k', output=salary55k)
 
     # View report
@@ -77,7 +77,7 @@ But we can also edit the data on-demand and then filter it, as follows in the ne
 
     # Instantiate a Report object
     salary55k = pyreports.manager('csv', '/tmp/salary55k.csv')
-    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    mydata = tablib.Dataset(*[('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
     report_only_55k = pyreports.Report(mydata,
                                         filters=['$ 55000'],
                                         map_func=stringify_salary,
@@ -148,7 +148,7 @@ The main advantage is the ability to iterate over each *Report* and access its p
     import tablib
 
     # Instantiate the Report objects
-    mydata = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+    mydata = tablib.Dataset(*[('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
     report_only_55k = pyreports.Report(mydata, filters=[55000], title='Report salary 55k')
     report_only_65k = pyreports.Report(mydata, filters=[65000], title='Report salary 65k')
 
