@@ -96,7 +96,8 @@ The **aggregate** function aggregates multiple columns of some *Dataset* into a 
 
     # Aggregate column for create a new Dataset
     new_data = pyreports.aggregate(employee['name'], employee['surname'], employee['salary'], places['city'], places['place']))
-    print(new_data.headers)     # ['name', 'surname', 'salary', 'city', 'place']
+    new_data.headers = ['name', 'surname', 'salary', 'city', 'place']
+    print(new_data)     # ['name', 'surname', 'salary', 'city', 'place']
 
 Merge
 -----
