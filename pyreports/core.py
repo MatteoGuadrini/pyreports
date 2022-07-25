@@ -284,6 +284,14 @@ class Report:
         """
         return (row for row in self.report)
 
+    def __getitem__(self, item):
+        """Get row of report
+
+        :param item: int row index
+        :return: row tuple
+        """
+        return self.report[item]
+
     def _print_data(self):
         """Print data and count
 
