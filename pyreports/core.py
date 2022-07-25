@@ -292,6 +292,15 @@ class Report:
         """
         return self.report[item]
 
+    def __delitem__(self, key):
+        """Delete row of report
+
+        :param key: int row index
+        :return: None
+        """
+        if self.report:
+            del self.report[key]
+
     def _print_data(self):
         """Print data and count
 
