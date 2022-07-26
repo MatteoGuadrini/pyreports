@@ -474,6 +474,14 @@ class ReportBook:
         """
         return True if self.reports else False
 
+    def __getitem__(self, item):
+        """Get Report objects
+
+        :param item: Report int index
+        :return: Report
+        """
+        return self.reports[item]
+
     def add(self, report: Report):
         """Add report object
 
