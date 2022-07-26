@@ -482,6 +482,15 @@ class ReportBook:
         """
         return self.reports[item]
 
+    def __delitem__(self, key):
+        """Delete Report object
+
+        :param key: Report int index
+        :return: None
+        """
+        if self.reports:
+            del self.reports[key]
+
     def add(self, report: Report):
         """Add report object
 
