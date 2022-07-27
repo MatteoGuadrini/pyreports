@@ -93,6 +93,16 @@ class Executor:
         """
         del self.data[key]
 
+    def __contains__(self, item):
+        """Check if item is in Dataset Executor object
+
+        :param item: Any item
+        :return: bool
+        """
+        for row in self.data:
+            if item in row:
+                return True
+
     def get_data(self):
         """Get dataset
 
