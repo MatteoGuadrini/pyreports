@@ -387,7 +387,13 @@ class Report:
         if bcc:
             message["Bcc"] = bcc
         if headers:
-            message.add_header(*headers)
+            if all([isinstance(header, (tuple, list)) for header in headers]):
+                for header in headers:
+                    message.add_header(*header)
+            elif isinstance(headers, (tuple, list)):
+                message.add_header(*headers)
+            else:
+                raise ValueError(f'headers must be tuple or List[tuple]')
 
         # Prepare body
         part = MIMEText(body, "html")
