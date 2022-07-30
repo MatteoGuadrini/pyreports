@@ -50,6 +50,7 @@ def get_args():
                         default=sys.stdin,
                         type=argparse.FileType('rt', encoding="utf-8"),
                         help='Config file')
+    parser.add_argument('-e', '--exclude', help='Excluded title report list', nargs=argparse.ZERO_OR_MORE, default=[])
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.add_argument('-V', '--version', help='Print version', version=__version__)
 
@@ -183,6 +184,10 @@ def main():
 
     # Build the data and report
     for report in reports:
+        # Check if report isn't in excluded list
+        if args.exclude and report.get('report').get('title') in args.exclude:
+            print_verbose(f'exclude report {report.get("report").get("title")}', verbose=args.verbose)
+            continue
         # Make a manager object
         input_ = report.get('report').get('input')
         print_verbose(f'make an input manager of type {input_.get("manager")}', verbose=args.verbose)
