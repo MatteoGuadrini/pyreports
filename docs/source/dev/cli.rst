@@ -23,6 +23,8 @@ Here are all the optional flags that the command line interface has.
 +===============+======================+
 | -v/--verbose  | Enable verbose mode  |
 +---------------+----------------------+
+| -e/--exclude  | Exclude reports      |
++---------------+----------------------+
 | -V/--version  | Print version        |
 +---------------+----------------------+
 | -h/--help     | Print help           |
