@@ -188,3 +188,8 @@ Reports can also be sent by email. Just specify the **mail** section.
           auth: ['user', 'password']
           ssl: true
           headers: ['key', 'value']
+
+Report examples
+***************
+
+Here are some report configurations ranging from the case of reading from a database and writing to a file up to an LDAP server.
