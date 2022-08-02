@@ -193,3 +193,29 @@ Report examples
 ***************
 
 Here are some report configurations ranging from the case of reading from a database and writing to a file up to an LDAP server.
+
+Database example
+----------------
+
+Below is an example of a report with data taken from a *mysql* database and save into *csv* file.
+
+.. code-block:: yaml
+
+    reports:
+      report:
+        title: "Red ford machine"
+        input:
+          manager: 'mysql'
+          source:
+          # Connection parameters of my mysql database
+            host: 'mysql1.local'
+            database: 'cars'
+            user: 'admin'
+            password: 'dba0000'
+          params:
+            query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
+            params: ['ford', 'red']
+        filters: [40000, 45000]
+        output:
+          manager: 'csv'
+          filename: '/tmp/test_csv.csv'
