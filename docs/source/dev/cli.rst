@@ -197,13 +197,13 @@ Here are some report configurations ranging from the case of reading from a data
 Database example
 ----------------
 
-Below is an example of a report with data taken from a *mysql* database and save into *csv* file.
+Below is an example of a report with data taken from a *mysql* database and save it into *csv* file.
 
 .. code-block:: yaml
 
     reports:
       report:
-        title: "Red ford machine"
+        title: 'Red ford machine'
         input:
           manager: 'mysql'
           source:
@@ -215,7 +215,44 @@ Below is an example of a report with data taken from a *mysql* database and save
           params:
             query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
             params: ['ford', 'red']
+        # Filter km
         filters: [40000, 45000]
         output:
           manager: 'csv'
-          filename: '/tmp/test_csv.csv'
+          filename: '/tmp/car_csv.csv'
+
+LDAP example
+------------
+
+Reports of users who have passwords without expiration by saving it in an *excel* file and sending it by email.
+
+.. code-block:: yaml
+
+    reports:
+      report:
+        title: 'Users who have passwords without expiration'
+        input:
+          manager: 'ldap'
+          source:
+          # Connection parameters of my ldap server
+            server: 'ldap.local'
+            username: 'user'
+            password: 'password'
+            ssl: False
+            tls: True
+          params:
+            base_search: 'DC=test,DC=local'
+            search_filter: '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=65536))'
+            attributes: ['cn', 'mail', 'phone']
+        # Append prefix number on phone number
+        map: |
+            def map_func(phone):
+              if phone.startswith('33'):
+                  return '+39' + phone
+        output:
+          manager: 'xlsx'
+          filename: '/tmp/users.xlsx'
+        mail:
+          server: 'smtp.local'
+          from: 'ARTHUR DENT <arthur.dent@hitchhikers.com'
+          to: 'ford.prefect@hitchhikers.com'
