@@ -256,3 +256,57 @@ Reports of users who have passwords without expiration by saving it in an *excel
           server: 'smtp.local'
           from: 'ARTHUR DENT <arthur.dent@hitchhikers.com'
           to: 'ford.prefect@hitchhikers.com'
+
+Two report examples
+-------------------
+
+Combine latest report examples into one configuration file.
+
+.. code-block:: yaml
+
+    reports:
+      report:
+        title: 'Red ford machine'
+        input:
+          manager: 'mysql'
+          source:
+          # Connection parameters of my mysql database
+            host: 'mysql1.local'
+            database: 'cars'
+            user: 'admin'
+            password: 'dba0000'
+          params:
+            query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
+            params: ['ford', 'red']
+        # Filter km
+        filters: [40000, 45000]
+        output:
+          manager: 'csv'
+          filename: '/tmp/car_csv.csv'
+      report:
+        title: 'Users who have passwords without expiration'
+        input:
+          manager: 'ldap'
+          source:
+          # Connection parameters of my ldap server
+            server: 'ldap.local'
+            username: 'user'
+            password: 'password'
+            ssl: False
+            tls: True
+          params:
+            base_search: 'DC=test,DC=local'
+            search_filter: '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=65536))'
+            attributes: ['cn', 'mail', 'phone']
+        # Append prefix number on phone number
+        map: |
+            def map_func(phone):
+              if phone.startswith('33'):
+                  return '+39' + phone
+        output:
+          manager: 'xlsx'
+          filename: '/tmp/users.xlsx'
+        mail:
+          server: 'smtp.local'
+          from: 'ARTHUR DENT <arthur.dent@hitchhikers.com'
+          to: 'ford.prefect@hitchhikers.com'
