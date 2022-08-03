@@ -186,7 +186,7 @@ def main():
     for report in reports:
         # Check if report isn't in excluded list
         if args.exclude and report.get('report').get('title') in args.exclude:
-            print_verbose(f'exclude report {report.get("report").get("title")}', verbose=args.verbose)
+            print_verbose(f'exclude report "{report.get("report").get("title")}"', verbose=args.verbose)
             continue
         # Make a manager object
         input_ = report.get('report').get('input')
