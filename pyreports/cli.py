@@ -32,7 +32,7 @@ import pyreports
 # endregion
 
 # region globals
-__version__ = '1.4.0'
+__version__ = '1.5.0'
 
 
 # endregion
@@ -43,16 +43,22 @@ def get_args():
 
     parser = argparse.ArgumentParser(
         description='pyreports command line interface (CLI)',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        epilog='Full docs here: https://pyreports.readthedocs.io/en/latest/dev/cli.html'
+    )
 
     parser.add_argument('config',
                         metavar='CONFIG_FILE',
                         default=sys.stdin,
                         type=argparse.FileType('rt', encoding="utf-8"),
-                        help='Config file')
-    parser.add_argument('-e', '--exclude', help='Excluded title report list', nargs=argparse.ZERO_OR_MORE, default=[])
+                        help='YAML configuration file')
+    parser.add_argument('-e', '--exclude',
+                        help='Excluded title report list',
+                        nargs=argparse.ZERO_OR_MORE,
+                        default=[],
+                        metavar='TITLE')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.add_argument('-V', '--version', help='Print version', version=__version__)
+    parser.add_argument('-V', '--version', help='Print version', action='version', version=__version__)
 
     args = parser.parse_args()
     filename = args.config.name

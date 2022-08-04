@@ -1,5 +1,18 @@
 # Release notes
 
+## 1.5.0
+Aug 4, 2022
+
+- Added **cli** module
+- Added **reports** cli
+- Added **\__getitem\__** method on _Report_ class
+- Added **\__delitem\__** method on _Report_ class
+- Added **\__getitem\__** method on _ReportBook_ class
+- Added **\__delitem\__** method on _ReportBook_ class
+- Added **\__contains\__** on _Executor_ class
+- Fix **NoSQLManager** creation into _manager_ function
+- Fix **print_data** on _Report_ class
+
 ## 1.4.0
 Jun 27, 2022
 
