@@ -1,8 +1,8 @@
 from setuptools import setup
 import __info__
 
-with open("README.md") as fh:
-    long_description = fh.read()
+with open("README.md") as rme, open("CHANGES.md") as ch:
+    long_description = rme.read() + "\n" + ch.read()
 
 setup(
     name='pyreports',
