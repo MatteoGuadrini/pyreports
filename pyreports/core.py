@@ -93,6 +93,16 @@ class Executor:
         """
         del self.data[key]
 
+    def __contains__(self, item):
+        """Check if item is in Dataset Executor object
+
+        :param item: Any item
+        :return: bool
+        """
+        for row in self.data:
+            if item in row:
+                return True
+
     def get_data(self):
         """Get dataset
 
@@ -284,13 +294,30 @@ class Report:
         """
         return (row for row in self.report)
 
+    def __getitem__(self, item):
+        """Get row of report
+
+        :param item: int row index
+        :return: row tuple
+        """
+        return self.report[item]
+
+    def __delitem__(self, key):
+        """Delete row of report
+
+        :param key: int row index
+        :return: None
+        """
+        if self.report:
+            del self.report[key]
+
     def _print_data(self):
         """Print data and count
 
         :return: data and count
         """
-        if isinstance(self.report, tuple):
-            out = f'{self.report[0]}\nrows: {self.report[1]}'
+        if self.count:
+            out = f'{self.report}\nrows: {int(self.count)}'
             return out
         else:
             return self.report
@@ -360,7 +387,13 @@ class Report:
         if bcc:
             message["Bcc"] = bcc
         if headers:
-            message.add_header(*headers)
+            if all([isinstance(header, (tuple, list)) for header in headers]):
+                for header in headers:
+                    message.add_header(*header)
+            elif isinstance(headers, (tuple, list)):
+                message.add_header(*headers)
+            else:
+                raise ValueError(f'headers must be tuple or List[tuple]')
 
         # Prepare body
         part = MIMEText(body, "html")
@@ -456,6 +489,23 @@ class ReportBook:
         :return: bool
         """
         return True if self.reports else False
+
+    def __getitem__(self, item):
+        """Get Report objects
+
+        :param item: Report int index
+        :return: Report
+        """
+        return self.reports[item]
+
+    def __delitem__(self, key):
+        """Delete Report object
+
+        :param key: Report int index
+        :return: None
+        """
+        if self.reports:
+            del self.reports[key]
 
     def add(self, report: Report):
         """Add report object
