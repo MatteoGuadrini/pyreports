@@ -25,5 +25,10 @@ setup(
             "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
             "Operating System :: OS Independent",
         ],
+    entry_points={
+        'console_scripts': [
+            'reports = pyreports.cli:main'
+        ]
+    },
     python_requires='>=3.7'
 )
