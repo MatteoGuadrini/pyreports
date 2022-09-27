@@ -3,7 +3,7 @@
 # vim: se ts=4 et syn=python:
 
 # created by: matteo.guadrini
-# __info__
+# __info__ -- pyreports
 #
 #     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
@@ -22,7 +22,7 @@
 
 """Information variable used by modules on this package."""
 
-__version__ = '1.5.0'
+__version__ = '1.5.1'
 __author__ = 'Matteo Guadrini'
 __email__ = 'matteo.guadrini@hotmail.it'
 __homepage__ = 'https://github.com/MatteoGuadrini/pyreports'

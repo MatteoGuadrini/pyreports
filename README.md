@@ -177,6 +177,33 @@ count_error_code = pyreports.counter(site_login, 'code')  # args: Dataset, colum
 print(count_error_code)   # Counter({200: 4032, 201: 42, 202: 1, 400: 40, 401: 38, 403: 27, 404: 802, 500: 3})
 ```
 
+### Command line
+
+```console
+$ cat car.yml
+reports:
+- report:
+  title: 'Red ford machine'
+  input:
+    manager: 'mysql'
+    source:
+    # Connection parameters of my mysql database
+      host: 'mysql1.local'
+      database: 'cars'
+      user: 'admin'
+      password: 'dba0000'
+    params:
+      query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
+      params: ['ford', 'red']
+  # Filter km
+  filters: [40000, 45000]
+  output:
+    manager: 'csv'
+    filename: '/tmp/car_csv.csv'
+
+$ report car.yaml
+```
+
 ## Official docs
 
 In the following links there is the [official documentation](https://pyreports.readthedocs.io/en/latest/), for the use and development of the library.
@@ -187,6 +214,7 @@ In the following links there is the [official documentation](https://pyreports.r
 * data tools: [doc](https://pyreports.readthedocs.io/en/latest/datatools.html)
 * examples: [doc](https://pyreports.readthedocs.io/en/latest/example.html)
 * API: [io](https://pyreports.readthedocs.io/en/latest/dev/io.html), [core](https://pyreports.readthedocs.io/en/latest/dev/core.html)
+* CLI: [cli](https://pyreports.readthedocs.io/en/latest/dev/cli.html)
 
 ## Open source
 _pyreports_ is an open source project. Any contribute, It's welcome.
