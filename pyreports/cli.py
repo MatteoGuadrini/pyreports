@@ -32,7 +32,7 @@ import pyreports
 # endregion
 
 # region globals
-__version__ = '1.5.0'
+__version__ = '1.5.1'
 
 
 # endregion
@@ -200,10 +200,12 @@ def main():
         manager = make_manager(input_)
         # Get data
         print_verbose(f'get data from manager {manager}', verbose=args.verbose)
-        data = get_data(manager, input_.get('params'))
+        report_ = pyreports.Report(tablib.Dataset())
         try:
             # Make a report object
-            exec(report.get('report').get('map'))
+            data = get_data(manager, input_.get('params'))
+            if 'map' in report.get('report'):
+                exec(report.get('report').get('map'))
             map_func = globals().get('map_func')
             report_ = pyreports.Report(
                 input_data=data,
@@ -212,29 +214,28 @@ def main():
                 map_func=map_func,
                 column=report.get('report').get('column'),
                 count=report.get('report').get('count', False),
-                output=make_manager(report.get('report').get('output'))
+                output=make_manager(report.get('report').get('output')) if 'output' in report.get('report') else None
             )
-            print_verbose(f'created report {report_.title}', verbose=args.verbose)
+            print_verbose(f'created report "{report_.title}"', verbose=args.verbose)
         except Exception as err:
             exit(f'error: {err}')
-        finally:
-            report_ = pyreports.Report(tablib.Dataset())
         # Check output
         if report_.output:
             # Check if export or send report
             if report.get('report').get('mail'):
                 print_verbose(f'send report to {report.get("report").get("mail").get("to")}', verbose=args.verbose)
+                mail_settings = report.get('report').get('mail')
                 report_.send(
-                    server=report.get('report').get('mail').get('server'),
-                    _from=report.get('report').get('mail').get('from'),
-                    to=report.get('report').get('mail').get('to'),
-                    cc=report.get('report').get('mail').get('cc'),
-                    bcc=report.get('report').get('mail').get('bcc'),
-                    subject=report.get('report').get('mail').get('subject'),
-                    body=report.get('report').get('mail').get('body'),
-                    auth=tuple(report.get('report').get('mail').get('auth')),
-                    _ssl=bool(report.get('report').get('mail').get('ssl')),
-                    headers=report.get('report').get('mail').get('headers')
+                    server=mail_settings.get('server'),
+                    _from=mail_settings.get('from'),
+                    to=mail_settings.get('to'),
+                    cc=mail_settings.get('cc'),
+                    bcc=mail_settings.get('bcc'),
+                    subject=mail_settings.get('subject'),
+                    body=mail_settings.get('body'),
+                    auth=tuple(mail_settings.get('auth')) if 'auth' in mail_settings else None,
+                    _ssl=bool(mail_settings.get('ssl')),
+                    headers=mail_settings.get('headers')
                 )
             else:
                 print_verbose(f'export report to {report_.output.data.file}', verbose=args.verbose)
@@ -243,6 +244,7 @@ def main():
             # Print report in stdout
             print_verbose(f'print report to stdout', verbose=args.verbose)
             title = report.get('report').get('title')
+            report_.exec()
             print(f"{title}\n{'=' * len(title)}\n")
             print(report_)
 
