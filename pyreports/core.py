@@ -393,7 +393,7 @@ class Report:
             elif isinstance(headers, (tuple, list)):
                 message.add_header(*headers)
             else:
-                raise ValueError(f'headers must be tuple or List[tuple]')
+                raise ValueError('headers must be tuple or List[tuple]')
 
         # Prepare body
         part = MIMEText(body, "html")
@@ -421,7 +421,7 @@ class Report:
         with protocol(server, port, **kwargs) as srv:
             if auth:
                 srv.login(*auth)
-            srv.sendmail(_from, to, message.as_string())
+            srv.sendmail(_from, [receiver for receiver in (to, cc, bcc) if receiver], message.as_string())
 
 
 class ReportBook:
