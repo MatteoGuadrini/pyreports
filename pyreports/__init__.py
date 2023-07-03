@@ -25,5 +25,5 @@
 from .io import manager
 from .core import Executor, Report, ReportBook
 from .exception import ReportDataError, ReportManagerError
-from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge
+from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge, deduplicate
 from .cli import make_manager, get_data, load_config, validate_config

@@ -168,4 +168,14 @@ def chunks(data, length):
     """
     for i in range(0, len(data), length):
         yield data[i:i + length]
+
+
+def deduplicate(data):
+    """Remove duplicated rows
+
+    :param data: Dataset object
+    :return: Dataset
+    """
+    return Dataset(*list(dict.fromkeys(data)))
+
 # endregion
