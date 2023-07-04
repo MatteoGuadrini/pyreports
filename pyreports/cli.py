@@ -102,7 +102,9 @@ def validate_config(config):
             raise yaml.YAMLError('"reports" section have not "report" list sections')
         datas = all([bool(report.get('report').get('input')) for report in reports])
         if not datas:
-            raise yaml.YAMLError('one of "report" section does not have "input" section')
+            raise yaml.YAMLError(
+                'one of "report" section does not have "input" section'
+            )
     except KeyError as err:
         raise yaml.YAMLError(f'there is no "{err}" section')
     except AttributeError:
@@ -186,21 +188,23 @@ def main():
     config = args.config
     reports = config.get('reports', ())
 
-    print_verbose(f'found {len(config.get("reports", ()))} report(s)', verbose=args.verbose)
+    print_verbose(f'found {len(config.get("reports", ()))} report(s)',
+                  verbose=args.verbose)
 
     # Build the data and report
     for report in reports:
         # Check if report isn't in excluded list
         if args.exclude and report.get('report').get('title') in args.exclude:
-            print_verbose(f'exclude report "{report.get("report").get("title")}"', verbose=args.verbose)
+            print_verbose(f'exclude report "{report.get("report").get("title")}"',
+                          verbose=args.verbose)
             continue
         # Make a manager object
         input_ = report.get('report').get('input')
-        print_verbose(f'make an input manager of type {input_.get("manager")}', verbose=args.verbose)
+        print_verbose(f'make an input manager of type {input_.get("manager")}',
+                      verbose=args.verbose)
         manager = make_manager(input_)
         # Get data
         print_verbose(f'get data from manager {manager}', verbose=args.verbose)
-        report_ = pyreports.Report(tablib.Dataset())
         try:
             # Make a report object
             data = get_data(manager, input_.get('params'))
@@ -218,6 +222,7 @@ def main():
             )
             print_verbose(f'created report "{report_.title}"', verbose=args.verbose)
         except Exception as err:
+            pyreports.Report(tablib.Dataset())
             exit(f'error: {err}')
         # Check output
         if report_.output:
@@ -242,7 +247,7 @@ def main():
                 report_.export()
         else:
             # Print report in stdout
-            print_verbose(f'print report to stdout', verbose=args.verbose)
+            print_verbose('print report to stdout', verbose=args.verbose)
             title = report.get('report').get('title')
             report_.exec()
             print(f"{title}\n{'=' * len(title)}\n")

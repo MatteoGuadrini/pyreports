@@ -41,7 +41,6 @@ from abc import ABC, abstractmethod
 
 # region Classes
 class Connection(ABC):
-
     """Connection base class"""
 
     def __init__(self, *args, **kwargs):
@@ -74,7 +73,6 @@ class Connection(ABC):
 
 
 class File(ABC):
-
     """File base class"""
 
     def __init__(self, filename):
@@ -114,7 +112,6 @@ class File(ABC):
 
 
 class TextFile(File):
-
     """Text file class"""
 
     def write(self, data):
@@ -141,7 +138,6 @@ class TextFile(File):
 
 
 class LogFile(File):
-
     """Log file class"""
 
     def write(self, data):
@@ -174,7 +170,6 @@ class LogFile(File):
 
 
 class CsvFile(File):
-
     """CSV file class"""
 
     def write(self, data):
@@ -198,7 +193,6 @@ class CsvFile(File):
 
 
 class JsonFile(File):
-
     """JSON file class"""
 
     def write(self, data):
@@ -222,7 +216,6 @@ class JsonFile(File):
 
 
 class YamlFile(File):
-
     """YAML file class"""
 
     def write(self, data):
@@ -246,7 +239,6 @@ class YamlFile(File):
 
 
 class ExcelFile(File):
-
     """Excel file class"""
 
     def write(self, data):
@@ -270,7 +262,6 @@ class ExcelFile(File):
 
 
 class SQLliteConnection(Connection):
-
     """Connection sqlite class"""
 
     def connect(self):
@@ -283,7 +274,6 @@ class SQLliteConnection(Connection):
 
 
 class MSSQLConnection(Connection):
-
     """Connection microsoft sql class"""
 
     def connect(self):
@@ -296,7 +286,6 @@ class MSSQLConnection(Connection):
 
 
 class MySQLConnection(Connection):
-
     """Connection mysql class"""
 
     def connect(self):
@@ -309,7 +298,6 @@ class MySQLConnection(Connection):
 
 
 class PostgreSQLConnection(Connection):
-
     """Connection postgresql class"""
 
     def connect(self):
@@ -322,7 +310,6 @@ class PostgreSQLConnection(Connection):
 
 
 class DatabaseManager:
-
     """Database manager class for SQL connection"""
 
     def __init__(self, connection: Connection):
@@ -346,7 +333,9 @@ class DatabaseManager:
 
         :return: string
         """
-        return f"<{self.__class__.__name__} object, connection={self.connector.__class__.__name__}>"
+        ret = f"<{self.__class__.__name__} object, "
+        ret += f"connection={self.connector.__class__.__name__}>"
+        return ret
 
     def __iter__(self):
         if self.connector.cursor:
@@ -451,11 +440,12 @@ class DatabaseManager:
 
 
 class NoSQLManager(Manager):
-
     """Database manager class for NOSQL connection"""
 
     @staticmethod
-    def _response_to_dataset(obj: Union[List[tuple], List[list], dict, nosqlapi.Response]) -> tablib.Dataset:
+    def _response_to_dataset(
+            obj: Union[List[tuple], List[list], dict, nosqlapi.Response]
+                             ) -> tablib.Dataset:
         """Transform receive data into Dataset object"""
         data = tablib.Dataset()
         if isinstance(obj, (list, tuple)):
@@ -482,7 +472,6 @@ class NoSQLManager(Manager):
 
 
 class FileManager:
-
     """File manager class for various readable file format"""
 
     def __init__(self, file: File):
@@ -526,7 +515,6 @@ class FileManager:
 
 
 class LdapManager:
-
     """LDAP manager class"""
 
     def __init__(self, server, username, password, ssl=False, tls=True):
@@ -541,7 +529,10 @@ class LdapManager:
         self.type = 'ldap'
         # Check ssl connection
         port = 636 if ssl else 389
-        self.connector = ldap3.Server(server, get_info=ldap3.ALL, port=port, use_ssl=ssl)
+        self.connector = ldap3.Server(server,
+                                      get_info=ldap3.ALL,
+                                      port=port,
+                                      use_ssl=ssl)
         # Check tls connection
         self.auto_bind = ldap3.AUTO_BIND_TLS_BEFORE_BIND if tls else ldap3.AUTO_BIND_NONE
         # Create a bind connection with user and password
@@ -555,7 +546,8 @@ class LdapManager:
         :return: string
         """
         obj_repr = f"<{self.__class__.__name__} object, "
-        obj_repr += f"server={self.connector.host}, ssl={self.connector.ssl}, tls={self.connector.tls}>"
+        obj_repr += f"server={self.connector.host}, "
+        obj_repr += f"ssl={self.connector.ssl}, tls={self.connector.tls}>"
         return obj_repr
 
     def rebind(self, username, password):
