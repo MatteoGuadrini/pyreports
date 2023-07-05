@@ -32,7 +32,7 @@ import psycopg2
 import tablib
 import ldap3
 import re
-from nosqlapi import Manager
+from nosqlapi import Manager as APIManager
 from abc import ABC, abstractmethod
 
 
@@ -109,6 +109,11 @@ class File(ABC):
         with open(self.file) as file:
             for line in file:
                 yield line
+
+
+class Manager(ABC):
+    """Manager base class"""
+    pass
 
 
 class TextFile(File):
@@ -439,13 +444,13 @@ class DatabaseManager:
         self.connector.connection.commit()
 
 
-class NoSQLManager(Manager):
+class NoSQLManager(Manager, APIManager):
     """Database manager class for NOSQL connection"""
 
     @staticmethod
     def _response_to_dataset(
             obj: Union[List[tuple], List[list], dict, nosqlapi.Response]
-                             ) -> tablib.Dataset:
+    ) -> tablib.Dataset:
         """Transform receive data into Dataset object"""
         data = tablib.Dataset()
         if isinstance(obj, (list, tuple)):
@@ -471,7 +476,7 @@ class NoSQLManager(Manager):
         return self._response_to_dataset(self.session.find(*args, **kwargs))
 
 
-class FileManager:
+class FileManager(Manager):
     """File manager class for various readable file format"""
 
     def __init__(self, file: File):
@@ -514,7 +519,7 @@ class FileManager:
         return data
 
 
-class LdapManager:
+class LdapManager(Manager):
     """LDAP manager class"""
 
     def __init__(self, server, username, password, ssl=False, tls=True):
