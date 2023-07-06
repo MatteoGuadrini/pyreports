@@ -33,6 +33,7 @@ import tablib
 import ldap3
 import re
 from nosqlapi import Manager as APIManager
+from nosqlapi import Connection as APIConnection
 from abc import ABC, abstractmethod
 
 
@@ -322,7 +323,7 @@ class DatabaseManager:
 
         :param connection: Connection based object
         """
-        self.type = 'database'
+        self.type = 'sql'
         self.connector = connection
         # Connect database
         self.connector.connect()
@@ -446,6 +447,10 @@ class DatabaseManager:
 
 class NoSQLManager(Manager, APIManager):
     """Database manager class for NOSQL connection"""
+
+    def __init__(self, connection: APIConnection, *args, **kwargs):
+        APIManager.__init__(self, connection, *args, **kwargs)
+        self.type = 'nosql'
 
     @staticmethod
     def _response_to_dataset(
@@ -667,7 +672,7 @@ def create_nosql_manager(connection, *args, **kwargs):
     """
     # Check if connection class is API compliant with nosqlapi
     if not hasattr(connection, 'connect'):
-        raise nosqlapi.ConnectError('the connection class is not API compliant. see https://nosqlapi.rtfd.io/')
+        raise nosqlapi.ConnectError('the Connection class is not API compliant. See https://nosqlapi.rtfd.io/')
     # Create NoSQLManager object
     return NoSQLManager(connection=connection, *args, **kwargs)
 

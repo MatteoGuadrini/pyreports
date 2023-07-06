@@ -31,7 +31,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 from email.mime.base import MIMEBase
-from .io import FileManager
+from .io import Manager
 from .exception import ReportManagerError, ReportDataError
 
 
@@ -237,7 +237,7 @@ class Report:
                  map_func=None,
                  column=None,
                  count=False,
-                 output: FileManager = None):
+                 output: Manager = None):
         """Create Report object
 
         :param input_data: Dataset object
@@ -246,7 +246,7 @@ class Report:
         :param map_func: function for modifying data
         :param column: select column name or index
         :param count: count rows
-        :param output: FileManager object
+        :param output: Manager object
         """
         # Discard all objects that are not Datasets
         if isinstance(input_data, tablib.Dataset):
@@ -259,10 +259,10 @@ class Report:
         self.map = map_func
         self.column = column
         self.count = bool(count)
-        if isinstance(output, FileManager) or output is None:
+        if isinstance(output, Manager) or output is None:
             self.output = output
         else:
-            raise ReportManagerError('Only FileManager object is allowed for output')
+            raise ReportManagerError('Only Manager object is allowed for output')
         # Data for report
         self.report = None
 
@@ -350,14 +350,34 @@ class Report:
         """
         # Process data before export
         self.exec()
-        # Verify if output is FileManager object
-        if isinstance(self.output, FileManager) or self.output is None:
-            if self.output:
+        if self.output is not None:
+            if self.output.type == 'file':
                 self.output.write(self.report)
-            else:
-                print(self)
+            elif self.output.type == 'sql':
+                if not self.report.headers:
+                    raise ReportDataError("Dataset object doesn't have a header")
+                table_name = {self.title.replace(' ', '_').lower()}
+                fields = ','.join([
+                    f'{field} VARCHAR(255)'
+                    for field in self.report.headers
+                ])
+                # Create table with header
+                self.output.execute(
+                    f"CREATE TABLE IF NOT EXISTS {table_name} "
+                    "(id INT NOT NULL AUTO_INCREMENT, "
+                    f"{fields} "
+                    ",PRIMARY KEY (id));"
+                )
+                # Insert data into table
+                for row in self.output:
+                    self.output.execute(
+                        f"INSERT INTO {table_name} "
+                        f"({[field for field in self.report.headers]}) "
+                        f"VALUES ({','.join(element for element in row)});"
+                    )
+                self.output.commit()
         else:
-            raise ReportManagerError('the output object must be FileManager or NoneType object')
+            print(self)
 
     def send(self, server, _from, to, cc=None, bcc=None, subject=None, body='', auth=None, _ssl=True, headers=None):
         """Send saved report to email
