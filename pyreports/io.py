@@ -267,7 +267,7 @@ class ExcelFile(File):
             return tablib.import_set(file, **kwargs)
 
 
-class SQLliteConnection(Connection):
+class SqliteConnection(Connection):
     """Connection sqlite class"""
 
     def connect(self):
@@ -315,7 +315,7 @@ class PostgreSQLConnection(Connection):
         self.cursor.close()
 
 
-class DatabaseManager:
+class DatabaseManager(Manager):
     """Database manager class for SQL connection"""
 
     def __init__(self, connection: Connection):
@@ -366,7 +366,10 @@ class DatabaseManager:
         :param params: parameters of the query
         :return: None
         """
-        self.connector.cursor.execute(query, params)
+        if params:
+            self.connector.cursor.execute(query, params)
+        else:
+            self.connector.cursor.execute(query)
         # Set last row id
         self.lastrowid = self.connector.cursor.lastrowid
         # Set row cont
@@ -608,7 +611,7 @@ class LdapManager(Manager):
 
 # region Variables
 DBTYPE = {
-    'sqlite': SQLliteConnection,
+    'sqlite': SqliteConnection,
     'mssql': MSSQLConnection,
     'mysql': MySQLConnection,
     'postgresql': PostgreSQLConnection

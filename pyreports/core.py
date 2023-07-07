@@ -40,7 +40,6 @@ from .exception import ReportManagerError, ReportDataError
 # region Classes
 
 class Executor:
-
     """Executor receives, processes, transforms and writes data"""
 
     def __init__(self, data, header=None):
@@ -227,7 +226,6 @@ class Executor:
 
 
 class Report:
-
     """Report represents the workflow for generating a report"""
 
     def __init__(self,
@@ -356,24 +354,23 @@ class Report:
             elif self.output.type == 'sql':
                 if not self.report.headers:
                     raise ReportDataError("Dataset object doesn't have a header")
-                table_name = {self.title.replace(' ', '_').lower()}
+                table_name = self.title.replace(' ', '_').lower()
                 fields = ','.join([
                     f'{field} VARCHAR(255)'
                     for field in self.report.headers
                 ])
                 # Create table with header
                 self.output.execute(
-                    f"CREATE TABLE IF NOT EXISTS {table_name} "
-                    "(id INT NOT NULL AUTO_INCREMENT, "
-                    f"{fields} "
-                    ",PRIMARY KEY (id));"
+                    f"CREATE TABLE IF NOT EXISTS {table_name} ({fields});"
                 )
                 # Insert data into table
-                for row in self.output:
+                table_header = ','.join(field for field in self.report.headers)
+                for row in self.report:
+                    row_table = [f"'{element}'" for element in row]
                     self.output.execute(
                         f"INSERT INTO {table_name} "
-                        f"({[field for field in self.report.headers]}) "
-                        f"VALUES ({','.join(element for element in row)});"
+                        f"({table_header}) "
+                        f"VALUES ({','.join(element for element in row_table)});"
                     )
                 self.output.commit()
         else:
@@ -445,7 +442,6 @@ class Report:
 
 
 class ReportBook:
-
     """ReportBook represent a collection of Report's object"""
 
     def __init__(self, reports=None, title=None):

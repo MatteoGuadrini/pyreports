@@ -118,6 +118,38 @@ class TestReport(unittest.TestCase):
         self.assertIsInstance(self.report.output.read(), Dataset)
 
 
+class TestReportDatabase(unittest.TestCase):
+    input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)],
+                         headers=('name', 'surname', 'age'))
+    output_data = pyreports.manager('sqlite', f'{tmp_folder}/mydb.db')
+    title = 'Test report'
+    column = 'age'
+    count = True
+    report = pyreports.Report(input_data=input_data,
+                              title=title,
+                              map_func=lambda item: str(item) if isinstance(item, int) else item,
+                              column=column,
+                              count=count,
+                              output=output_data)
+
+    def test_report_object(self):
+        self.assertIsInstance(self.report, pyreports.Report)
+
+    def test_no_output_report_object(self):
+        new_report = pyreports.Report(input_data=self.input_data)
+        self.assertIsInstance(new_report, pyreports.Report)
+
+    def test_exec(self):
+        self.report.exec()
+        self.assertEqual(self.report.report[0], ('Matteo', 'Guadrini', '35'))
+        self.assertEqual(self.report.count, 2)
+
+    def test_export(self):
+        self.report.export()
+        self.report.output.execute('SELECT * from test_report')
+        self.assertIsInstance(self.report.output.fetchall(), Dataset)
+
+
 class TestReportBook(unittest.TestCase):
     input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)])
     output_data = pyreports.manager('csv', f'{tmp_folder}/test_csv.csv')
