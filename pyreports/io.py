@@ -267,7 +267,7 @@ class ExcelFile(File):
             return tablib.import_set(file, **kwargs)
 
 
-class SqliteConnection(Connection):
+class SQLiteConnection(Connection):
     """Connection sqlite class"""
 
     def connect(self):
@@ -611,7 +611,7 @@ class LdapManager(Manager):
 
 # region Variables
 DBTYPE = {
-    'sqlite': SqliteConnection,
+    'sqlite': SQLiteConnection,
     'mssql': MSSQLConnection,
     'mysql': MySQLConnection,
     'postgresql': PostgreSQLConnection
