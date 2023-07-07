@@ -31,7 +31,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 from email.mime.base import MIMEBase
-from .io import Manager
+from .io import Manager, WRITABLE_MANAGER
 from .exception import ReportManagerError, ReportDataError
 
 
@@ -258,6 +258,9 @@ class Report:
         self.column = column
         self.count = bool(count)
         if isinstance(output, Manager) or output is None:
+            if output:
+                if output.__class__.__name__ not in WRITABLE_MANAGER:
+                    raise ReportManagerError(f'Only {WRITABLE_MANAGER} object is allowed for output')
             self.output = output
         else:
             raise ReportManagerError('Only Manager object is allowed for output')

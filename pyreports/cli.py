@@ -243,7 +243,8 @@ def main():
                     headers=mail_settings.get('headers')
                 )
             else:
-                print_verbose(f'export report to {report_.output.data.file}', verbose=args.verbose)
+                print_verbose(f'export report to {report_.output}',
+                              verbose=args.verbose)
                 report_.export()
         else:
             # Print report in stdout

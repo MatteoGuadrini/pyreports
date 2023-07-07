@@ -22,7 +22,7 @@
 
 """Build complex pyreports from/to various formats."""
 
-from .io import manager
+from .io import manager, READABLE_MANAGER, WRITABLE_MANAGER
 from .core import Executor, Report, ReportBook
 from .exception import ReportDataError, ReportManagerError
 from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge, deduplicate

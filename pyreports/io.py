@@ -626,6 +626,10 @@ FILETYPE = {
     'xlsx': ExcelFile,
 }
 
+READABLE_MANAGER = ('FileManager', 'DatabaseManager', 'LdapManager', 'NoSQLManager')
+
+WRITABLE_MANAGER = ('FileManager', 'DatabaseManager', 'NoSQLManager')
+
 
 # endregion
 
