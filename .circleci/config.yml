@@ -3,11 +3,9 @@ version: 2.1
 jobs:
   build-and-test:
     docker:
-      - image: cimg/python:3.10.4
+      - image: circleci/python
     steps:
       - checkout
-      - run: sudo apt-get update -q
-      - run: sudo apt-get install -q -y python3-pip
       - run: sudo pip install Cython
       - run: sudo python3 setup.py install
       - run: sudo chmod -R 777 /tmp
