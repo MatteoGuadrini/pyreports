@@ -117,12 +117,13 @@ The report section must have a data **input**, which can be file, sql database o
 output section
 --------------
 
-**output** is a *FileManager* object where save your report data.
+**output** is a *Manager* object where save your report data, is same of input data.
 
 .. attention::
    If *output* is null or absent, the output of data is *stdout*.
 
 .. code-block:: yaml
+   :caption: FileManager
 
     reports:
     - report:
@@ -132,6 +133,24 @@ output section
       output:
         manager: 'csv'
         filename: '/tmp/test_csv.csv'
+
+
+.. code-block:: yaml
+   :caption: DatabaseManager
+
+    reports:
+    - report:
+      # My input
+      input:
+        # ...
+      output:
+        manager: 'mysql'
+        source:
+        # Connection parameters of my mysql database
+          host: 'mysql1.local'
+          database: 'cars'
+          user: 'admin'
+          password: 'dba0000'
 
 other section
 -------------

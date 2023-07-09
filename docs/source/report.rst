@@ -23,7 +23,7 @@ To instantiate an object, you basically need three things:
 
 - **input**: a *Dataset* object, mandatory.
 - **filter**, **map function** or/and **column**: they are the same objects you would use in an *Executor* object, optional.
-- **output**: a *FileManager* object, optional.
+- **output**: a *Manager* object, optional.
 
 .. code-block:: python
 
@@ -76,7 +76,7 @@ But we can also edit the data on-demand and then filter it, as follows in the ne
             return salary
 
     # Instantiate a Report object
-    salary55k = pyreports.manager('csv', '/tmp/salary55k.csv')
+    salary55k = pyreports.manager('sqlite', '/tmp/mydb.db')     # DatabaseManager
     mydata = tablib.Dataset(*[('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
     report_only_55k = pyreports.Report(mydata,
                                         filters=['$ 55000'],
