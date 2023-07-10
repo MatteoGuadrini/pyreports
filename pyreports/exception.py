@@ -23,6 +23,10 @@
 """Contains all custom exception."""
 
 
+class ExecutorError(Exception):
+    pass
+
+
 # ReportException hierarchy
 class ReportException(Exception):
     pass

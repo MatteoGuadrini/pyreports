@@ -32,7 +32,7 @@ from email.mime.multipart import MIMEMultipart
 from email import encoders
 from email.mime.base import MIMEBase
 from .io import Manager, WRITABLE_MANAGER
-from .exception import ReportManagerError, ReportDataError
+from .exception import ReportManagerError, ReportDataError, ExecutorError
 
 
 # endregion
@@ -48,7 +48,22 @@ class Executor:
         :param data: everything type of data
         :param header: list header of data
         """
-        self.data = tablib.Dataset(*data) if not isinstance(data, tablib.Dataset) else data
+        # Check type of input data
+        err_msg = "input data must be a Dataset, tuple, list, List[dict] or List[tuple] object"
+        if isinstance(data, (tuple, list)):
+            if all((isinstance(obj, (tuple, list)) for obj in data)):
+                self.data = tablib.Dataset(*data)
+            elif not all((isinstance(obj, (tuple, list)) for obj in data)):
+                self.data = tablib.Dataset()
+                self.data.append(data)
+            else:
+                raise ExecutorError(err_msg)
+        elif isinstance(data, dict):
+            self.data = tablib.Dataset(*list(data.values()))
+        elif isinstance(data, tablib.Dataset):
+            self.data = data
+        else:
+            raise ExecutorError(err_msg)
         # Set header
         if header or header is None:
             self.headers(header)
