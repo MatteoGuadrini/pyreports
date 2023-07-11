@@ -140,12 +140,13 @@ class Executor:
         """
         self.data.headers = header
 
-    def filter(self, flist=None, key=None, column=None):
+    def filter(self, flist=None, key=None, column=None, negation=False):
         """Filter data through a list of strings (equal operator) and/or function key
 
         :param flist: list of strings
         :param key: function that takes a single argument and returns data
         :param column: select column name or index number
+        :param negation: enable negation for flist or key
         :return: None
         """
         if flist is None:
@@ -154,15 +155,24 @@ class Executor:
         # Filter data through filter list
         for row in self:
             for f in flist:
-                if f in row:
-                    ret_data.append(row)
-                    break
-            # Filter data through function
-            if key and callable(key):
-                for field in row:
-                    if bool(key(field)):
+                if negation:
+                    if f not in row:
                         ret_data.append(row)
                         break
+                else:
+                    if f in row:
+                        ret_data.append(row)
+                        break
+            # Filter data through function (key)
+            if key and callable(key):
+                if negation:
+                    if not any([bool(key(field)) for field in row]):
+                        ret_data.append(row)
+                        continue
+                else:
+                    if any([bool(key(field)) for field in row]):
+                        ret_data.append(row)
+                        continue
         self.data = ret_data
         # Single column
         if column and self.data.headers:

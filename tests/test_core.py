@@ -1,4 +1,6 @@
 import unittest
+
+
 import pyreports
 from tablib import Dataset
 from tempfile import gettempdir
@@ -27,6 +29,13 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(self.data.get_data()[0], ('Arthur', 'Dent', 42))
         self.data.reset()
 
+    def test_filter_by_list_negation(self):
+        data = pyreports.Executor(Dataset())
+        data.data.append(['Arthur', 'Dent', 42])
+        data.data.append(['Ford', 'Prefect', 42])
+        data.filter(['Prefect'], negation=True)
+        self.assertEqual(data.get_data()[0], ('Arthur', 'Dent', 42))
+
     def test_filter_by_key(self):
 
         def is_answer(number):
@@ -39,6 +48,18 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(self.data.get_data()[0], ('Arthur', 'Dent', 42))
         self.assertEqual(self.data.get_data()[1], ('Ford', 'Prefect', 42))
         self.data.reset()
+
+    def test_filter_by_key_negation(self):
+
+        def is_answer(number):
+            if number == 42:
+                return True
+
+        data = pyreports.Executor(Dataset())
+        data.data.append(['Arthur', 'Dent', 42])
+        data.data.append(['Ford', 'Prefect', 43])
+        data.filter(key=is_answer, negation=True)
+        self.assertEqual(data.get_data()[0], ('Ford', 'Prefect', 43))
 
     def test_filter_by_list_and_column(self):
         self.data.headers(['name', 'surname', 'age'])
