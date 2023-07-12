@@ -67,7 +67,7 @@ def get_args():
     try:
         args.config = load_config(args.config)
     except yaml.YAMLError as err:
-        parser.error(f'file {args.config} is not a valid YAML file: {err}')
+        parser.error(f'file {filename} is not a valid YAML file: \n{err}')
 
     # Validate config file
     try:
@@ -147,11 +147,13 @@ def get_data(manager, params=None):
         else:
             data = manager.read()
     # DatabaseManager
-    elif manager.type == 'database':
+    elif manager.type == 'sql':
         if params and isinstance(params, (list, tuple)):
-            data = manager.execute(*params)
+            manager.execute(*params)
+            data = manager.fetchall()
         elif params and isinstance(params, dict):
-            data = manager.execute(**params)
+            manager.execute(**params)
+            data = manager.fetchall()
     # LdapManager
     elif manager.type == 'ldap':
         if params and isinstance(params, (list, tuple)):
@@ -159,7 +161,7 @@ def get_data(manager, params=None):
         elif params and isinstance(params, dict):
             data = manager.query(**params)
     # NosqlManager
-    else:
+    elif manager.type == 'nosql':
         if params and isinstance(params, (list, tuple)):
             data = manager.find(*params)
         elif params and isinstance(params, dict):
