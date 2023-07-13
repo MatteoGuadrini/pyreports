@@ -218,6 +218,7 @@ def main():
                 title=report.get('report').get('title'),
                 filters=report.get('report').get('filters'),
                 map_func=map_func,
+                negation=report.get('report').get('negation', False),
                 column=report.get('report').get('column'),
                 count=report.get('report').get('count', False),
                 output=make_manager(report.get('report').get('output')) if 'output' in report.get('report') else None

@@ -172,6 +172,7 @@ other section
           def map_func(integer):
               if isinstance(integer, int):
                   return str(integer)
+        negation: true
         column: "column_name"
         count: True
 
