@@ -258,6 +258,7 @@ class Report:
                  title=None,
                  filters=None,
                  map_func=None,
+                 negation=False,
                  column=None,
                  count=False,
                  output: Manager = None):
@@ -267,6 +268,7 @@ class Report:
         :param title: title of Report object
         :param filters: list or function for filter data
         :param map_func: function for modifying data
+        :param negation: enable negation for filters or map_func
         :param column: select column name or index
         :param count: count rows
         :param output: Manager object
@@ -280,6 +282,7 @@ class Report:
         self.title = title
         self.filter = filters
         self.map = map_func
+        self.negation = negation
         self.column = column
         self.count = bool(count)
         if isinstance(output, Manager) or output is None:
@@ -361,9 +364,9 @@ class Report:
         # Apply filters
         if self.filter:
             if callable(self.filter):
-                ex.filter(key=self.filter)
+                ex.filter(key=self.filter, negation=self.negation)
             else:
-                ex.filter(self.filter)
+                ex.filter(self.filter, negation=self.negation)
         # Count element
         if bool(self.count):
             self.count = len(ex)

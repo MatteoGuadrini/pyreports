@@ -134,6 +134,13 @@ class TestReport(unittest.TestCase):
         self.assertEqual(self.report.report[0], ('Arthur', 'Dent', '42'))
         self.assertEqual(self.report.count, 1)
 
+    def test_exec_negation(self):
+        self.report.negation = True
+        self.report.exec()
+        self.assertEqual(self.report.report[0], ('Matteo', 'Guadrini', '35'))
+        self.assertEqual(self.report.count, 1)
+        self.report.negation = False
+
     def test_export(self):
         self.report.export()
         self.assertIsInstance(self.report.output.read(), Dataset)
