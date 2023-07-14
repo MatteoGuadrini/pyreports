@@ -1,5 +1,18 @@
 # Release notes
 
+## 1.6.0
+Jul 14, 2023
+
+- Add **deduplicate** function on datatools
+- Add **Manager** abstract class
+- Add **READABLE_MANAGER** and **WRITABLE_MANAGER** tuple
+- Add _pyproject.toml_ file
+- Add **negation** to filter method on _Executor_ class
+- Fix _max_len_ into **aggregate** function, refs #2
+- Fix _sendmail_ method addresses, refs #3
+- Rename **SQLiteConnection** class
+- Reformat code with ruff code analysis
+
 ## 1.5.0
 Aug 4, 2022
 

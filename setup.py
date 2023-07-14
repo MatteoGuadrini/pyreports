@@ -1,17 +1,22 @@
 from setuptools import setup
-import __info__
+
+
+__version__ = '1.6.0'
+__author__ = 'Matteo Guadrini'
+__email__ = 'matteo.guadrini@hotmail.it'
+__homepage__ = 'https://github.com/MatteoGuadrini/pyreports'
 
 with open("README.md") as rme, open("CHANGES.md") as ch:
     long_description = rme.read() + "\n" + ch.read()
 
 setup(
     name='pyreports',
-    version=__info__.__version__,
+    version=__version__,
     packages=['pyreports'],
-    url=__info__.__homepage__,
+    url=__homepage__,
     license='GNU General Public License v3.0',
-    author=__info__.__author__,
-    author_email=__info__.__email__,
+    author=__author__,
+    author_email=__email__,
     keywords='pyreports reports report csv yaml export excel database ldap dataset file executor book',
     maintainer='Matteo Guadrini',
     maintainer_email='matteo.guadrini@hotmail.it',

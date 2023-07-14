@@ -1,15 +1,14 @@
 [build-system]
-requires = ["setuptools", "wheel", "cython"]
+requires = ["setuptools", "setuptools_scm[toml]", "wheel", "cython"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyreports"
-version = "1.5.1"
+version = "1.6.0"
 readme = "README.md"
 license = {text = "GNU General Public License v3.0"}
 keywords = ['pyreports', 'reports', 'report', 'csv', 'yaml', 'export',
             'excel', 'database', 'ldap', 'dataset', 'file', 'executor', 'book']
-packages = ['pyreports']
 authors = [{ name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" }]
 maintainers = [
     { name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" },
@@ -30,4 +29,5 @@ reports = "pyreports.cli:main"
 [project.urls]
 homepage = "https://github.com/MatteoGuadrini/pyreports'"
 documentation = "https://pyreports.readthedocs.io/en/latest/"
+repository = "https://github.com/MatteoGuadrini/pyreports/pyreports.git"
 changelog = "https://github.com/MatteoGuadrini/pyreports/blob/master/CHANGES.md"
