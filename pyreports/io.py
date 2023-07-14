@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # io -- pyreports
 #
-#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -32,7 +32,8 @@ import psycopg2
 import tablib
 import ldap3
 import re
-from nosqlapi import Manager
+from nosqlapi import Manager as APIManager
+from nosqlapi import Connection as APIConnection
 from abc import ABC, abstractmethod
 
 
@@ -41,7 +42,6 @@ from abc import ABC, abstractmethod
 
 # region Classes
 class Connection(ABC):
-
     """Connection base class"""
 
     def __init__(self, *args, **kwargs):
@@ -74,7 +74,6 @@ class Connection(ABC):
 
 
 class File(ABC):
-
     """File base class"""
 
     def __init__(self, filename):
@@ -113,8 +112,12 @@ class File(ABC):
                 yield line
 
 
-class TextFile(File):
+class Manager(ABC):
+    """Manager base class"""
+    pass
 
+
+class TextFile(File):
     """Text file class"""
 
     def write(self, data):
@@ -141,7 +144,6 @@ class TextFile(File):
 
 
 class LogFile(File):
-
     """Log file class"""
 
     def write(self, data):
@@ -174,7 +176,6 @@ class LogFile(File):
 
 
 class CsvFile(File):
-
     """CSV file class"""
 
     def write(self, data):
@@ -198,7 +199,6 @@ class CsvFile(File):
 
 
 class JsonFile(File):
-
     """JSON file class"""
 
     def write(self, data):
@@ -222,7 +222,6 @@ class JsonFile(File):
 
 
 class YamlFile(File):
-
     """YAML file class"""
 
     def write(self, data):
@@ -246,7 +245,6 @@ class YamlFile(File):
 
 
 class ExcelFile(File):
-
     """Excel file class"""
 
     def write(self, data):
@@ -269,8 +267,7 @@ class ExcelFile(File):
             return tablib.import_set(file, **kwargs)
 
 
-class SQLliteConnection(Connection):
-
+class SQLiteConnection(Connection):
     """Connection sqlite class"""
 
     def connect(self):
@@ -283,7 +280,6 @@ class SQLliteConnection(Connection):
 
 
 class MSSQLConnection(Connection):
-
     """Connection microsoft sql class"""
 
     def connect(self):
@@ -296,7 +292,6 @@ class MSSQLConnection(Connection):
 
 
 class MySQLConnection(Connection):
-
     """Connection mysql class"""
 
     def connect(self):
@@ -309,7 +304,6 @@ class MySQLConnection(Connection):
 
 
 class PostgreSQLConnection(Connection):
-
     """Connection postgresql class"""
 
     def connect(self):
@@ -321,8 +315,7 @@ class PostgreSQLConnection(Connection):
         self.cursor.close()
 
 
-class DatabaseManager:
-
+class DatabaseManager(Manager):
     """Database manager class for SQL connection"""
 
     def __init__(self, connection: Connection):
@@ -330,7 +323,7 @@ class DatabaseManager:
 
         :param connection: Connection based object
         """
-        self.type = 'database'
+        self.type = 'sql'
         self.connector = connection
         # Connect database
         self.connector.connect()
@@ -346,7 +339,9 @@ class DatabaseManager:
 
         :return: string
         """
-        return f"<{self.__class__.__name__} object, connection={self.connector.__class__.__name__}>"
+        ret = f"<{self.__class__.__name__} object, "
+        ret += f"connection={self.connector.__class__.__name__}>"
+        return ret
 
     def __iter__(self):
         if self.connector.cursor:
@@ -371,7 +366,10 @@ class DatabaseManager:
         :param params: parameters of the query
         :return: None
         """
-        self.connector.cursor.execute(query, params)
+        if params:
+            self.connector.cursor.execute(query, params)
+        else:
+            self.connector.cursor.execute(query)
         # Set last row id
         self.lastrowid = self.connector.cursor.lastrowid
         # Set row cont
@@ -450,12 +448,17 @@ class DatabaseManager:
         self.connector.connection.commit()
 
 
-class NoSQLManager(Manager):
-
+class NoSQLManager(Manager, APIManager):
     """Database manager class for NOSQL connection"""
 
+    def __init__(self, connection: APIConnection, *args, **kwargs):
+        APIManager.__init__(self, connection, *args, **kwargs)
+        self.type = 'nosql'
+
     @staticmethod
-    def _response_to_dataset(obj: Union[List[tuple], List[list], dict, nosqlapi.Response]) -> tablib.Dataset:
+    def _response_to_dataset(
+            obj: Union[List[tuple], List[list], dict, nosqlapi.Response]
+    ) -> tablib.Dataset:
         """Transform receive data into Dataset object"""
         data = tablib.Dataset()
         if isinstance(obj, (list, tuple)):
@@ -481,8 +484,7 @@ class NoSQLManager(Manager):
         return self._response_to_dataset(self.session.find(*args, **kwargs))
 
 
-class FileManager:
-
+class FileManager(Manager):
     """File manager class for various readable file format"""
 
     def __init__(self, file: File):
@@ -525,8 +527,7 @@ class FileManager:
         return data
 
 
-class LdapManager:
-
+class LdapManager(Manager):
     """LDAP manager class"""
 
     def __init__(self, server, username, password, ssl=False, tls=True):
@@ -541,7 +542,10 @@ class LdapManager:
         self.type = 'ldap'
         # Check ssl connection
         port = 636 if ssl else 389
-        self.connector = ldap3.Server(server, get_info=ldap3.ALL, port=port, use_ssl=ssl)
+        self.connector = ldap3.Server(server,
+                                      get_info=ldap3.ALL,
+                                      port=port,
+                                      use_ssl=ssl)
         # Check tls connection
         self.auto_bind = ldap3.AUTO_BIND_TLS_BEFORE_BIND if tls else ldap3.AUTO_BIND_NONE
         # Create a bind connection with user and password
@@ -555,7 +559,8 @@ class LdapManager:
         :return: string
         """
         obj_repr = f"<{self.__class__.__name__} object, "
-        obj_repr += f"server={self.connector.host}, ssl={self.connector.ssl}, tls={self.connector.tls}>"
+        obj_repr += f"server={self.connector.host}, "
+        obj_repr += f"ssl={self.connector.ssl}, tls={self.connector.tls}>"
         return obj_repr
 
     def rebind(self, username, password):
@@ -606,7 +611,7 @@ class LdapManager:
 
 # region Variables
 DBTYPE = {
-    'sqlite': SQLliteConnection,
+    'sqlite': SQLiteConnection,
     'mssql': MSSQLConnection,
     'mysql': MySQLConnection,
     'postgresql': PostgreSQLConnection
@@ -620,6 +625,10 @@ FILETYPE = {
     'yaml': YamlFile,
     'xlsx': ExcelFile,
 }
+
+READABLE_MANAGER = ('FileManager', 'DatabaseManager', 'LdapManager', 'NoSQLManager')
+
+WRITABLE_MANAGER = ('FileManager', 'DatabaseManager', 'NoSQLManager')
 
 
 # endregion
@@ -670,7 +679,7 @@ def create_nosql_manager(connection, *args, **kwargs):
     """
     # Check if connection class is API compliant with nosqlapi
     if not hasattr(connection, 'connect'):
-        raise nosqlapi.ConnectError('the connection class is not API compliant. see https://nosqlapi.rtfd.io/')
+        raise nosqlapi.ConnectError('the Connection class is not API compliant. See https://nosqlapi.rtfd.io/')
     # Create NoSQLManager object
     return NoSQLManager(connection=connection, *args, **kwargs)
 

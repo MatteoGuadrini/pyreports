@@ -28,7 +28,7 @@ Example ``Connection`` based class:
 
 .. literalinclude:: ../../../pyreports/io.py
     :language: python
-    :pyobject: SQLliteConnection
+    :pyobject: SQLiteConnection
 
 .. warning::
     All connections are `DBAPI 2.0 <https://www.python.org/dev/peps/pep-0249/>`_ compliant. If you need to create your own, it must adhere to these APIs.
@@ -73,8 +73,9 @@ Managers are classes that represent an input and output manager. For example, th
 
 
 
-.. autoclass:: pyreports.io.DatabaseManager
-    :members:
+.. literalinclude:: ../../../pyreports/io.py
+    :language: python
+    :pyobject: DatabaseManager
 
 
 Manager function
@@ -88,7 +89,9 @@ For example, the ``DatabaseManager`` class has associated the ``create_database_
 
 
 
-.. autofunction:: pyreports.io.manager
+.. literalinclude:: ../../../pyreports/io.py
+    :language: python
+    :pyobject: manager
 
 
 

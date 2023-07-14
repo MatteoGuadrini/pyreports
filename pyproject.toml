@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm[toml]", "wheel", "cython"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyreports"
+version = "1.6.0"
+readme = "README.md"
+license = {text = "GNU General Public License v3.0"}
+keywords = ['pyreports', 'reports', 'report', 'csv', 'yaml', 'export',
+            'excel', 'database', 'ldap', 'dataset', 'file', 'executor', 'book']
+authors = [{ name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" }]
+maintainers = [
+    { name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" },
+]
+description = "pyreports is a python library that allows you to create complex report from various sources."
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+dependencies = ['ldap3', 'pymssql', 'mysql-connector-python',
+                'psycopg2-binary', 'tablib', 'tablib[all]', 'nosqlapi', 'pyyaml']
+
+[project.scripts]
+reports = "pyreports.cli:main"
+
+[project.urls]
+homepage = "https://github.com/MatteoGuadrini/pyreports'"
+documentation = "https://pyreports.readthedocs.io/en/latest/"
+repository = "https://github.com/MatteoGuadrini/pyreports/pyreports.git"
+changelog = "https://github.com/MatteoGuadrini/pyreports/blob/master/CHANGES.md"

@@ -3,16 +3,18 @@ version: 2.1
 jobs:
   build-and-test:
     docker:
-      - image: cimg/python:3.10.4
+      - image: circleci/python
     steps:
       - checkout
-      - run: sudo apt-get update -q
-      - run: sudo apt-get install -q -y python3-pip
-      - run: sudo pip install Cython
-      - run: sudo python3 setup.py install
+      - run: sudo apt update && sudo apt install -y freetds-dev libssl-dev python-dev freetds-bin
+      - run: sudo pip install --upgrade pip
+      - run: sudo pip install cython
+      - run: sudo pip install pymssql
+      - run: sudo pip install numpy
+      - run: sudo pip install pandas
+      - run: sudo python setup.py install
       - run: sudo chmod -R 777 /tmp
-      - run: sudo python3 -m unittest discover tests
-
+      - run: sudo python -m unittest discover tests
 
 workflows:
   main:

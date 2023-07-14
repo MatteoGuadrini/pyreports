@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # datatools -- pyreports
 #
-#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -120,16 +120,16 @@ def aggregate(*columns, fill_empty: bool = False, fill_value=None):
     """
     if len(columns) >= 2:
         new_data = Dataset()
-        # Check len of all columns
-        last_list = columns[0]
-        for list_ in columns[1:]:
+        # Check max len of all columns
+        max_len = max([len(column) for column in columns])
+        for list_ in columns:
             if fill_empty:
-                while len(last_list) != len(list_):
+                while max_len != len(list_):
                     list_.append(fill_value() if callable(fill_value) else fill_value)
             else:
-                if len(last_list) != len(list_):
+                if max_len != len(list_):
                     raise InvalidDimensions('the columns are not the same length')
-                last_list = list_
+                max_len = len(list_)
         # Aggregate columns
         for column in columns:
             new_data.append_col(column)
@@ -168,4 +168,14 @@ def chunks(data, length):
     """
     for i in range(0, len(data), length):
         yield data[i:i + length]
+
+
+def deduplicate(data):
+    """Remove duplicated rows
+
+    :param data: Dataset object
+    :return: Dataset
+    """
+    return Dataset(*list(dict.fromkeys(data)))
+
 # endregion

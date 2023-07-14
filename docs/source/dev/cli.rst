@@ -60,14 +60,14 @@ The report section must have a data **input**, which can be file, sql database o
 
     reports:
     - report:
-      # My input
-      input:
-        manager: 'log'
-        filename: '/tmp/test_log.log'
-        # Apache http log format
-        params:
-          pattern: '([(\d\.)]+) (.*) \[(.*?)\] (.*?) (\d+) (\d+) (.*?) (.*?) (\(.*?\))'
-          headers: ['ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser', 'host']
+        # My input
+        input:
+          manager: 'log'
+          filename: '/tmp/test_log.log'
+          # Apache http log format
+          params:
+            pattern: '([(\d\.)]+) (.*) \[(.*?)\] (.*?) (\d+) (\d+) (.*?) (.*?) (\(.*?\))'
+            headers: ['ip', 'user', 'date', 'req', 'ret', 'size', 'url', 'browser', 'host']
 
 .. note::
    Only *log* type has a ``pattern`` params.
@@ -78,18 +78,18 @@ The report section must have a data **input**, which can be file, sql database o
 
     reports:
     - report:
-      # My input
-      input:
-        manager: 'mysql'
-        source:
-        # Connection parameters of my mysql database
-          host: 'mysql1.local'
-          database: 'cars'
-          user: 'admin'
-          password: 'dba0000'
-        params:
-          query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
-          params: ['ford', 'red']
+        # My input
+        input:
+          manager: 'mysql'
+          source:
+          # Connection parameters of my mysql database
+            host: 'mysql1.local'
+            database: 'cars'
+            user: 'admin'
+            password: 'dba0000'
+          params:
+            query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
+            params: ['ford', 'red']
 
 .. attention::
    For complete list of *source* parameters see the various python package for the providers databases.
@@ -99,39 +99,58 @@ The report section must have a data **input**, which can be file, sql database o
 
     reports:
     - report:
-      # My input
-      input:
-        manager: 'ldap'
-        source:
-        # Connection parameters of my ldap server
-          server: 'ldap.local'
-          username: 'user'
-          password: 'password'
-          ssl: False
-          tls: True
-        params:
-          base_search: 'DC=test,DC=local'
-          search_filter: '(&(objectClass=user)(objectCategory=person))'
-          attributes: ['name', 'mail', 'phone']
+        # My input
+        input:
+          manager: 'ldap'
+          source:
+          # Connection parameters of my ldap server
+            server: 'ldap.local'
+            username: 'user'
+            password: 'password'
+            ssl: False
+            tls: True
+          params:
+            base_search: 'DC=test,DC=local'
+            search_filter: '(&(objectClass=user)(objectCategory=person))'
+            attributes: ['name', 'mail', 'phone']
 
 output section
 --------------
 
-**output** is a *FileManager* object where save your report data.
+**output** is a *Manager* object where save your report data, is same of input data.
 
 .. attention::
    If *output* is null or absent, the output of data is *stdout*.
 
 .. code-block:: yaml
+   :caption: FileManager
 
     reports:
     - report:
-      # My input
-      input:
-        # ...
-      output:
-        manager: 'csv'
-        filename: '/tmp/test_csv.csv'
+        # My input
+        input:
+          # ...
+        output:
+          manager: 'csv'
+          filename: '/tmp/test_csv.csv'
+
+
+.. code-block:: yaml
+   :caption: DatabaseManager
+
+    reports:
+    - report:
+        # My input
+        input:
+          # ...
+        output:
+          manager: 'mysql'
+          source:
+          # Connection parameters of my mysql database
+            host: 'mysql1.local'
+            database: 'cars'
+            user: 'admin'
+            password: 'dba0000'
 
 other section
 -------------
@@ -142,19 +161,20 @@ other section
 
     reports:
     - report:
-      # My input
-      input:
-        # ...
-      output:
-        # ...
-      title: "One report"
-      filters: ['string_filter', 42]
-      map: |
-        def map_func(integer):
-            if isinstance(integer, int):
-                return str(integer)
-      column: "column_name"
-      count: True
+        # My input
+        input:
+          # ...
+        output:
+          # ...
+        title: "One report"
+        filters: ['string_filter', 42]
+        map: |
+          def map_func(integer):
+              if isinstance(integer, int):
+                  return str(integer)
+        negation: true
+        column: "column_name"
+        count: True
 
 .. warning::
    **map** section accept any python code. Specify only a function that accept only one argument and with name ``map_func``.
@@ -171,23 +191,23 @@ Reports can also be sent by email. Just specify the **mail** section.
 
     reports:
     - report:
-      # My input
-      input:
-        # ...
-      output:
-        # ...
-      # Other sections
-      mail:
-        server: 'smtp.local'
-        from: 'ARTHUR DENT <arthur.dent@hitchhikers.com>'
-        to: 'ford.prefect@hitchhikers.com'
-        cc: 'startiblast@hitchhikers.com'
-        bcc: 'allmouse@hitchhikers.com'
-        subject: 'New report mail'
-        body: 'Report in attachment'
-        auth: ['user', 'password']
-        ssl: true
-        headers: ['key', 'value']
+        # My input
+        input:
+          # ...
+        output:
+          # ...
+        # Other sections
+        mail:
+          server: 'smtp.local'
+          from: 'ARTHUR DENT <arthur.dent@hitchhikers.com>'
+          to: 'ford.prefect@hitchhikers.com'
+          cc: 'startiblast@hitchhikers.com'
+          bcc: 'allmouse@hitchhikers.com'
+          subject: 'New report mail'
+          body: 'Report in attachment'
+          auth: ['user', 'password']
+          ssl: true
+          headers: ['key', 'value']
 
 .. warning::
    **mail** settings required **output** settings.
@@ -206,23 +226,23 @@ Below is an example of a report with data taken from a *mysql* database and save
 
     reports:
     - report:
-      title: 'Red ford machine'
-      input:
-        manager: 'mysql'
-        source:
-        # Connection parameters of my mysql database
-          host: 'mysql1.local'
-          database: 'cars'
-          user: 'admin'
-          password: 'dba0000'
-        params:
-          query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
-          params: ['ford', 'red']
-      # Filter km
-      filters: [40000, 45000]
-      output:
-        manager: 'csv'
-        filename: '/tmp/car_csv.csv'
+        title: 'Red ford machine'
+        input:
+          manager: 'mysql'
+          source:
+          # Connection parameters of my mysql database
+            host: 'mysql1.local'
+            database: 'cars'
+            user: 'admin'
+            password: 'dba0000'
+          params:
+            query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
+            params: ['ford', 'red']
+        # Filter km
+        filters: [40000, 45000]
+        output:
+          manager: 'csv'
+          filename: '/tmp/car_csv.csv'
 
 LDAP example
 ------------
@@ -233,32 +253,32 @@ Reports of users who have passwords without expiration by saving it in an *excel
 
     reports:
     - report:
-      title: 'Users who have passwords without expiration'
-      input:
-        manager: 'ldap'
-        source:
-         # Connection parameters of my ldap server
-         server: 'ldap.local'
-          username: 'user'
-          password: 'password'
-          ssl: False
-          tls: True
-        params:
-          base_search: 'DC=test,DC=local'
-          search_filter: '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=65536))'
-          attributes: ['cn', 'mail', 'phone']
-      # Append prefix number on phone number
-      map: |
-          def map_func(phone):
-            if phone.startswith('33'):
-                return '+39' + phone
-      output:
-        manager: 'xlsx'
-        filename: '/tmp/users.xlsx'
-      mail:
-        server: 'smtp.local'
-        from: 'ARTHUR DENT <arthur.dent@hitchhikers.com'
-        to: 'ford.prefect@hitchhikers.com'
+        title: 'Users who have passwords without expiration'
+        input:
+          manager: 'ldap'
+          source:
+           # Connection parameters of my ldap server
+           server: 'ldap.local'
+            username: 'user'
+            password: 'password'
+            ssl: False
+            tls: True
+          params:
+            base_search: 'DC=test,DC=local'
+            search_filter: '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=65536))'
+            attributes: ['cn', 'mail', 'phone']
+        # Append prefix number on phone number
+        map: |
+            def map_func(phone):
+               if phone.startswith('33'):
+                  return '+39' + phone
+        output:
+          manager: 'xlsx'
+          filename: '/tmp/users.xlsx'
+        mail:
+          server: 'smtp.local'
+          from: 'ARTHUR DENT <arthur.dent@hitchhikers.com'
+          to: 'ford.prefect@hitchhikers.com'
 
 Two report examples
 -------------------
@@ -269,47 +289,47 @@ Combine latest report examples into one configuration file.
 
     reports:
     - report:
-      title: 'Red ford machine'
-      input:
-        manager: 'mysql'
-        source:
-        # Connection parameters of my mysql database
-          host: 'mysql1.local'
-          database: 'cars'
-          user: 'admin'
-          password: 'dba0000'
-        params:
-          query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
-          params: ['ford', 'red']
-      # Filter km
-      filters: [40000, 45000]
-      output:
-        manager: 'csv'
-        filename: '/tmp/car_csv.csv'
+        title: 'Red ford machine'
+        input:
+          manager: 'mysql'
+          source:
+          # Connection parameters of my mysql database
+            host: 'mysql1.local'
+            database: 'cars'
+            user: 'admin'
+            password: 'dba0000'
+          params:
+            query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
+            params: ['ford', 'red']
+        # Filter km
+        filters: [40000, 45000]
+        output:
+          manager: 'csv'
+          filename: '/tmp/car_csv.csv'
     - report:
-      title: 'Users who have passwords without expiration'
-      input:
-        manager: 'ldap'
-        source:
-        # Connection parameters of my ldap server
-          server: 'ldap.local'
-          username: 'user'
-          password: 'password'
-          ssl: False
-          tls: True
-        params:
-          base_search: 'DC=test,DC=local'
-          search_filter: '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=65536))'
-          attributes: ['cn', 'mail', 'phone']
-      # Append prefix number on phone number
-      map: |
-          def map_func(phone):
-            if phone.startswith('33'):
-                return '+39' + phone
-      output:
-        manager: 'xlsx'
-        filename: '/tmp/users.xlsx'
-      mail:
-        server: 'smtp.local'
-        from: 'ARTHUR DENT <arthur.dent@hitchhikers.com'
-        to: 'ford.prefect@hitchhikers.com'
+        title: 'Users who have passwords without expiration'
+        input:
+          manager: 'ldap'
+          source:
+          # Connection parameters of my ldap server
+            server: 'ldap.local'
+            username: 'user'
+            password: 'password'
+            ssl: False
+            tls: True
+          params:
+            base_search: 'DC=test,DC=local'
+            search_filter: '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=65536))'
+            attributes: ['cn', 'mail', 'phone']
+        # Append prefix number on phone number
+        map: |
+            def map_func(phone):
+               if phone.startswith('33'):
+                  return '+39' + phone
+        output:
+          manager: 'xlsx'
+          filename: '/tmp/users.xlsx'
+        mail:
+          server: 'smtp.local'
+          from: 'ARTHUR DENT <arthur.dent@hitchhikers.com'
+          to: 'ford.prefect@hitchhikers.com'

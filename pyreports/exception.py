@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # exception.py -- pyreports
 #
-#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,10 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Contains all custom exception."""
+
+
+class ExecutorError(Exception):
+    pass
 
 
 # ReportException hierarchy

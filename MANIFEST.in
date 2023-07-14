@@ -1,1 +1,1 @@
-include __info__.py
+include pyproject.toml

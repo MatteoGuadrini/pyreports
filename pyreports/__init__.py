@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # __init__ -- pyreports
 #
-#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@
 
 """Build complex pyreports from/to various formats."""
 
-from .io import manager
+from .io import manager, READABLE_MANAGER, WRITABLE_MANAGER
 from .core import Executor, Report, ReportBook
 from .exception import ReportDataError, ReportManagerError
-from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge
+from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge, deduplicate
 from .cli import make_manager, get_data, load_config, validate_config

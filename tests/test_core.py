@@ -1,4 +1,6 @@
 import unittest
+
+
 import pyreports
 from tablib import Dataset
 from tempfile import gettempdir
@@ -27,6 +29,13 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(self.data.get_data()[0], ('Arthur', 'Dent', 42))
         self.data.reset()
 
+    def test_filter_by_list_negation(self):
+        data = pyreports.Executor(Dataset())
+        data.data.append(['Arthur', 'Dent', 42])
+        data.data.append(['Ford', 'Prefect', 42])
+        data.filter(['Prefect'], negation=True)
+        self.assertEqual(data.get_data()[0], ('Arthur', 'Dent', 42))
+
     def test_filter_by_key(self):
 
         def is_answer(number):
@@ -39,6 +48,18 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(self.data.get_data()[0], ('Arthur', 'Dent', 42))
         self.assertEqual(self.data.get_data()[1], ('Ford', 'Prefect', 42))
         self.data.reset()
+
+    def test_filter_by_key_negation(self):
+
+        def is_answer(number):
+            if number == 42:
+                return True
+
+        data = pyreports.Executor(Dataset())
+        data.data.append(['Arthur', 'Dent', 42])
+        data.data.append(['Ford', 'Prefect', 43])
+        data.filter(key=is_answer, negation=True)
+        self.assertEqual(data.get_data()[0], ('Ford', 'Prefect', 43))
 
     def test_filter_by_list_and_column(self):
         self.data.headers(['name', 'surname', 'age'])
@@ -113,9 +134,48 @@ class TestReport(unittest.TestCase):
         self.assertEqual(self.report.report[0], ('Arthur', 'Dent', '42'))
         self.assertEqual(self.report.count, 1)
 
+    def test_exec_negation(self):
+        self.report.negation = True
+        self.report.exec()
+        self.assertEqual(self.report.report[0], ('Matteo', 'Guadrini', '35'))
+        self.assertEqual(self.report.count, 1)
+        self.report.negation = False
+
     def test_export(self):
         self.report.export()
         self.assertIsInstance(self.report.output.read(), Dataset)
+
+
+class TestReportDatabase(unittest.TestCase):
+    input_data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42)],
+                         headers=('name', 'surname', 'age'))
+    output_data = pyreports.manager('sqlite', f'{tmp_folder}/mydb.db')
+    title = 'Test report'
+    column = 'age'
+    count = True
+    report = pyreports.Report(input_data=input_data,
+                              title=title,
+                              map_func=lambda item: str(item) if isinstance(item, int) else item,
+                              column=column,
+                              count=count,
+                              output=output_data)
+
+    def test_report_object(self):
+        self.assertIsInstance(self.report, pyreports.Report)
+
+    def test_no_output_report_object(self):
+        new_report = pyreports.Report(input_data=self.input_data)
+        self.assertIsInstance(new_report, pyreports.Report)
+
+    def test_exec(self):
+        self.report.exec()
+        self.assertEqual(self.report.report[0], ('Matteo', 'Guadrini', '35'))
+        self.assertEqual(self.report.count, 2)
+
+    def test_export(self):
+        self.report.export()
+        self.report.output.execute('SELECT * from test_report')
+        self.assertIsInstance(self.report.output.fetchall(), Dataset)
 
 
 class TestReportBook(unittest.TestCase):

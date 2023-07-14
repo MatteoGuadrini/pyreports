@@ -30,14 +30,17 @@ class TestDataTools(unittest.TestCase):
         ages = self.data.get_col(2)
         self.assertEqual(pyreports.aggregate(names, surnames, ages)[0], ('Matteo', 'Guadrini', 35))
         ages = ['Name', 'Surname']
-        self.assertRaises(tablib.InvalidDimensions, pyreports.aggregate, names, surnames, ages)
+        self.assertRaises(tablib.InvalidDimensions, pyreports.aggregate, names,
+                          surnames, ages)
         self.assertRaises(pyreports.ReportDataError, pyreports.aggregate, names)
 
     def test_aggregate_fill_empty(self):
         names = self.data.get_col(0)
         surnames = self.data.get_col(1)
         ages = ['Name', 'Surname']
-        self.assertEqual(pyreports.aggregate(names, surnames, ages, fill_empty=True)[2], ('Ford', 'Prefect', None))
+        self.assertEqual(pyreports.aggregate(names, surnames, ages,
+                                             fill_empty=True)[2],
+                         ('Ford', 'Prefect', None))
 
     def test_chunks(self):
         data = Dataset(*[('Matteo', 'Guadrini', 35), ('Arthur', 'Dent', 42), ('Ford', 'Prefect', 42)])
@@ -46,7 +49,14 @@ class TestDataTools(unittest.TestCase):
         self.assertEqual(list(pyreports.chunks(data, 4))[0][0], ('Matteo', 'Guadrini', 35))
 
     def test_merge(self):
-        self.assertEqual(pyreports.merge(self.data, self.data)[3], ('Matteo', 'Guadrini', 35))
+        self.assertEqual(pyreports.merge(self.data, self.data)[3],
+                         ('Matteo', 'Guadrini', 35))
+
+    def test_deduplication(self):
+        data = Dataset(*[('Matteo', 'Guadrini', 35),
+                         ('Arthur', 'Dent', 42),
+                         ('Matteo', 'Guadrini', 35)])
+        self.assertEqual(len(pyreports.deduplicate(data)), 2)
 
 
 if __name__ == '__main__':

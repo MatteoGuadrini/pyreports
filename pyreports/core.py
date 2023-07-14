@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # core -- pyreports
 #
-#     Copyright (C) 2022 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 from email.mime.base import MIMEBase
-from .io import FileManager
-from .exception import ReportManagerError, ReportDataError
+from .io import Manager, WRITABLE_MANAGER
+from .exception import ReportManagerError, ReportDataError, ExecutorError
 
 
 # endregion
@@ -40,7 +40,6 @@ from .exception import ReportManagerError, ReportDataError
 # region Classes
 
 class Executor:
-
     """Executor receives, processes, transforms and writes data"""
 
     def __init__(self, data, header=None):
@@ -49,7 +48,22 @@ class Executor:
         :param data: everything type of data
         :param header: list header of data
         """
-        self.data = tablib.Dataset(*data) if not isinstance(data, tablib.Dataset) else data
+        # Check type of input data
+        err_msg = "input data must be a Dataset, tuple, list, List[dict] or List[tuple] object"
+        if isinstance(data, (tuple, list)):
+            if all((isinstance(obj, (tuple, list)) for obj in data)):
+                self.data = tablib.Dataset(*data)
+            elif not all((isinstance(obj, (tuple, list)) for obj in data)):
+                self.data = tablib.Dataset()
+                self.data.append(data)
+            else:
+                raise ExecutorError(err_msg)
+        elif isinstance(data, dict):
+            self.data = tablib.Dataset(*list(data.values()))
+        elif isinstance(data, tablib.Dataset):
+            self.data = data
+        else:
+            raise ExecutorError(err_msg)
         # Set header
         if header or header is None:
             self.headers(header)
@@ -126,12 +140,13 @@ class Executor:
         """
         self.data.headers = header
 
-    def filter(self, flist=None, key=None, column=None):
+    def filter(self, flist=None, key=None, column=None, negation=False):
         """Filter data through a list of strings (equal operator) and/or function key
 
         :param flist: list of strings
         :param key: function that takes a single argument and returns data
         :param column: select column name or index number
+        :param negation: enable negation for flist or key
         :return: None
         """
         if flist is None:
@@ -140,15 +155,24 @@ class Executor:
         # Filter data through filter list
         for row in self:
             for f in flist:
-                if f in row:
-                    ret_data.append(row)
-                    break
-            # Filter data through function
-            if key and callable(key):
-                for field in row:
-                    if bool(key(field)):
+                if negation:
+                    if f not in row:
                         ret_data.append(row)
                         break
+                else:
+                    if f in row:
+                        ret_data.append(row)
+                        break
+            # Filter data through function (key)
+            if key and callable(key):
+                if negation:
+                    if not any([bool(key(field)) for field in row]):
+                        ret_data.append(row)
+                        continue
+                else:
+                    if any([bool(key(field)) for field in row]):
+                        ret_data.append(row)
+                        continue
         self.data = ret_data
         # Single column
         if column and self.data.headers:
@@ -227,7 +251,6 @@ class Executor:
 
 
 class Report:
-
     """Report represents the workflow for generating a report"""
 
     def __init__(self,
@@ -235,18 +258,20 @@ class Report:
                  title=None,
                  filters=None,
                  map_func=None,
+                 negation=False,
                  column=None,
                  count=False,
-                 output: FileManager = None):
+                 output: Manager = None):
         """Create Report object
 
         :param input_data: Dataset object
         :param title: title of Report object
         :param filters: list or function for filter data
         :param map_func: function for modifying data
+        :param negation: enable negation for filters or map_func
         :param column: select column name or index
         :param count: count rows
-        :param output: FileManager object
+        :param output: Manager object
         """
         # Discard all objects that are not Datasets
         if isinstance(input_data, tablib.Dataset):
@@ -257,12 +282,16 @@ class Report:
         self.title = title
         self.filter = filters
         self.map = map_func
+        self.negation = negation
         self.column = column
         self.count = bool(count)
-        if isinstance(output, FileManager) or output is None:
+        if isinstance(output, Manager) or output is None:
+            if output:
+                if output.__class__.__name__ not in WRITABLE_MANAGER:
+                    raise ReportManagerError(f'Only {WRITABLE_MANAGER} object is allowed for output')
             self.output = output
         else:
-            raise ReportManagerError('Only FileManager object is allowed for output')
+            raise ReportManagerError('Only Manager object is allowed for output')
         # Data for report
         self.report = None
 
@@ -335,9 +364,9 @@ class Report:
         # Apply filters
         if self.filter:
             if callable(self.filter):
-                ex.filter(key=self.filter)
+                ex.filter(key=self.filter, negation=self.negation)
             else:
-                ex.filter(self.filter)
+                ex.filter(self.filter, negation=self.negation)
         # Count element
         if bool(self.count):
             self.count = len(ex)
@@ -350,14 +379,33 @@ class Report:
         """
         # Process data before export
         self.exec()
-        # Verify if output is FileManager object
-        if isinstance(self.output, FileManager) or self.output is None:
-            if self.output:
+        if self.output is not None:
+            if self.output.type == 'file':
                 self.output.write(self.report)
-            else:
-                print(self)
+            elif self.output.type == 'sql':
+                if not self.report.headers:
+                    raise ReportDataError("Dataset object doesn't have a header")
+                table_name = self.title.replace(' ', '_').lower()
+                fields = ','.join([
+                    f'{field} VARCHAR(255)'
+                    for field in self.report.headers
+                ])
+                # Create table with header
+                self.output.execute(
+                    f"CREATE TABLE IF NOT EXISTS {table_name} ({fields});"
+                )
+                # Insert data into table
+                table_header = ','.join(field for field in self.report.headers)
+                for row in self.report:
+                    row_table = [f"'{element}'" for element in row]
+                    self.output.execute(
+                        f"INSERT INTO {table_name} "
+                        f"({table_header}) "
+                        f"VALUES ({','.join(element for element in row_table)});"
+                    )
+                self.output.commit()
         else:
-            raise ReportManagerError('the output object must be FileManager or NoneType object')
+            print(self)
 
     def send(self, server, _from, to, cc=None, bcc=None, subject=None, body='', auth=None, _ssl=True, headers=None):
         """Send saved report to email
@@ -393,7 +441,7 @@ class Report:
             elif isinstance(headers, (tuple, list)):
                 message.add_header(*headers)
             else:
-                raise ValueError(f'headers must be tuple or List[tuple]')
+                raise ValueError('headers must be tuple or List[tuple]')
 
         # Prepare body
         part = MIMEText(body, "html")
@@ -421,11 +469,10 @@ class Report:
         with protocol(server, port, **kwargs) as srv:
             if auth:
                 srv.login(*auth)
-            srv.sendmail(_from, to, message.as_string())
+            srv.sendmail(_from, [receiver for receiver in (to, cc, bcc) if receiver], message.as_string())
 
 
 class ReportBook:
-
     """ReportBook represent a collection of Report's object"""
 
     def __init__(self, reports=None, title=None):
