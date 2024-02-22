@@ -29,5 +29,5 @@ reports = "pyreports.cli:main"
 [project.urls]
 homepage = "https://github.com/MatteoGuadrini/pyreports'"
 documentation = "https://pyreports.readthedocs.io/en/latest/"
-repository = "https://github.com/MatteoGuadrini/pyreports/pyreports.git"
+repository = "https://github.com/MatteoGuadrini/pyreports.git"
 changelog = "https://github.com/MatteoGuadrini/pyreports/blob/master/CHANGES.md"

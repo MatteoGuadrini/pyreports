@@ -28,11 +28,7 @@ import tablib
 import yaml
 import argparse
 import pyreports
-
-# endregion
-
-# region globals
-__version__ = '1.5.1'
+from pyreports import __version__
 
 
 # endregion

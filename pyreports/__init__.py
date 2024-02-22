@@ -20,10 +20,12 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Build complex pyreports from/to various formats."""
+"""Build complex reports from/to various formats."""
 
-from .io import manager, READABLE_MANAGER, WRITABLE_MANAGER
-from .core import Executor, Report, ReportBook
-from .exception import ReportDataError, ReportManagerError
-from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge, deduplicate
-from .cli import make_manager, get_data, load_config, validate_config
+__version__ = '1.6.0'
+
+from .io import manager, READABLE_MANAGER, WRITABLE_MANAGER  # noqa: F401
+from .core import Executor, Report, ReportBook  # noqa: F401
+from .exception import ReportDataError, ReportManagerError  # noqa: F401
+from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge, deduplicate  # noqa: F401
+from .cli import make_manager, get_data, load_config, validate_config  # noqa: F401
