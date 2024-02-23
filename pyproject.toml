@@ -20,7 +20,7 @@ classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
 ]
-dependencies = ['ldap3', 'pymssql', 'mysql-connector-python',
+dependencies = ['ldap3', 'mysql-connector-python',
                 'psycopg2-binary', 'tablib', 'tablib[all]', 'nosqlapi', 'pyyaml']
 
 [project.scripts]

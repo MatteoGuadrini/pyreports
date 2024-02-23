@@ -26,7 +26,6 @@
 import sqlite3
 from typing import Union, List
 import nosqlapi
-import pymssql
 import mysql.connector as mdb
 import psycopg2
 import tablib
@@ -114,6 +113,7 @@ class File(ABC):
 
 class Manager(ABC):
     """Manager base class"""
+
     pass
 
 
@@ -128,8 +128,8 @@ class TextFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with open(self.file, mode='w') as file:
-            file.write('\n'.join(str(line) for row in data for line in row))
+        with open(self.file, mode="w") as file:
+            file.write("\n".join(str(line) for row in data for line in row))
 
     def read(self, **kwargs):
         """Read with format
@@ -139,7 +139,7 @@ class TextFile(File):
         data = tablib.Dataset(**kwargs)
         with open(self.file) as file:
             for line in file:
-                data.append([line.strip('\n')])
+                data.append([line.strip("\n")])
         return data
 
 
@@ -154,10 +154,10 @@ class LogFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(*data)
-        with open(self.file, mode='w') as file:
-            file.write('\n'.join([' '.join(row).strip('\n') for row in data]))
+        with open(self.file, mode="w") as file:
+            file.write("\n".join([" ".join(row).strip("\n") for row in data]))
 
-    def read(self, pattern=r'(.*\n|.*$)', **kwargs):
+    def read(self, pattern=r"(.*\n|.*$)", **kwargs):
         """Read with format
 
         :param pattern: regular expression pattern
@@ -186,8 +186,8 @@ class CsvFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with open(self.file, mode='w') as file:
-            file.write(data.export('csv'))
+        with open(self.file, mode="w") as file:
+            file.write(data.export("csv"))
 
     def read(self, **kwargs):
         """Read csv format
@@ -209,8 +209,8 @@ class JsonFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with open(self.file, mode='w') as file:
-            file.write(data.export('json'))
+        with open(self.file, mode="w") as file:
+            file.write(data.export("json"))
 
     def read(self, **kwargs):
         """Read json format
@@ -232,8 +232,8 @@ class YamlFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with open(self.file, mode='w') as file:
-            file.write(data.export('yaml'))
+        with open(self.file, mode="w") as file:
+            file.write(data.export("yaml"))
 
     def read(self, **kwargs):
         """Read yaml format
@@ -255,15 +255,15 @@ class ExcelFile(File):
         """
         if not isinstance(data, tablib.Dataset):
             data = tablib.Dataset(data)
-        with open(self.file, mode='wb') as file:
-            file.write(data.export('xlsx'))
+        with open(self.file, mode="wb") as file:
+            file.write(data.export("xlsx"))
 
     def read(self, **kwargs):
         """Read xlsx format
 
         :return: Dataset object
         """
-        with open(self.file, 'rb') as file:
+        with open(self.file, "rb") as file:
             return tablib.import_set(file, **kwargs)
 
 
@@ -272,18 +272,6 @@ class SQLiteConnection(Connection):
 
     def connect(self):
         self.connection = sqlite3.connect(*self.args, **self.kwargs)
-        self.cursor = self.connection.cursor()
-
-    def close(self):
-        self.connection.close()
-        self.cursor.close()
-
-
-class MSSQLConnection(Connection):
-    """Connection microsoft sql class"""
-
-    def connect(self):
-        self.connection = pymssql.connect(*self.args, **self.kwargs)
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -323,7 +311,7 @@ class DatabaseManager(Manager):
 
         :param connection: Connection based object
         """
-        self.type = 'sql'
+        self.type = "sql"
         self.connector = connection
         # Connect database
         self.connector.connect()
@@ -410,7 +398,9 @@ class DatabaseManager(Manager):
         :return: Dataset object
         """
         header = [field[0] for field in self.description]
-        self.data = tablib.Dataset(list(self.connector.cursor.fetchone()), headers=header)
+        self.data = tablib.Dataset(
+            list(self.connector.cursor.fetchone()), headers=header
+        )
         return self.data
 
     def fetchmany(self, size=1) -> tablib.Dataset:
@@ -453,11 +443,11 @@ class NoSQLManager(Manager, APIManager):
 
     def __init__(self, connection: APIConnection, *args, **kwargs):
         APIManager.__init__(self, connection, *args, **kwargs)
-        self.type = 'nosql'
+        self.type = "nosql"
 
     @staticmethod
     def _response_to_dataset(
-            obj: Union[List[tuple], List[list], dict, nosqlapi.Response]
+        obj: Union[List[tuple], List[list], dict, nosqlapi.Response],
     ) -> tablib.Dataset:
         """Transform receive data into Dataset object"""
         data = tablib.Dataset()
@@ -469,7 +459,9 @@ class NoSQLManager(Manager, APIManager):
             if isinstance(obj.data, (list, tuple)):
                 data = tablib.Dataset([row for row in obj.data])
             elif isinstance(obj.data, dict):
-                data = tablib.Dataset([obj.data[key] for key in obj], headers=list(obj.data.keys()))
+                data = tablib.Dataset(
+                    [obj.data[key] for key in obj], headers=list(obj.data.keys())
+                )
         else:
             data.append(obj)
 
@@ -492,7 +484,7 @@ class FileManager(Manager):
 
         :param file: file object
         """
-        self.type = 'file'
+        self.type = "file"
         self.data = file
 
     def __repr__(self):
@@ -539,18 +531,24 @@ class LdapManager(Manager):
         :param ssl: disable or enable SSL. Default is False.
         :param tls: disable or enable TLS. Default is True.
         """
-        self.type = 'ldap'
+        self.type = "ldap"
         # Check ssl connection
         port = 636 if ssl else 389
-        self.connector = ldap3.Server(server,
-                                      get_info=ldap3.ALL,
-                                      port=port,
-                                      use_ssl=ssl)
+        self.connector = ldap3.Server(
+            server, get_info=ldap3.ALL, port=port, use_ssl=ssl
+        )
         # Check tls connection
-        self.auto_bind = ldap3.AUTO_BIND_TLS_BEFORE_BIND if tls else ldap3.AUTO_BIND_NONE
+        self.auto_bind = (
+            ldap3.AUTO_BIND_TLS_BEFORE_BIND if tls else ldap3.AUTO_BIND_NONE
+        )
         # Create a bind connection with user and password
-        self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
-                                     auto_bind=self.auto_bind, raise_exceptions=True)
+        self.bind = ldap3.Connection(
+            self.connector,
+            user=f"{username}",
+            password=f"{password}",
+            auto_bind=self.auto_bind,
+            raise_exceptions=True,
+        )
         self.bind.bind()
 
     def __repr__(self):
@@ -572,8 +570,13 @@ class LdapManager(Manager):
         """
         # Disconnect LDAP server
         self.bind.unbind()
-        self.bind = ldap3.Connection(self.connector, user=f'{username}', password=f'{password}',
-                                     auto_bind=self.auto_bind, raise_exceptions=True)
+        self.bind = ldap3.Connection(
+            self.connector,
+            user=f"{username}",
+            password=f"{password}",
+            auto_bind=self.auto_bind,
+            raise_exceptions=True,
+        )
         self.bind.bind()
 
     def unbind(self):
@@ -591,16 +594,20 @@ class LdapManager(Manager):
         :param attributes: list of returning LDAP attributes
         :return: Dataset object
         """
-        if self.bind.search(search_base=base_search, search_filter=f'{search_filter}', attributes=attributes,
-                            search_scope=ldap3.SUBTREE):
+        if self.bind.search(
+            search_base=base_search,
+            search_filter=f"{search_filter}",
+            attributes=attributes,
+            search_scope=ldap3.SUBTREE,
+        ):
             # Build Dataset
             data = tablib.Dataset()
             data.headers = attributes
             for result in self.bind.response:
-                if result.get('attributes'):
+                if result.get("attributes"):
                     row = list()
                     for index, _ in enumerate(attributes):
-                        row.append(result.get('attributes').get(attributes[index]))
+                        row.append(result.get("attributes").get(attributes[index]))
                     data.append(row)
             # Return object
             return data
@@ -611,24 +618,23 @@ class LdapManager(Manager):
 
 # region Variables
 DBTYPE = {
-    'sqlite': SQLiteConnection,
-    'mssql': MSSQLConnection,
-    'mysql': MySQLConnection,
-    'postgresql': PostgreSQLConnection
+    "sqlite": SQLiteConnection,
+    "mysql": MySQLConnection,
+    "postgresql": PostgreSQLConnection,
 }
 
 FILETYPE = {
-    'file': TextFile,
-    'log': LogFile,
-    'csv': CsvFile,
-    'json': JsonFile,
-    'yaml': YamlFile,
-    'xlsx': ExcelFile,
+    "file": TextFile,
+    "log": LogFile,
+    "csv": CsvFile,
+    "json": JsonFile,
+    "yaml": YamlFile,
+    "xlsx": ExcelFile,
 }
 
-READABLE_MANAGER = ('FileManager', 'DatabaseManager', 'LdapManager', 'NoSQLManager')
+READABLE_MANAGER = ("FileManager", "DatabaseManager", "LdapManager", "NoSQLManager")
 
-WRITABLE_MANAGER = ('FileManager', 'DatabaseManager', 'NoSQLManager')
+WRITABLE_MANAGER = ("FileManager", "DatabaseManager", "NoSQLManager")
 
 
 # endregion
@@ -678,8 +684,10 @@ def create_nosql_manager(connection, *args, **kwargs):
     :return: NoSQLManager
     """
     # Check if connection class is API compliant with nosqlapi
-    if not hasattr(connection, 'connect'):
-        raise nosqlapi.ConnectError('the Connection class is not API compliant. See https://nosqlapi.rtfd.io/')
+    if not hasattr(connection, "connect"):
+        raise nosqlapi.ConnectError(
+            "the Connection class is not API compliant. See https://nosqlapi.rtfd.io/"
+        )
     # Create NoSQLManager object
     return NoSQLManager(connection=connection, *args, **kwargs)
 
@@ -697,17 +705,18 @@ def manager(datatype, *args, **kwargs):
         return create_database_manager(datatype, *args, **kwargs)
     elif datatype in FILETYPE:
         return create_file_manager(datatype, *args, **kwargs)
-    elif datatype == 'ldap':
+    elif datatype == "ldap":
         return create_ldap_manager(*args, **kwargs)
-    elif datatype == 'nosql':
-        connection = kwargs.get('connection') or args[0]
+    elif datatype == "nosql":
+        connection = kwargs.get("connection") or args[0]
         nargs = args[1:]
         try:
-            kwargs.pop('connection')
+            kwargs.pop("connection")
         except KeyError:
             pass
         return create_nosql_manager(connection, *nargs, **kwargs)
     else:
         raise ValueError(f"data type {datatype} doesn't exists!")
+
 
 # endregion
