@@ -33,28 +33,38 @@ from pyreports import __version__
 
 # endregion
 
+
 # region functions
 def get_args():
     """Get command-line arguments"""
 
     parser = argparse.ArgumentParser(
-        description='pyreports command line interface (CLI)',
+        description="pyreports command line interface (CLI)",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        epilog='Full docs here: https://pyreports.readthedocs.io/en/latest/dev/cli.html'
+        epilog="Full docs here: https://pyreports.readthedocs.io/en/latest/dev/cli.html",
     )
 
-    parser.add_argument('config',
-                        metavar='CONFIG_FILE',
-                        default=sys.stdin,
-                        type=argparse.FileType('rt', encoding="utf-8"),
-                        help='YAML configuration file')
-    parser.add_argument('-e', '--exclude',
-                        help='Excluded title report list',
-                        nargs=argparse.ZERO_OR_MORE,
-                        default=[],
-                        metavar='TITLE')
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.add_argument('-V', '--version', help='Print version', action='version', version=__version__)
+    parser.add_argument(
+        "config",
+        metavar="CONFIG_FILE",
+        default=sys.stdin,
+        type=argparse.FileType("rt", encoding="utf-8"),
+        help="YAML configuration file",
+    )
+    parser.add_argument(
+        "-e",
+        "--exclude",
+        help="Excluded title report list",
+        nargs=argparse.ZERO_OR_MORE,
+        default=[],
+        metavar="TITLE",
+    )
+    parser.add_argument(
+        "-v", "--verbose", help="Enable verbose mode", action="store_true"
+    )
+    parser.add_argument(
+        "-V", "--version", help="Print version", action="version", version=__version__
+    )
 
     args = parser.parse_args()
     filename = args.config.name
@@ -63,7 +73,7 @@ def get_args():
     try:
         args.config = load_config(args.config)
     except yaml.YAMLError as err:
-        parser.error(f'file {filename} is not a valid YAML file: \n{err}')
+        parser.error(f"file {filename} is not a valid YAML file: \n{err}")
 
     # Validate config file
     try:
@@ -71,7 +81,7 @@ def get_args():
     except yaml.YAMLError as err:
         parser.error(str(err))
 
-    print_verbose(f'parsed YAML file {filename}', verbose=args.verbose)
+    print_verbose(f"parsed YAML file {filename}", verbose=args.verbose)
 
     return args
 
@@ -93,10 +103,10 @@ def validate_config(config):
     :return: None
     """
     try:
-        reports = config['reports']
+        reports = config["reports"]
         if reports is None or not isinstance(reports, list):
             raise yaml.YAMLError('"reports" section have not "report" list sections')
-        datas = all([bool(report.get('report').get('input')) for report in reports])
+        datas = all([bool(report.get("report").get("input")) for report in reports])
         if not datas:
             raise yaml.YAMLError(
                 'one of "report" section does not have "input" section'
@@ -104,7 +114,9 @@ def validate_config(config):
     except KeyError as err:
         raise yaml.YAMLError(f'there is no "{err}" section')
     except AttributeError:
-        raise yaml.YAMLError('correctly indents the "report" section or "report" section not exists')
+        raise yaml.YAMLError(
+            'correctly indents the "report" section or "report" section not exists'
+        )
 
 
 def make_manager(input_config):
@@ -114,12 +126,16 @@ def make_manager(input_config):
     :return: manager
     """
 
-    type_ = input_config.get('manager')
+    type_ = input_config.get("manager")
 
     if type_ in pyreports.io.FILETYPE:
-        manager = pyreports.manager(input_config.get('manager'), input_config.get('filename', ()))
+        manager = pyreports.manager(
+            input_config.get("manager"), input_config.get("filename", ())
+        )
     else:
-        manager = pyreports.manager(input_config.get('manager'), **input_config.get('source', {}))
+        manager = pyreports.manager(
+            input_config.get("manager"), **input_config.get("source", {})
+        )
 
     return manager
 
@@ -135,7 +151,7 @@ def get_data(manager, params=None):
         params = ()
     data = None
     # FileManager
-    if manager.type == 'file':
+    if manager.type == "file":
         if params and isinstance(params, (list, tuple)):
             data = manager.read(*params)
         elif params and isinstance(params, dict):
@@ -143,7 +159,7 @@ def get_data(manager, params=None):
         else:
             data = manager.read()
     # DatabaseManager
-    elif manager.type == 'sql':
+    elif manager.type == "sql":
         if params and isinstance(params, (list, tuple)):
             manager.execute(*params)
             data = manager.fetchall()
@@ -151,13 +167,13 @@ def get_data(manager, params=None):
             manager.execute(**params)
             data = manager.fetchall()
     # LdapManager
-    elif manager.type == 'ldap':
+    elif manager.type == "ldap":
         if params and isinstance(params, (list, tuple)):
             data = manager.query(*params)
         elif params and isinstance(params, dict):
             data = manager.query(**params)
     # NosqlManager
-    elif manager.type == 'nosql':
+    elif manager.type == "nosql":
         if params and isinstance(params, (list, tuple)):
             data = manager.find(*params)
         elif params and isinstance(params, dict):
@@ -174,7 +190,7 @@ def print_verbose(*messages, verbose=False):
     :return: None
     """
     if verbose:
-        print('info:', *messages)
+        print("info:", *messages)
 
 
 def main():
@@ -184,71 +200,84 @@ def main():
     args = get_args()
     # Take reports
     config = args.config
-    reports = config.get('reports', ())
+    reports = config.get("reports", ())
 
-    print_verbose(f'found {len(config.get("reports", ()))} report(s)',
-                  verbose=args.verbose)
+    print_verbose(
+        f'found {len(config.get("reports", ()))} report(s)', verbose=args.verbose
+    )
 
     # Build the data and report
     for report in reports:
         # Check if report isn't in excluded list
-        if args.exclude and report.get('report').get('title') in args.exclude:
-            print_verbose(f'exclude report "{report.get("report").get("title")}"',
-                          verbose=args.verbose)
+        if args.exclude and report.get("report").get("title") in args.exclude:
+            print_verbose(
+                f'exclude report "{report.get("report").get("title")}"',
+                verbose=args.verbose,
+            )
             continue
         # Make a manager object
-        input_ = report.get('report').get('input')
-        print_verbose(f'make an input manager of type {input_.get("manager")}',
-                      verbose=args.verbose)
+        input_ = report.get("report").get("input")
+        print_verbose(
+            f'make an input manager of type {input_.get("manager")}',
+            verbose=args.verbose,
+        )
         manager = make_manager(input_)
         # Get data
-        print_verbose(f'get data from manager {manager}', verbose=args.verbose)
+        print_verbose(f"get data from manager {manager}", verbose=args.verbose)
         try:
             # Make a report object
-            data = get_data(manager, input_.get('params'))
-            if 'map' in report.get('report'):
-                exec(report.get('report').get('map'))
-            map_func = globals().get('map_func')
+            data = get_data(manager, input_.get("params"))
+            if "map" in report.get("report"):
+                exec(report.get("report").get("map"))
+            map_func = globals().get("map_func")
             report_ = pyreports.Report(
                 input_data=data,
-                title=report.get('report').get('title'),
-                filters=report.get('report').get('filters'),
+                title=report.get("report").get("title"),
+                filters=report.get("report").get("filters"),
                 map_func=map_func,
-                negation=report.get('report').get('negation', False),
-                column=report.get('report').get('column'),
-                count=report.get('report').get('count', False),
-                output=make_manager(report.get('report').get('output')) if 'output' in report.get('report') else None
+                negation=report.get("report").get("negation", False),
+                column=report.get("report").get("column"),
+                count=report.get("report").get("count", False),
+                output=make_manager(report.get("report").get("output"))
+                if "output" in report.get("report")
+                else None,
             )
             print_verbose(f'created report "{report_.title}"', verbose=args.verbose)
         except Exception as err:
             pyreports.Report(tablib.Dataset())
-            exit(f'error: {err}')
+            exit(f"error: {err}")
         # Check output
         if report_.output:
             # Check if export or send report
-            if report.get('report').get('mail'):
-                print_verbose(f'send report to {report.get("report").get("mail").get("to")}', verbose=args.verbose)
-                mail_settings = report.get('report').get('mail')
+            if report.get("report").get("mail"):
+                print_verbose(
+                    f'send report to {report.get("report").get("mail").get("to")}',
+                    verbose=args.verbose,
+                )
+                mail_settings = report.get("report").get("mail")
                 report_.send(
-                    server=mail_settings.get('server'),
-                    _from=mail_settings.get('from'),
-                    to=mail_settings.get('to'),
-                    cc=mail_settings.get('cc'),
-                    bcc=mail_settings.get('bcc'),
-                    subject=mail_settings.get('subject'),
-                    body=mail_settings.get('body'),
-                    auth=tuple(mail_settings.get('auth')) if 'auth' in mail_settings else None,
-                    _ssl=bool(mail_settings.get('ssl')),
-                    headers=mail_settings.get('headers')
+                    server=mail_settings.get("server"),
+                    _from=mail_settings.get("from"),
+                    to=mail_settings.get("to"),
+                    cc=mail_settings.get("cc"),
+                    bcc=mail_settings.get("bcc"),
+                    subject=mail_settings.get("subject"),
+                    body=mail_settings.get("body"),
+                    auth=tuple(mail_settings.get("auth"))
+                    if "auth" in mail_settings
+                    else None,
+                    _ssl=bool(mail_settings.get("ssl")),
+                    headers=mail_settings.get("headers"),
                 )
             else:
-                print_verbose(f'export report to {report_.output}',
-                              verbose=args.verbose)
+                print_verbose(
+                    f"export report to {report_.output}", verbose=args.verbose
+                )
                 report_.export()
         else:
             # Print report in stdout
-            print_verbose('print report to stdout', verbose=args.verbose)
-            title = report.get('report').get('title')
+            print_verbose("print report to stdout", verbose=args.verbose)
+            title = report.get("report").get("title")
             report_.exec()
             print(f"{title}\n{'=' * len(title)}\n")
             print(report_)
@@ -257,7 +286,7 @@ def main():
 # endregion
 
 # region main
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
 # endregion

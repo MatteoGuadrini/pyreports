@@ -39,6 +39,7 @@ from .exception import ReportManagerError, ReportDataError, ExecutorError
 
 # region Classes
 
+
 class Executor:
     """Executor receives, processes, transforms and writes data"""
 
@@ -253,15 +254,17 @@ class Executor:
 class Report:
     """Report represents the workflow for generating a report"""
 
-    def __init__(self,
-                 input_data: tablib.Dataset,
-                 title=None,
-                 filters=None,
-                 map_func=None,
-                 negation=False,
-                 column=None,
-                 count=False,
-                 output: Manager = None):
+    def __init__(
+        self,
+        input_data: tablib.Dataset,
+        title=None,
+        filters=None,
+        map_func=None,
+        negation=False,
+        column=None,
+        count=False,
+        output: Manager = None,
+    ):
         """Create Report object
 
         :param input_data: Dataset object
@@ -277,7 +280,7 @@ class Report:
         if isinstance(input_data, tablib.Dataset):
             self.data = input_data
         else:
-            raise ReportDataError('Only Dataset object is allowed for input')
+            raise ReportDataError("Only Dataset object is allowed for input")
         # Set other arguments
         self.title = title
         self.filter = filters
@@ -288,10 +291,12 @@ class Report:
         if isinstance(output, Manager) or output is None:
             if output:
                 if output.__class__.__name__ not in WRITABLE_MANAGER:
-                    raise ReportManagerError(f'Only {WRITABLE_MANAGER} object is allowed for output')
+                    raise ReportManagerError(
+                        f"Only {WRITABLE_MANAGER} object is allowed for output"
+                    )
             self.output = output
         else:
-            raise ReportManagerError('Only Manager object is allowed for output')
+            raise ReportManagerError("Only Manager object is allowed for output")
         # Data for report
         self.report = None
 
@@ -346,7 +351,7 @@ class Report:
         :return: data and count
         """
         if self.count:
-            out = f'{self.report}\nrows: {int(self.count)}'
+            out = f"{self.report}\nrows: {int(self.count)}"
             return out
         else:
             return self.report
@@ -380,22 +385,21 @@ class Report:
         # Process data before export
         self.exec()
         if self.output is not None:
-            if self.output.type == 'file':
+            if self.output.type == "file":
                 self.output.write(self.report)
-            elif self.output.type == 'sql':
+            elif self.output.type == "sql":
                 if not self.report.headers:
                     raise ReportDataError("Dataset object doesn't have a header")
-                table_name = self.title.replace(' ', '_').lower()
-                fields = ','.join([
-                    f'{field} VARCHAR(255)'
-                    for field in self.report.headers
-                ])
+                table_name = self.title.replace(" ", "_").lower()
+                fields = ",".join(
+                    [f"{field} VARCHAR(255)" for field in self.report.headers]
+                )
                 # Create table with header
                 self.output.execute(
                     f"CREATE TABLE IF NOT EXISTS {table_name} ({fields});"
                 )
                 # Insert data into table
-                table_header = ','.join(field for field in self.report.headers)
+                table_header = ",".join(field for field in self.report.headers)
                 for row in self.report:
                     row_table = [f"'{element}'" for element in row]
                     self.output.execute(
@@ -407,7 +411,19 @@ class Report:
         else:
             print(self)
 
-    def send(self, server, _from, to, cc=None, bcc=None, subject=None, body='', auth=None, _ssl=True, headers=None):
+    def send(
+        self,
+        server,
+        _from,
+        to,
+        cc=None,
+        bcc=None,
+        subject=None,
+        body="",
+        auth=None,
+        _ssl=True,
+        headers=None,
+    ):
         """Send saved report to email
 
         :param server: server SMTP
@@ -423,7 +439,9 @@ class Report:
         :return: None
         """
         if not self.output:
-            raise ReportDataError('if you want send a mail with a report in attachment, must be specified output')
+            raise ReportDataError(
+                "if you want send a mail with a report in attachment, must be specified output"
+            )
 
         # Prepare mail header
         message = MIMEMultipart("alternative")
@@ -441,7 +459,7 @@ class Report:
             elif isinstance(headers, (tuple, list)):
                 message.add_header(*headers)
             else:
-                raise ValueError('headers must be tuple or List[tuple]')
+                raise ValueError("headers must be tuple or List[tuple]")
 
         # Prepare body
         part = MIMEText(body, "html")
@@ -450,18 +468,22 @@ class Report:
         # Prepare attachment
         self.export()
         attach_file_name = self.output.data.file
-        attach_file = open(attach_file_name, 'rb')
-        payload = MIMEBase('application', 'octate-stream')
+        attach_file = open(attach_file_name, "rb")
+        payload = MIMEBase("application", "octate-stream")
         payload.set_payload(attach_file.read())
         encoders.encode_base64(payload)
-        payload.add_header('Content-Disposition', 'attachment', filename=os.path.basename(attach_file_name))
+        payload.add_header(
+            "Content-Disposition",
+            "attachment",
+            filename=os.path.basename(attach_file_name),
+        )
         message.attach(payload)
 
         # Prepare SMTP connection
         if _ssl:
             port = smtplib.SMTP_SSL_PORT
             protocol = smtplib.SMTP_SSL
-            kwargs = {'context': ssl.create_default_context()}
+            kwargs = {"context": ssl.create_default_context()}
         else:
             port = smtplib.SMTP_PORT
             protocol = smtplib.SMTP
@@ -469,7 +491,11 @@ class Report:
         with protocol(server, port, **kwargs) as srv:
             if auth:
                 srv.login(*auth)
-            srv.sendmail(_from, [receiver for receiver in (to, cc, bcc) if receiver], message.as_string())
+            srv.sendmail(
+                _from,
+                [receiver for receiver in (to, cc, bcc) if receiver],
+                message.as_string(),
+            )
 
 
 class ReportBook:
@@ -495,7 +521,7 @@ class ReportBook:
         :return: ReportBook
         """
         if not isinstance(other, ReportBook):
-            raise ReportDataError('you can only add ReportBook object')
+            raise ReportDataError("you can only add ReportBook object")
         self.reports.extend(other.reports)
         return self
 
@@ -518,9 +544,8 @@ class ReportBook:
 
         :return: string
         """
-        output = f'ReportBook {self.title if self.title else None}\n'
-        output += '\n'.join('\t' + str(report.title)
-                            for report in self.reports)
+        output = f"ReportBook {self.title if self.title else None}\n"
+        output += "\n".join("\t" + str(report.title) for report in self.reports)
         return output
 
     def __repr__(self):
@@ -561,7 +586,7 @@ class ReportBook:
         :return: None
         """
         if not isinstance(report, Report):
-            raise ReportDataError('you can only add Report object')
+            raise ReportDataError("you can only add Report object")
         self.reports.append(report)
 
     def remove(self, index: int = None):
@@ -588,13 +613,25 @@ class ReportBook:
             # Prepare book for export
             book = tablib.Databook(tuple([report.report for report in self]))
             # Save Excel WorkBook
-            with open(output, 'wb') as f:
-                f.write(book.export('xlsx'))
+            with open(output, "wb") as f:
+                f.write(book.export("xlsx"))
         else:
             for report in self:
                 report.export()
 
-    def send(self, server, _from, to, cc=None, bcc=None, subject=None, body='', auth=None, _ssl=True, headers=None):
+    def send(
+        self,
+        server,
+        _from,
+        to,
+        cc=None,
+        bcc=None,
+        subject=None,
+        body="",
+        auth=None,
+        _ssl=True,
+        headers=None,
+    ):
         """Send saved report to email
 
         :param server: server SMTP
@@ -610,7 +647,18 @@ class ReportBook:
         :return: None
         """
         for report in self:
-            report.send(server, _from, to, cc=cc, bcc=bcc, subject=subject, body=body, auth=auth,
-                        _ssl=_ssl, headers=headers)
+            report.send(
+                server,
+                _from,
+                to,
+                cc=cc,
+                bcc=bcc,
+                subject=subject,
+                body=body,
+                auth=auth,
+                _ssl=_ssl,
+                headers=headers,
+            )
+
 
 # endregion

@@ -22,10 +22,19 @@
 
 """Build complex reports from/to various formats."""
 
-__version__ = '1.6.0'
+__version__ = "1.6.0"
 
 from .io import manager, READABLE_MANAGER, WRITABLE_MANAGER  # noqa: F401
 from .core import Executor, Report, ReportBook  # noqa: F401
 from .exception import ReportDataError, ReportManagerError  # noqa: F401
-from .datatools import average, most_common, percentage, counter, aggregate, chunks, merge, deduplicate  # noqa: F401
+from .datatools import (
+    average,  # noqa: F401
+    most_common,  # noqa: F401
+    percentage,  # noqa: F401
+    counter,  # noqa: F401
+    aggregate,  # noqa: F401
+    chunks,  # noqa: F401
+    merge,  # noqa: F401
+    deduplicate,  # noqa: F401
+)
 from .cli import make_manager, get_data, load_config, validate_config  # noqa: F401

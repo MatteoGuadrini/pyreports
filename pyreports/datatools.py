@@ -30,6 +30,7 @@ from tablib import Dataset, InvalidDimensions
 
 # endregion
 
+
 # region Functions
 def _select_column(data, column):
     """Select Dataset column
@@ -40,7 +41,7 @@ def _select_column(data, column):
     """
     # Check if dataset have a column
     if not data.headers:
-        raise ReportDataError('dataset object must have the headers')
+        raise ReportDataError("dataset object must have the headers")
     # Select column
     if isinstance(column, int):
         return data.get_col(column)
@@ -60,7 +61,7 @@ def average(data, column):
     data = _select_column(data, column)
     # Check if all item is integer or float
     if not all(isinstance(item, (int, float)) for item in data):
-        raise ReportDataError('the column contains only int or float')
+        raise ReportDataError("the column contains only int or float")
     # Calculate average
     return float(sum(data) / len(data))
 
@@ -87,10 +88,7 @@ def percentage(data, filter_):
     :return: float
     """
     # Filtering data...
-    data_filtered = [item
-                     for row in data
-                     for item in row
-                     if filter_ == item]
+    data_filtered = [item for row in data for item in row if filter_ == item]
     quotient = len(data_filtered) / len(data)
     return quotient * 100
 
@@ -128,14 +126,14 @@ def aggregate(*columns, fill_empty: bool = False, fill_value=None):
                     list_.append(fill_value() if callable(fill_value) else fill_value)
             else:
                 if max_len != len(list_):
-                    raise InvalidDimensions('the columns are not the same length')
+                    raise InvalidDimensions("the columns are not the same length")
                 max_len = len(list_)
         # Aggregate columns
         for column in columns:
             new_data.append_col(column)
         return new_data
     else:
-        raise ReportDataError('you can aggregate two or more columns')
+        raise ReportDataError("you can aggregate two or more columns")
 
 
 def merge(*datasets):
@@ -151,11 +149,11 @@ def merge(*datasets):
         length_row = len(datasets[0][0])
         for data in datasets:
             if length_row != len(data[0]):
-                raise InvalidDimensions('the row are not the same length')
+                raise InvalidDimensions("the row are not the same length")
             new_data.extend(data)
         return new_data
     else:
-        raise ReportDataError('you can merge two or more dataset object')
+        raise ReportDataError("you can merge two or more dataset object")
 
 
 def chunks(data, length):
@@ -167,7 +165,7 @@ def chunks(data, length):
     :return: generator
     """
     for i in range(0, len(data), length):
-        yield data[i:i + length]
+        yield data[i : i + length]
 
 
 def deduplicate(data):
@@ -177,5 +175,6 @@ def deduplicate(data):
     :return: Dataset
     """
     return Dataset(*list(dict.fromkeys(data)))
+
 
 # endregion

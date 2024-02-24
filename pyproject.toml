@@ -6,9 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "pyreports"
 version = "1.6.0"
 readme = "README.md"
-license = {text = "GNU General Public License v3.0"}
+license = { text = "GNU General Public License v3.0" }
 keywords = ['pyreports', 'reports', 'report', 'csv', 'yaml', 'export',
-            'excel', 'database', 'ldap', 'dataset', 'file', 'executor', 'book']
+    'excel', 'database', 'ldap', 'dataset', 'file', 'executor', 'book']
 authors = [{ name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" }]
 maintainers = [
     { name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" },
@@ -21,7 +21,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = ['ldap3', 'mysql-connector-python',
-                'psycopg2-binary', 'tablib', 'tablib[all]', 'nosqlapi', 'pyyaml']
+    'psycopg2-binary', 'tablib', 'tablib[all]', 'nosqlapi', 'pyyaml']
 
 [project.scripts]
 reports = "pyreports.cli:main"
