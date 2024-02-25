@@ -31,6 +31,21 @@ from tablib import Dataset, InvalidDimensions
 # endregion
 
 
+# region Classes
+class DataAdapters:
+    """Data adapters class"""
+
+    def __init__(self, input_data: Dataset):
+        # Discard all objects that are not Datasets
+        if isinstance(input_data, Dataset):
+            self.data = input_data
+        else:
+            raise ReportDataError("only Dataset object is allowed for input")
+
+
+# endregion
+
+
 # region Functions
 def _select_column(data, column):
     """Select Dataset column
@@ -164,8 +179,8 @@ def chunks(data, length):
     :param length: n-sized chunks
     :return: generator
     """
-    for i in range(0, len(data), length):
-        yield data[i : i + length]
+    for idx in range(0, len(data), length):
+        yield data[idx : idx + length]
 
 
 def deduplicate(data):
