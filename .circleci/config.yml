@@ -8,8 +8,7 @@ jobs:
       - checkout
       - run: sudo apt update && sudo apt install -y freetds-dev libssl-dev python-dev freetds-bin
       - run: sudo pip install --upgrade pip
-      - run: sudo pip install cython
-      - run: sudo pip install pymssql
+      - run: sudo pip install "Cython<3"
       - run: sudo pip install numpy
       - run: sudo pip install pandas
       - run: sudo python setup.py install
