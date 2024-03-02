@@ -15,28 +15,27 @@
 # sys.path.insert(0, os.path.abspath('.'))
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
 
-import __info__
+sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Project information -----------------------------------------------------
 
-project = 'pyreports'
-copyright = '2021, Matteo Guadrini'
-author = __info__.__author__
+project = "pyreports"
+copyright = "2024, Matteo Guadrini"
+author = "Matteo Guadrini"
 
 # The full version, including alpha/beta/rc tags
-release = __info__.__version__
+release = "1.6.0"
 
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest']
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.doctest"]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -53,11 +52,9 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
-html_theme_options = {
-    'logo_only': False
-}
+html_theme_options = {"logo_only": False}
 html_logo = "_static/pyreports.svg"
 
-master_doc = 'index'
+master_doc = "index"
