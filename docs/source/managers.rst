@@ -16,7 +16,6 @@ Each type of manager is managed by micro types; Below is the complete list:
 
 #. Database
     #. sqlite (SQLite)
-    #. mssql (Microsoft SQL)
     #. mysql (MySQL or MariaDB)
     #. postgresql (PostgreSQL or EnterpriseDB)
 #. File
@@ -41,7 +40,6 @@ Each type of manager is managed by micro types; Below is the complete list:
 
     # DatabaseManager object
     sqlite_db = pyreports.manager('sqlite', database='/tmp/mydb.db')
-    mssql_db = pyreports.manager('mssql', server='mssql1.local', database='test', user='dba', password='dba0000')
     mysql_db = pyreports.manager('mysql', host='mysql1.local', database='test', user='dba', password='dba0000')
     postgresql_db = pyreports.manager('postgresql', host='postgresql1.local', database='test', user='dba', password='dba0000')
 
