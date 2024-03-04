@@ -43,8 +43,7 @@ class DataAdapters:
             raise ReportDataError("only Dataset object is allowed for input")
 
     def aggregate(self, *columns, fill_value=None):
-        """
-        Aggregate in the current Dataset other columns
+        """Aggregate in the current Dataset other columns
 
         :param columns: columns added
         :param fill_value: fill value for empty field if "fill_empty" argument is specified
@@ -53,6 +52,16 @@ class DataAdapters:
         local_columns = [self.data[col] for col in self.data.headers]
         local_columns.extend(columns)
         self.data = aggregate(*local_columns, fill_empty=True, fill_value=fill_value)
+
+    def merge(self, *datasets):
+        """Merge in the current Dataset other Dataset objects
+
+        :param datasets: datasets that will merge
+        :return: None
+        """
+        datasets = list(datasets)
+        datasets += self.data
+        self.data = merge(*datasets)
 
 
 # endregion
