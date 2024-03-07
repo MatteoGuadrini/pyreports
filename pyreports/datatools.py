@@ -49,7 +49,9 @@ class DataAdapters:
         :param fill_value: fill value for empty field if "fill_empty" argument is specified
         :return: None
         """
-        local_columns = [self.data[col] for col in self.data.headers]
+        if not self.data:
+            raise ReportDataError("dataset is empty")
+        local_columns = [self.data.get_col(col) for col in range(self.data.width)]
         local_columns.extend(columns)
         self.data = aggregate(*local_columns, fill_empty=True, fill_value=fill_value)
 
