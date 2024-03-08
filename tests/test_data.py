@@ -87,6 +87,18 @@ class TestDataTools(unittest.TestCase):
         data = pyreports.DataAdapters(Dataset(*[("Matteo", "Guadrini", 35)]))
         self.assertIsInstance(data, pyreports.DataAdapters)
 
+    def test_data_adapters_aggregate(self):
+        names = self.data.get_col(0)
+        surnames = self.data.get_col(1)
+        ages = self.data.get_col(2)
+        data = pyreports.DataAdapters(Dataset())
+        self.assertRaises(
+            pyreports.ReportDataError, data.aggregate, names, surnames, ages
+        )
+        data = pyreports.DataAdapters(Dataset(*[("Heart",)]))
+        data.aggregate(names, surnames, ages)
+        self.assertEqual(data.data[0], ("Heart", "Matteo", "Guadrini", 35))
+
 
 if __name__ == "__main__":
     unittest.main()
