@@ -62,7 +62,10 @@ class DataAdapters:
         :return: None
         """
         datasets = list(datasets)
-        datasets += self.data
+        datasets.append(self.data)
+        # Check if all Datasets are not empty
+        if not all([data for data in datasets]):
+            raise ReportDataError("one or more Datasets are empty")
         self.data = merge(*datasets)
 
 
