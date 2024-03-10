@@ -99,6 +99,12 @@ class TestDataTools(unittest.TestCase):
         data.aggregate(names, surnames, ages)
         self.assertEqual(data.data[0], ("Heart", "Matteo", "Guadrini", 35))
 
+    def test_data_adapters_merge(self):
+        data = pyreports.DataAdapters(Dataset())
+        self.assertRaises(pyreports.ReportDataError, data.merge, self.data)
+        data = pyreports.DataAdapters(Dataset(*[("Arthur", "Dent", 42)]))
+        data.merge(self.data)
+
 
 if __name__ == "__main__":
     unittest.main()
