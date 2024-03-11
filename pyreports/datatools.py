@@ -63,10 +63,17 @@ class DataAdapters:
         """
         datasets = list(datasets)
         datasets.append(self.data)
-        # Check if all Datasets are not empty
+        # Check if all Datasets are not empties
         if not all([data for data in datasets]):
-            raise ReportDataError("one or more Datasets are empty")
+            raise ReportDataError("one or more Datasets are empties")
         self.data = merge(*datasets)
+
+    def counter(self):
+        """Count value into the rows
+
+        :return: Counter
+        """
+        return Counter((item for row in self.data for item in row))
 
 
 # endregion
