@@ -105,6 +105,12 @@ class TestDataTools(unittest.TestCase):
         data = pyreports.DataAdapters(Dataset(*[("Arthur", "Dent", 42)]))
         data.merge(self.data)
 
+    def test_data_adapters_counter(self):
+        data = pyreports.DataAdapters(Dataset(*[("Arthur", "Dent", 42)]))
+        data.merge(self.data)
+        counter = data.counter()
+        self.assertEqual(counter["Arthur"], 2)
+
 
 if __name__ == "__main__":
     unittest.main()
