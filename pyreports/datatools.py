@@ -75,6 +75,16 @@ class DataAdapters:
         """
         return Counter((item for row in self.data for item in row))
 
+    def chunks(self, length):
+        """
+        Yield successive n-sized chunks from Dataset
+
+        :param length: n-sized chunks
+        :return: generator
+        """
+        for idx in range(0, len(self.data), length):
+            yield self.data[idx : idx + length]
+
 
 # endregion
 
