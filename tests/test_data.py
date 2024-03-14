@@ -100,6 +100,7 @@ class TestDataTools(unittest.TestCase):
         self.assertEqual(data.data[0], ("Heart", "Matteo", "Guadrini", 35))
 
     def test_data_adapters_merge(self):
+        data = pyreports.DataAdapters(Dataset(*[("Arthur", "Dent", 42)]))
         data = pyreports.DataAdapters(Dataset())
         self.assertRaises(pyreports.ReportDataError, data.merge, self.data)
         data = pyreports.DataAdapters(Dataset(*[("Arthur", "Dent", 42)]))
@@ -110,6 +111,26 @@ class TestDataTools(unittest.TestCase):
         data.merge(self.data)
         counter = data.counter()
         self.assertEqual(counter["Arthur"], 2)
+
+    def test_adapters_chunks(self):
+        data = pyreports.DataAdapters(
+            Dataset(
+                *[
+                    ("Matteo", "Guadrini", 35),
+                    ("Arthur", "Dent", 42),
+                    ("Ford", "Prefect", 42),
+                ]
+            )
+        )
+        data.data.extend(
+            [
+                ("Matteo", "Guadrini", 35),
+                ("Arthur", "Dent", 42),
+                ("Ford", "Prefect", 42),
+            ]
+        )
+        data.data.headers = ["name", "surname", "age"]
+        self.assertEqual(list(data.chunks(4))[0][0], ("Matteo", "Guadrini", 35))
 
 
 if __name__ == "__main__":
