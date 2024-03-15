@@ -85,6 +85,13 @@ class DataAdapters:
         for idx in range(0, len(self.data), length):
             yield self.data[idx : idx + length]
 
+    def deduplicate(self):
+        """Remove duplicated rows
+
+        :return: Dataset
+        """
+        self.data = Dataset(*list(dict.fromkeys(self.data)))
+
 
 # endregion
 
