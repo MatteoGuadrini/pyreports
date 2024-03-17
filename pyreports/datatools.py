@@ -88,9 +88,9 @@ class DataAdapters:
     def deduplicate(self):
         """Remove duplicated rows
 
-        :return: Dataset
+        :return: None
         """
-        self.data = Dataset(*list(dict.fromkeys(self.data)))
+        self.data = Dataset(*list(dict.fromkeys(iter(self.data))))
 
 
 # endregion
@@ -239,7 +239,7 @@ def deduplicate(data):
     :param data: Dataset object
     :return: Dataset
     """
-    return Dataset(*list(dict.fromkeys(data)))
+    return Dataset(*list(dict.fromkeys(iter(data))))
 
 
 # endregion
