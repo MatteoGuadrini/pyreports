@@ -92,6 +92,9 @@ class DataAdapters:
         """
         self.data = Dataset(*list(dict.fromkeys(iter(self.data))))
 
+    def __iter__(self):
+        return (row for row in self.data)
+
 
 # endregion
 
