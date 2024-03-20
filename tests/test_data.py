@@ -144,6 +144,18 @@ class TestDataTools(unittest.TestCase):
         data.deduplicate()
         self.assertEqual(len(data.data), 2)
 
+    def test_data_adapters_iter(self):
+        data = pyreports.DataAdapters(
+            Dataset(
+                *[
+                    ("Matteo", "Guadrini", 35),
+                    ("Arthur", "Dent", 42),
+                    ("Matteo", "Guadrini", 35),
+                ]
+            )
+        )
+        self.assertEqual(list(iter(data.data))[1], ("Arthur", "Dent", 42))
+
 
 if __name__ == "__main__":
     unittest.main()
