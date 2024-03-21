@@ -95,6 +95,9 @@ class DataAdapters:
     def __iter__(self):
         return (row for row in self.data)
 
+    def __getitem__(self, item):
+        return self.data[item]
+
 
 # endregion
 
