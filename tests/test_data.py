@@ -156,6 +156,22 @@ class TestDataTools(unittest.TestCase):
         )
         self.assertEqual(list(iter(data.data))[1], ("Arthur", "Dent", 42))
 
+    def test_data_adapters_get_items(self):
+        data = pyreports.DataAdapters(
+            Dataset(
+                *[
+                    ("Matteo", "Guadrini", 35),
+                    ("Arthur", "Dent", 42),
+                    ("Matteo", "Guadrini", 35),
+                ],
+                headers=("name", "surname", "age"),
+            )
+        )
+        # Get row
+        self.assertEqual(data[1], ("Arthur", "Dent", 42))
+        # Get column
+        self.assertEqual(data["name"], ["Matteo", "Arthur", "Matteo"])
+
 
 if __name__ == "__main__":
     unittest.main()
