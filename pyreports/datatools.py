@@ -38,9 +38,13 @@ class DataAdapters:
     def __init__(self, input_data: Dataset):
         # Discard all objects that are not Datasets
         if isinstance(input_data, Dataset):
-            self.data = input_data
+            self._data = input_data
         else:
             raise ReportDataError("only Dataset object is allowed for input")
+
+    @property
+    def data(self):
+        return self._data
 
     def aggregate(self, *columns, fill_value=None):
         """Aggregate in the current Dataset other columns
