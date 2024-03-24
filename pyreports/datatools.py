@@ -46,6 +46,10 @@ class DataAdapters:
     def data(self):
         return self._data
 
+    @data.setter
+    def data(self, dataset):
+        self._data = dataset
+
     def aggregate(self, *columns, fill_value=None):
         """Aggregate in the current Dataset other columns
 
