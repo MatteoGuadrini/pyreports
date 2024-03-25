@@ -32,8 +32,8 @@ from tablib import Dataset, InvalidDimensions
 
 
 # region Classes
-class DataAdapters:
-    """Data adapters class"""
+class DataObject:
+    """Data object class"""
 
     def __init__(self, input_data: Dataset):
         # Discard all objects that are not Datasets
@@ -49,6 +49,10 @@ class DataAdapters:
     @data.setter
     def data(self, dataset):
         self._data = dataset
+
+
+class DataAdapters(DataObject):
+    """Data adapters class"""
 
     def aggregate(self, *columns, fill_value=None):
         """Aggregate in the current Dataset other columns
