@@ -111,6 +111,17 @@ class DataAdapters(DataObject):
         return self.data[item]
 
 
+class DataPrinters(DataObject):
+    """Data printers class"""
+
+    def print(self):
+        """Print data
+
+        :return: None
+        """
+        print(self.data)
+
+
 # endregion
 
 
