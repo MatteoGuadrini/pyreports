@@ -36,6 +36,7 @@ from .datatools import (
     chunks,  # noqa: F401
     merge,  # noqa: F401
     deduplicate,  # noqa: F401
+    DataObject,  # noqa: F401
     DataAdapters,  # noqa: F401
 )
 from .cli import make_manager, get_data, load_config, validate_config  # noqa: F401
