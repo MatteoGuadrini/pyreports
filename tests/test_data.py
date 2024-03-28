@@ -83,6 +83,11 @@ class TestDataTools(unittest.TestCase):
         )
         self.assertEqual(len(pyreports.deduplicate(data)), 2)
 
+    def test_data_object(self):
+        data = pyreports.DataObject(Dataset(*[("Matteo", "Guadrini", 35)]))
+        self.assertIsInstance(data, pyreports.DataObject)
+        self.assertIsInstance(data.data, tablib.Dataset)
+
     def test_data_adapters(self):
         data = pyreports.DataAdapters(Dataset(*[("Matteo", "Guadrini", 35)]))
         self.assertIsInstance(data, pyreports.DataAdapters)
