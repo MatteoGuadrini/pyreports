@@ -121,6 +121,20 @@ class DataPrinters(DataObject):
         """
         print(self.data)
 
+    def __repr__(self):
+        """Representation of DataObject
+
+        :return: string
+        """
+        return f"<DataObject, headers={self.data.headers if self.data.headers else []}, rows={len(self.data)}>"
+
+    def __str__(self):
+        """Pretty representation of DataObject
+
+        :return: string
+        """
+        return str(self.data)
+
 
 # endregion
 
