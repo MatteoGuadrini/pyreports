@@ -119,7 +119,7 @@ class DataPrinters(DataObject):
 
         :return: None
         """
-        print(self.data)
+        print(self)
 
     def __repr__(self):
         """Representation of DataObject
