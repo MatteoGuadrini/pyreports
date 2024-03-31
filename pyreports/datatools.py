@@ -121,6 +121,21 @@ class DataPrinters(DataObject):
         """
         print(self)
 
+    def average(self, column):
+        """
+        Average of list of integers or floats
+
+        :param column: column name or index
+        :return: float
+        """
+        # Select column
+        data = _select_column(self.data, column)
+        # Check if all item is integer or float
+        if not all(isinstance(item, (int, float)) for item in data):
+            raise ReportDataError("the column contains only int or float")
+        # Calculate average
+        return float(sum(data) / len(data))
+
     def __repr__(self):
         """Representation of DataObject
 
