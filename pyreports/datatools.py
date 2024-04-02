@@ -127,7 +127,7 @@ class DataPrinters(DataObject):
         :param column: column name or index
         :return: float
         """
-        average(self.data, column)
+        return average(self.data, column)
 
     def most_common(self, column):
         """The most common element in a column
@@ -135,7 +135,15 @@ class DataPrinters(DataObject):
         :param column: column name or index
         :return: Any
         """
-        most_common(self.data, column)
+        return most_common(self.data, column)
+
+    def percentage(self, filter_):
+        """Calculating the percentage according to filter
+
+        :param filter_: equality filter
+        :return: float
+        """
+        return percentage(self.data, filter_)
 
     def __repr__(self):
         """Representation of DataObject
@@ -208,7 +216,7 @@ def percentage(data, filter_):
     Calculating the percentage according to filter
 
     :param data: Dataset object
-    :param filter_: filter
+    :param filter_: equality filter
     :return: float
     """
     # Filtering data...
