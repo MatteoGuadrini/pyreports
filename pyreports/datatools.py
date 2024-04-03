@@ -150,7 +150,7 @@ class DataPrinters(DataObject):
 
         :return: string
         """
-        return f"<DataObject, headers={self.data.headers if self.data.headers else []}, rows={len(self.data)}>"
+        return f"<DataObject, headers={self.data.headers if self.data.headers else []}, rows={len(self)}>"
 
     def __str__(self):
         """Pretty representation of DataObject
@@ -158,6 +158,13 @@ class DataPrinters(DataObject):
         :return: string
         """
         return str(self.data)
+
+    def __len__(self):
+        """Measure length of DataSet
+
+        :return: int
+        """
+        return len(self.data)
 
 
 # endregion
