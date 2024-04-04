@@ -177,6 +177,11 @@ class TestDataTools(unittest.TestCase):
         # Get column
         self.assertEqual(data["name"], ["Matteo", "Arthur", "Matteo"])
 
+    def test_data_printers(self):
+        data = pyreports.DataPrinters(Dataset(*[("Matteo", "Guadrini", 35)]))
+        self.assertIsInstance(data, pyreports.DataPrinters)
+        self.assertIsInstance(data.data, tablib.Dataset)
+
 
 if __name__ == "__main__":
     unittest.main()
