@@ -182,6 +182,10 @@ class TestDataTools(unittest.TestCase):
         self.assertIsInstance(data, pyreports.DataPrinters)
         self.assertIsInstance(data.data, tablib.Dataset)
 
+    def test_data_printers_len(self):
+        data = pyreports.DataPrinters(Dataset(*[("Matteo", "Guadrini", 35)]))
+        self.assertEqual(1, len(data))
+
 
 if __name__ == "__main__":
     unittest.main()
