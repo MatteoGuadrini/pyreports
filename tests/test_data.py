@@ -186,6 +186,13 @@ class TestDataTools(unittest.TestCase):
         data = pyreports.DataPrinters(Dataset(*[("Matteo", "Guadrini", 35)]))
         self.assertEqual(1, len(data))
 
+    def test_data_printers_average(self):
+        data = pyreports.DataPrinters(
+            Dataset(*[("Matteo", "Guadrini", 35), ("Arthur", "Dent", 42)])
+        )
+        data.data.headers = ["Name", "Surname", "Age"]
+        self.assertEqual(data.average(2), 38.5)
+
 
 if __name__ == "__main__":
     unittest.main()
