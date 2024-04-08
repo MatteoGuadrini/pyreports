@@ -206,6 +206,19 @@ class TestDataTools(unittest.TestCase):
         data.data.headers = ["Name", "Surname", "Age"]
         self.assertEqual(data.most_common("Age"), 42)
 
+    def test_data_printers_percentage(self):
+        data = pyreports.DataPrinters(
+            Dataset(
+                *[
+                    ("Matteo", "Guadrini", 35),
+                    ("Arthur", "Dent", 42),
+                    ("Ford", "Prefect", 42),
+                ]
+            )
+        )
+        data.data.headers = ["Name", "Surname", "Age"]
+        self.assertEqual(data.percentage(42), 66.66666666666666)
+
 
 if __name__ == "__main__":
     unittest.main()
