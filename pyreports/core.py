@@ -31,6 +31,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email import encoders
 from email.mime.base import MIMEBase
+from .datatools import DataAdapters, DataPrinters
 from .io import Manager, WRITABLE_MANAGER
 from .exception import ReportManagerError, ReportDataError, ExecutorError
 
@@ -251,7 +252,7 @@ class Executor:
         return Executor(self.origin, header=self.origin.headers)
 
 
-class Report:
+class Report(DataAdapters, DataPrinters):
     """Report represents the workflow for generating a report"""
 
     def __init__(
@@ -277,10 +278,7 @@ class Report:
         :param output: Manager object
         """
         # Discard all objects that are not Datasets
-        if isinstance(input_data, tablib.Dataset):
-            self.data = input_data
-        else:
-            raise ReportDataError("Only Dataset object is allowed for input")
+        DataAdapters.__init__(self, input_data=input_data)
         # Set other arguments
         self.title = title
         self.filter = filters
