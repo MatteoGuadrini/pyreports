@@ -8,6 +8,20 @@ In this section we will see all these functions contained in the **datatools** m
 .. toctree::
 
 
+DataObject
+----------
+
+**DataObject** class represents a pure *Dataset*.
+
+.. autoclass:: pyreports.DataObject
+   :members:
+
+.. code-block:: python
+
+    import pyreports
+
+    data = pyreports.DataObject(tablib.Dataset(*[("Arthur", "Dent", 42)]))
+    assert isinstance(data.data, tablib.Dataset) == True
 
 
 Average
