@@ -24,6 +24,24 @@ DataObject
     assert isinstance(data.data, tablib.Dataset) == True
 
 
+
+DataAdapters
+------------
+
+**DataAdapters** class is an object that contains methods that modifying *Dataset*.
+
+.. code-block:: python
+
+    import pyreports
+
+    data = pyreports.DataAdapters(tablib.Dataset(*[("Arthur", "Dent", 42)]))
+    assert isinstance(data.data, tablib.Dataset) == True
+
+
+.. autoclass:: pyreports.DataAdapters
+   :members:
+
+
 Average
 -------
 
