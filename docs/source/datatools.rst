@@ -34,11 +34,27 @@ DataAdapters
 
     import pyreports
 
-    data = pyreports.DataAdapters(tablib.Dataset(*[("Arthur", "Dent", 42)]))
+    data = pyreports.DataAdapters(tablib.Dataset(*[("Arthur", "Dent", 42)], headers=["name", "surname", "age"]))
     assert isinstance(data.data, tablib.Dataset) == True
 
 
 .. autoclass:: pyreports.DataAdapters
+   :members:
+
+DataPrinters
+------------
+
+**DataPrinters** class is an object that contains methods that printing *Dataset*'s information.
+
+.. code-block:: python
+
+    import pyreports
+
+    data = pyreports.DataPrinters(tablib.Dataset(*[("Arthur", "Dent", 42)], headers=["name", "surname", "age"]))
+    assert isinstance(data.data, tablib.Dataset) == True
+
+
+.. autoclass:: pyreports.DataPrinters
    :members:
 
 
