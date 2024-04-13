@@ -18,7 +18,7 @@ DataObject
 
 .. code-block:: python
 
-    import pyreports
+    import pyreports, tablib
 
     data = pyreports.DataObject(tablib.Dataset(*[("Arthur", "Dent", 42)]))
     assert isinstance(data.data, tablib.Dataset) == True
@@ -32,10 +32,33 @@ DataAdapters
 
 .. code-block:: python
 
-    import pyreports
+    import pyreports, tablib
 
-    data = pyreports.DataAdapters(tablib.Dataset(*[("Arthur", "Dent", 42)], headers=["name", "surname", "age"]))
+    data = pyreports.DataAdapters(tablib.Dataset(*[("Arthur", "Dent", 42)]))
     assert isinstance(data.data, tablib.Dataset) == True
+
+
+    # Aggregate
+    planets = tablib.Dataset(*[("Heart",)])
+    data.aggregate(planets)
+
+    # Merge
+    others = tablib.Dataset(*[("Betelgeuse", "Ford", "Prefect", 42)])
+    data.merge(others)
+
+    # Counter
+    data = pyreports.DataAdapters(Dataset(*[("Heart", "Arthur", "Dent", 42)]))
+    data.merge(self.data)
+    counter = data.counter()
+    assert counter["Arthur"] == 2
+
+    # Chunks
+    data.data.headers = ["planet", "name", "surname", "age"]
+    assert list(data.chunks(4))[0][0] == ("Heart", "Arthur", "Dent", 42)
+
+    # Deduplicate
+    data.deduplicate()
+    assert len(data.data) == 2
 
 
 .. autoclass:: pyreports.DataAdapters
