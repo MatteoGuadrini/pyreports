@@ -60,6 +60,13 @@ DataAdapters
     data.deduplicate()
     assert len(data.data) == 2
 
+    # Get items
+    assert data[1] == ("Betelgeuse", "Ford", "Prefect", 42)
+
+    # Iter items
+    for item in data:
+        print(item)
+
 
 .. autoclass:: pyreports.DataAdapters
    :members:
