@@ -78,11 +78,25 @@ DataPrinters
 
 .. code-block:: python
 
-    import pyreports
+    import pyreports, tablib
 
-    data = pyreports.DataPrinters(tablib.Dataset(*[("Arthur", "Dent", 42)], headers=["name", "surname", "age"]))
+    data = pyreports.DataPrinters(tablib.Dataset(*[("Arthur", "Dent", 42), ("Ford", "Prefect", 42)], headers=["name", "surname", "age"]))
     assert isinstance(data.data, tablib.Dataset) == True
 
+    # Print
+    data.print()
+
+    # Average
+    assert data.average(2) == 42
+    assert data.average("age") == 42
+
+    # Most common
+    data.data.append(("Ford", "Prefect", 42))
+    assert data.most_common(0) == "Ford"
+    assert data.most_common("name") == "Ford"
+
+    # Percentage
+    assert data.percentage("Ford") == 66.66666666666666
 
 .. autoclass:: pyreports.DataPrinters
    :members:
