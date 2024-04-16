@@ -98,6 +98,15 @@ DataPrinters
     # Percentage
     assert data.percentage("Ford") == 66.66666666666666
 
+    # Representation
+    assert repr(data) == "<DataObject, headers=['name', 'surname', 'age'], rows=3>"
+
+    # String
+    assert str(data) == 'name  |surname|age\n------|-------|---\nArthur|Dent   |42 \nFord  |Prefect|42 \nFord  |Prefect|42 '
+
+    # Length
+    assert len(data) == 3
+
 .. autoclass:: pyreports.DataPrinters
    :members:
 
