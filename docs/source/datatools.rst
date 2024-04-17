@@ -239,3 +239,19 @@ The **chunks** function divides a *Dataset* into pieces from *N* (``int``). This
 
 .. note::
     If the division does not result zero, the last tuple of elements will be a smaller number.
+
+Deduplicate
+-----------
+
+The **deduplicate** function remove duplicated rows into *Dataset* objects.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+
+    # Remove duplicated rows (removed the last ('Ford', 'Prefect', 65000))
+    pyreports.deduplicate(employee1)
+    print(len(employee1))     # 2
