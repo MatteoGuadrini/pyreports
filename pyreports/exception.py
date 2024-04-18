@@ -28,7 +28,11 @@ class ExecutorError(Exception):
 
 
 # ReportException hierarchy
-class ReportException(Exception):
+class DataObjectError(Exception):
+    pass
+
+
+class ReportException(DataObjectError):
     pass
 
 

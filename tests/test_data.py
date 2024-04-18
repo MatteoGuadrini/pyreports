@@ -37,7 +37,7 @@ class TestDataTools(unittest.TestCase):
         self.assertRaises(
             tablib.InvalidDimensions, pyreports.aggregate, names, surnames, ages
         )
-        self.assertRaises(pyreports.ReportDataError, pyreports.aggregate, names)
+        self.assertRaises(pyreports.DataObjectError, pyreports.aggregate, names)
 
     def test_aggregate_fill_empty(self):
         names = self.data.get_col(0)
@@ -98,7 +98,7 @@ class TestDataTools(unittest.TestCase):
         ages = self.data.get_col(2)
         data = pyreports.DataAdapters(Dataset())
         self.assertRaises(
-            pyreports.ReportDataError, data.aggregate, names, surnames, ages
+            pyreports.DataObjectError, data.aggregate, names, surnames, ages
         )
         data = pyreports.DataAdapters(Dataset(*[("Heart",)]))
         data.aggregate(names, surnames, ages)
@@ -106,7 +106,7 @@ class TestDataTools(unittest.TestCase):
 
     def test_data_adapters_merge(self):
         data = pyreports.DataAdapters(Dataset())
-        self.assertRaises(pyreports.ReportDataError, data.merge, self.data)
+        self.assertRaises(pyreports.DataObjectError, data.merge, self.data)
         data = pyreports.DataAdapters(Dataset(*[("Arthur", "Dent", 42)]))
         data.merge(self.data)
 

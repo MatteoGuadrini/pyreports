@@ -23,7 +23,7 @@
 """Contains all functions for data processing."""
 
 # region Imports
-from .exception import ReportDataError
+from .exception import DataObjectError
 from collections import Counter
 from tablib import Dataset, InvalidDimensions
 
@@ -40,7 +40,7 @@ class DataObject:
         if isinstance(input_data, Dataset):
             self._data = input_data
         else:
-            raise ReportDataError("only Dataset object is allowed for input")
+            raise DataObjectError("only Dataset object is allowed for input")
 
     @property
     def data(self):
@@ -62,7 +62,7 @@ class DataAdapters(DataObject):
         :return: None
         """
         if not self.data:
-            raise ReportDataError("dataset is empty")
+            raise DataObjectError("dataset is empty")
         local_columns = [self.data.get_col(col) for col in range(self.data.width)]
         local_columns.extend(columns)
         self.data = aggregate(*local_columns, fill_empty=True, fill_value=fill_value)
@@ -77,7 +77,7 @@ class DataAdapters(DataObject):
         datasets.append(self.data)
         # Check if all Datasets are not empties
         if not all([data for data in datasets]):
-            raise ReportDataError("one or more Datasets are empties")
+            raise DataObjectError("one or more Datasets are empties")
         self.data = merge(*datasets)
 
     def counter(self):
@@ -180,7 +180,7 @@ def _select_column(data, column):
     """
     # Check if dataset have a column
     if not data.headers:
-        raise ReportDataError("dataset object must have the headers")
+        raise DataObjectError("dataset object must have the headers")
     # Select column
     if isinstance(column, int):
         return data.get_col(column)
@@ -200,7 +200,7 @@ def average(data, column):
     data = _select_column(data, column)
     # Check if all item is integer or float
     if not all(isinstance(item, (int, float)) for item in data):
-        raise ReportDataError("the column contains only int or float")
+        raise DataObjectError("the column contains only int or float")
     # Calculate average
     return float(sum(data) / len(data))
 
@@ -272,7 +272,7 @@ def aggregate(*columns, fill_empty: bool = False, fill_value=None):
             new_data.append_col(column)
         return new_data
     else:
-        raise ReportDataError("you can aggregate two or more columns")
+        raise DataObjectError("you can aggregate two or more columns")
 
 
 def merge(*datasets):
@@ -292,7 +292,7 @@ def merge(*datasets):
             new_data.extend(data)
         return new_data
     else:
-        raise ReportDataError("you can merge two or more dataset object")
+        raise DataObjectError("you can merge two or more dataset object")
 
 
 def chunks(data, length):

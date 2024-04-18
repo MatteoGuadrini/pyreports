@@ -26,7 +26,7 @@ __version__ = "1.6.0"
 
 from .io import manager, READABLE_MANAGER, WRITABLE_MANAGER  # noqa: F401
 from .core import Executor, Report, ReportBook  # noqa: F401
-from .exception import ReportDataError, ReportManagerError  # noqa: F401
+from .exception import ReportDataError, ReportManagerError, DataObjectError  # noqa: F401
 from .datatools import (
     average,  # noqa: F401
     most_common,  # noqa: F401
