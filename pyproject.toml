@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyreports"
-version = "1.6.0"
+version = "1.7.0"
 readme = "README.md"
 license = { text = "GNU General Public License v3.0" }
 keywords = ['pyreports', 'reports', 'report', 'csv', 'yaml', 'export',

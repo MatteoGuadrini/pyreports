@@ -1,5 +1,28 @@
 # Release notes
 
+## 1.7.0
+Apr 19, 2024
+
+- Remove **pymssql** support
+- Add **DataObject** class
+- Add **DataAdapters** class
+- Add **DataPrinters** class
+- Add **aggregate** into _DataAdapters_ class
+- Add **merge** method into _DataAdapters_ class
+- Add **counter** method into _DataAdapters_ class
+- Add **chunks** method into _DataAdapters_ class
+- Add **deduplicate** method into _DataAdapters_ class
+- Add **iter** method into _DataAdapters_ class
+- Add **getitem** method into _DataAdapters_ class
+- Add **getitem** method into _DataAdapters_ class
+- Add **repr** and **str** function into _DataPrinters_ class
+- Add **average** method into _DataPrinters_ class
+- Add **most_common** method into _DataPrinters_ class
+- Add **percentage** method into _DataPrinters_ class
+- Add **len** method into _DataPrinters_ class
+- Add **DataAdapters** and **DataPrinters** classes into _Report_ class
+- Add **DataObjectError** exception class
+
 ## 1.6.0
 Jul 14, 2023
 
