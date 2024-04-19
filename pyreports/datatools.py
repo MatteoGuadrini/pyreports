@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # datatools -- pyreports
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -23,12 +23,152 @@
 """Contains all functions for data processing."""
 
 # region Imports
-from .exception import ReportDataError
+from .exception import DataObjectError
 from collections import Counter
 from tablib import Dataset, InvalidDimensions
 
 
 # endregion
+
+
+# region Classes
+class DataObject:
+    """Data object class"""
+
+    def __init__(self, input_data: Dataset):
+        # Discard all objects that are not Datasets
+        if isinstance(input_data, Dataset):
+            self._data = input_data
+        else:
+            raise DataObjectError("only Dataset object is allowed for input")
+
+    @property
+    def data(self):
+        return self._data
+
+    @data.setter
+    def data(self, dataset):
+        self._data = dataset
+
+
+class DataAdapters(DataObject):
+    """Data adapters class"""
+
+    def aggregate(self, *columns, fill_value=None):
+        """Aggregate in the current Dataset other columns
+
+        :param columns: columns added
+        :param fill_value: fill value for empty field if "fill_empty" argument is specified
+        :return: None
+        """
+        if not self.data:
+            raise DataObjectError("dataset is empty")
+        local_columns = [self.data.get_col(col) for col in range(self.data.width)]
+        local_columns.extend(columns)
+        self.data = aggregate(*local_columns, fill_empty=True, fill_value=fill_value)
+
+    def merge(self, *datasets):
+        """Merge in the current Dataset other Dataset objects
+
+        :param datasets: datasets that will merge
+        :return: None
+        """
+        datasets = list(datasets)
+        datasets.append(self.data)
+        # Check if all Datasets are not empties
+        if not all([data for data in datasets]):
+            raise DataObjectError("one or more Datasets are empties")
+        self.data = merge(*datasets)
+
+    def counter(self):
+        """Count value into the rows
+
+        :return: Counter
+        """
+        return Counter((item for row in self.data for item in row))
+
+    def chunks(self, length):
+        """
+        Yield successive n-sized chunks from Dataset
+
+        :param length: n-sized chunks
+        :return: generator
+        """
+        for idx in range(0, len(self.data), length):
+            yield self.data[idx : idx + length]
+
+    def deduplicate(self):
+        """Remove duplicated rows
+
+        :return: None
+        """
+        self.data = Dataset(*list(dict.fromkeys(iter(self.data))))
+
+    def __iter__(self):
+        return (row for row in self.data)
+
+    def __getitem__(self, item):
+        return self.data[item]
+
+
+class DataPrinters(DataObject):
+    """Data printers class"""
+
+    def print(self):
+        """Print data
+
+        :return: None
+        """
+        print(self)
+
+    def average(self, column):
+        """Average of list of integers or floats
+
+        :param column: column name or index
+        :return: float
+        """
+        return average(self.data, column)
+
+    def most_common(self, column):
+        """The most common element in a column
+
+        :param column: column name or index
+        :return: Any
+        """
+        return most_common(self.data, column)
+
+    def percentage(self, filter_):
+        """Calculating the percentage according to filter
+
+        :param filter_: equality filter
+        :return: float
+        """
+        return percentage(self.data, filter_)
+
+    def __repr__(self):
+        """Representation of DataObject
+
+        :return: string
+        """
+        return f"<DataObject, headers={self.data.headers if self.data.headers else []}, rows={len(self)}>"
+
+    def __str__(self):
+        """Pretty representation of DataObject
+
+        :return: string
+        """
+        return str(self.data)
+
+    def __len__(self):
+        """Measure length of DataSet
+
+        :return: int
+        """
+        return len(self.data)
+
+
+# endregion
+
 
 # region Functions
 def _select_column(data, column):
@@ -40,7 +180,7 @@ def _select_column(data, column):
     """
     # Check if dataset have a column
     if not data.headers:
-        raise ReportDataError('dataset object must have the headers')
+        raise DataObjectError("dataset object must have the headers")
     # Select column
     if isinstance(column, int):
         return data.get_col(column)
@@ -60,7 +200,7 @@ def average(data, column):
     data = _select_column(data, column)
     # Check if all item is integer or float
     if not all(isinstance(item, (int, float)) for item in data):
-        raise ReportDataError('the column contains only int or float')
+        raise DataObjectError("the column contains only int or float")
     # Calculate average
     return float(sum(data) / len(data))
 
@@ -83,14 +223,11 @@ def percentage(data, filter_):
     Calculating the percentage according to filter
 
     :param data: Dataset object
-    :param filter_: filter
+    :param filter_: equality filter
     :return: float
     """
     # Filtering data...
-    data_filtered = [item
-                     for row in data
-                     for item in row
-                     if filter_ == item]
+    data_filtered = [item for row in data for item in row if filter_ == item]
     quotient = len(data_filtered) / len(data)
     return quotient * 100
 
@@ -128,14 +265,14 @@ def aggregate(*columns, fill_empty: bool = False, fill_value=None):
                     list_.append(fill_value() if callable(fill_value) else fill_value)
             else:
                 if max_len != len(list_):
-                    raise InvalidDimensions('the columns are not the same length')
+                    raise InvalidDimensions("the columns are not the same length")
                 max_len = len(list_)
         # Aggregate columns
         for column in columns:
             new_data.append_col(column)
         return new_data
     else:
-        raise ReportDataError('you can aggregate two or more columns')
+        raise DataObjectError("you can aggregate two or more columns")
 
 
 def merge(*datasets):
@@ -151,11 +288,11 @@ def merge(*datasets):
         length_row = len(datasets[0][0])
         for data in datasets:
             if length_row != len(data[0]):
-                raise InvalidDimensions('the row are not the same length')
+                raise InvalidDimensions("the row are not the same length")
             new_data.extend(data)
         return new_data
     else:
-        raise ReportDataError('you can merge two or more dataset object')
+        raise DataObjectError("you can merge two or more dataset object")
 
 
 def chunks(data, length):
@@ -166,8 +303,8 @@ def chunks(data, length):
     :param length: n-sized chunks
     :return: generator
     """
-    for i in range(0, len(data), length):
-        yield data[i:i + length]
+    for idx in range(0, len(data), length):
+        yield data[idx : idx + length]
 
 
 def deduplicate(data):
@@ -176,6 +313,7 @@ def deduplicate(data):
     :param data: Dataset object
     :return: Dataset
     """
-    return Dataset(*list(dict.fromkeys(data)))
+    return Dataset(*list(dict.fromkeys(iter(data))))
+
 
 # endregion

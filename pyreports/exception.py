@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # exception.py -- pyreports
 #
-#     Copyright (C) 2023 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -28,7 +28,11 @@ class ExecutorError(Exception):
 
 
 # ReportException hierarchy
-class ReportException(Exception):
+class DataObjectError(Exception):
+    pass
+
+
+class ReportException(DataObjectError):
     pass
 
 

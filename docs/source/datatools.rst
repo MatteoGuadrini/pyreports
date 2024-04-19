@@ -8,6 +8,107 @@ In this section we will see all these functions contained in the **datatools** m
 .. toctree::
 
 
+DataObject
+----------
+
+**DataObject** class represents a pure *Dataset*.
+
+.. autoclass:: pyreports.DataObject
+   :members:
+
+.. code-block:: python
+
+    import pyreports, tablib
+
+    data = pyreports.DataObject(tablib.Dataset(*[("Arthur", "Dent", 42)]))
+    assert isinstance(data.data, tablib.Dataset) == True
+
+
+
+DataAdapters
+------------
+
+**DataAdapters** class is an object that contains methods that modifying *Dataset*.
+
+.. code-block:: python
+
+    import pyreports, tablib
+
+    data = pyreports.DataAdapters(tablib.Dataset(*[("Arthur", "Dent", 42)]))
+    assert isinstance(data.data, tablib.Dataset) == True
+
+
+    # Aggregate
+    planets = tablib.Dataset(*[("Heart",)])
+    data.aggregate(planets)
+
+    # Merge
+    others = tablib.Dataset(*[("Betelgeuse", "Ford", "Prefect", 42)])
+    data.merge(others)
+
+    # Counter
+    data = pyreports.DataAdapters(Dataset(*[("Heart", "Arthur", "Dent", 42)]))
+    data.merge(self.data)
+    counter = data.counter()
+    assert counter["Arthur"] == 2
+
+    # Chunks
+    data.data.headers = ["planet", "name", "surname", "age"]
+    assert list(data.chunks(4))[0][0] == ("Heart", "Arthur", "Dent", 42)
+
+    # Deduplicate
+    data.deduplicate()
+    assert len(data.data) == 2
+
+    # Get items
+    assert data[1] == ("Betelgeuse", "Ford", "Prefect", 42)
+
+    # Iter items
+    for item in data:
+        print(item)
+
+
+.. autoclass:: pyreports.DataAdapters
+   :members:
+
+DataPrinters
+------------
+
+**DataPrinters** class is an object that contains methods that printing *Dataset*'s information.
+
+.. code-block:: python
+
+    import pyreports, tablib
+
+    data = pyreports.DataPrinters(tablib.Dataset(*[("Arthur", "Dent", 42), ("Ford", "Prefect", 42)], headers=["name", "surname", "age"]))
+    assert isinstance(data.data, tablib.Dataset) == True
+
+    # Print
+    data.print()
+
+    # Average
+    assert data.average(2) == 42
+    assert data.average("age") == 42
+
+    # Most common
+    data.data.append(("Ford", "Prefect", 42))
+    assert data.most_common(0) == "Ford"
+    assert data.most_common("name") == "Ford"
+
+    # Percentage
+    assert data.percentage("Ford") == 66.66666666666666
+
+    # Representation
+    assert repr(data) == "<DataObject, headers=['name', 'surname', 'age'], rows=3>"
+
+    # String
+    assert str(data) == 'name  |surname|age\n------|-------|---\nArthur|Dent   |42 \nFord  |Prefect|42 \nFord  |Prefect|42 '
+
+    # Length
+    assert len(data) == 3
+
+.. autoclass:: pyreports.DataPrinters
+   :members:
 
 
 Average
@@ -138,3 +239,19 @@ The **chunks** function divides a *Dataset* into pieces from *N* (``int``). This
 
 .. note::
     If the division does not result zero, the last tuple of elements will be a smaller number.
+
+Deduplicate
+-----------
+
+The **deduplicate** function remove duplicated rows into *Dataset* objects.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+
+    # Remove duplicated rows (removed the last ('Ford', 'Prefect', 65000))
+    pyreports.deduplicate(employee1)
+    print(len(employee1))     # 2

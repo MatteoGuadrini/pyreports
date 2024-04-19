@@ -99,7 +99,7 @@ In this example, we will take two different inputs, and combine them to export a
     # Config Unix application file: this is a FileManager object
     config_file = pyreports.manager('yaml', '/home/myapp.yml')
     # Console admin: this is a DatabaseManager object
-    mydb = pyreports.manager('mssql', server='mssql1.local', database='admins', user='sa', password='sa0000')
+    mydb = pyreports.manager('mysql', server='mysql1.local', database='admins', user='sa', password='sa0000')
     # Get data
     admin_app = config_file.read()                  # return Dataset object: three column (name, shell, login)
     mydb.execute('SELECT * FROM console_admins')
