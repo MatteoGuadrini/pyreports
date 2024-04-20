@@ -182,24 +182,24 @@ print(count_error_code)   # Counter({200: 4032, 201: 42, 202: 1, 400: 40, 401: 3
 ```console
 $ cat car.yml
 reports:
-- report:
-  title: 'Red ford machine'
-  input:
-    manager: 'mysql'
-    source:
-    # Connection parameters of my mysql database
-      host: 'mysql1.local'
-      database: 'cars'
-      user: 'admin'
-      password: 'dba0000'
-    params:
-      query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
-      params: ['ford', 'red']
-  # Filter km
-  filters: [40000, 45000]
-  output:
-    manager: 'csv'
-    filename: '/tmp/car_csv.csv'
+  - report:
+    title: 'Red ford machine'
+    input:
+      manager: 'mysql'
+      source:
+      # Connection parameters of my mysql database
+        host: 'mysql1.local'
+        database: 'cars'
+        user: 'admin'
+        password: 'dba0000'
+      params:
+        query: 'SELECT * FROM cars WHERE brand = %s AND color = %s'
+        params: ['ford', 'red']
+    # Filter km
+    filters: [40000, 45000]
+    output:
+      manager: 'csv'
+      filename: '/tmp/car_csv.csv'
 
 $ report car.yaml
 ```
