@@ -27,7 +27,7 @@ dependencies = ['ldap3', 'mysql-connector-python',
 reports = "pyreports.cli:main"
 
 [project.urls]
-homepage = "https://github.com/MatteoGuadrini/pyreports'"
+homepage = "https://github.com/MatteoGuadrini/pyreports"
 documentation = "https://pyreports.readthedocs.io/en/latest/"
 repository = "https://github.com/MatteoGuadrini/pyreports.git"
 changelog = "https://github.com/MatteoGuadrini/pyreports/blob/master/CHANGES.md"
