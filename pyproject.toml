@@ -14,7 +14,7 @@ maintainers = [
     { name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" },
 ]
 description = "pyreports is a python library that allows you to create complex report from various sources."
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
