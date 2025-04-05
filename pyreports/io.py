@@ -311,7 +311,7 @@ class DatabaseManager(Manager):
 
         :param connection: Connection based object
         """
-        self.type = "sql"
+        self._type = "sql"
         self.connector = connection
         # Connect database
         self.connector.connect()
@@ -336,6 +336,10 @@ class DatabaseManager(Manager):
             return (e for e in self.connector.cursor)
         else:
             return iter([])
+
+    @property
+    def type(self):
+        return self._type
 
     def reconnect(self):
         """Close and start connection
