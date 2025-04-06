@@ -447,7 +447,11 @@ class NoSQLManager(Manager, APIManager):
 
     def __init__(self, connection: APIConnection, *args, **kwargs):
         APIManager.__init__(self, connection, *args, **kwargs)
-        self.type = "nosql"
+        self._type = "nosql"
+
+    @property
+    def type(self):
+        return self._type
 
     @staticmethod
     def _response_to_dataset(
