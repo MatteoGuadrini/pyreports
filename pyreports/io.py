@@ -492,7 +492,7 @@ class FileManager(Manager):
 
         :param file: file object
         """
-        self.type = "file"
+        self._type = "file"
         self.data = file
 
     def __repr__(self):
@@ -506,6 +506,10 @@ class FileManager(Manager):
         with open(self.data.file) as file:
             for line in file:
                 yield line
+
+    @property
+    def type(self):
+        return self._type
 
     def write(self, data):
         """Write data on file
