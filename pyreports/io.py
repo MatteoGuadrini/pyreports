@@ -543,7 +543,7 @@ class LdapManager(Manager):
         :param ssl: disable or enable SSL. Default is False.
         :param tls: disable or enable TLS. Default is True.
         """
-        self.type = "ldap"
+        self._type = "ldap"
         # Check ssl connection
         port = 636 if ssl else 389
         self.connector = ldap3.Server(
@@ -572,6 +572,10 @@ class LdapManager(Manager):
         obj_repr += f"server={self.connector.host}, "
         obj_repr += f"ssl={self.connector.ssl}, tls={self.connector.tls}>"
         return obj_repr
+
+    @property
+    def type(self):
+        return self._type
 
     def rebind(self, username, password):
         """Re-bind with specified username and password
@@ -606,23 +610,23 @@ class LdapManager(Manager):
         :param attributes: list of returning LDAP attributes
         :return: Dataset object
         """
+        # Build Dataset
+        data = tablib.Dataset()
+        data.headers = attributes
         if self.bind.search(
             search_base=base_search,
             search_filter=f"{search_filter}",
             attributes=attributes,
             search_scope=ldap3.SUBTREE,
         ):
-            # Build Dataset
-            data = tablib.Dataset()
-            data.headers = attributes
             for result in self.bind.response:
                 if result.get("attributes"):
                     row = list()
                     for index, _ in enumerate(attributes):
                         row.append(result.get("attributes").get(attributes[index]))
                     data.append(row)
-            # Return object
-            return data
+        # Return object
+        return data
 
 
 # endregion
