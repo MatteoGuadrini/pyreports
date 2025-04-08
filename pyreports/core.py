@@ -93,6 +93,13 @@ class Executor:
         """
         return str(self.data)
 
+    def __repr__(self):
+        """Representation of Executor object
+
+        :return: string
+        """
+        return f"<Executor object, header={self.data.headers if self.data.headers else None}>"
+
     def __getitem__(self, item):
         """Get row into Dataset object
 
