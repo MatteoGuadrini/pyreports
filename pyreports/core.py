@@ -68,9 +68,26 @@ class Executor:
             raise ExecutorError(err_msg)
         # Set header
         if header or header is None:
-            self.headers(header)
+            self.headers = header
         self.origin = tablib.Dataset()
         self.origin.extend(self.data)
+
+    @property
+    def headers(self):
+        """Get header
+
+        :return: None
+        """
+        return self.data.headers
+
+    @headers.setter
+    def headers(self, header):
+        """Set header
+
+        :param header: header of data
+        :return: None
+        """
+        self.data.headers = header
 
     def __len__(self):
         """Count data
@@ -140,14 +157,6 @@ class Executor:
         """
         self.data = tablib.Dataset()
         self.data.extend(self.origin)
-
-    def headers(self, header):
-        """Set header
-
-        :param header: header of data
-        :return: None
-        """
-        self.data.headers = header
 
     def filter(self, flist=None, key=None, column=None, negation=False):
         """Filter data through a list of strings (equal operator) and/or function key

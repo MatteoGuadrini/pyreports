@@ -19,7 +19,7 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(str(self.data.get_data()), "Matteo|Guadrini|35")
 
     def test_set_headers(self):
-        self.data.headers(["name", "surname", "age"])
+        self.data.headers = ["name", "surname", "age"]
         self.assertEqual(self.data.data.headers, ["name", "surname", "age"])
 
     def test_filter_by_list(self):
@@ -60,7 +60,7 @@ class TestExecutor(unittest.TestCase):
         self.assertEqual(data.get_data()[0], ("Ford", "Prefect", 43))
 
     def test_filter_by_list_and_column(self):
-        self.data.headers(["name", "surname", "age"])
+        self.data.headers = ["name", "surname", "age"]
         self.data.data.append(["Arthur", "Dent", 42])
         self.data.data.append(["Ford", "Prefect", 42])
         self.data.filter([42], column="age")
@@ -82,7 +82,7 @@ class TestExecutor(unittest.TestCase):
         self.data.reset()
 
     def test_select_column(self):
-        self.data.headers(["name", "surname", "age"])
+        self.data.headers = ["name", "surname", "age"]
         self.data.data.append(["Arthur", "Dent", 42])
         self.data.data.append(["Ford", "Prefect", 42])
         # By name
@@ -94,7 +94,7 @@ class TestExecutor(unittest.TestCase):
     def test_count(self):
         self.assertEqual(len(self.data), 1)
         self.assertEqual(self.data.count_rows(), 1)
-        self.data.headers(["name", "surname", "age"])
+        self.data.headers = ["name", "surname", "age"]
         self.assertEqual(self.data.count_columns(), 3)
 
     def test_clone(self):
