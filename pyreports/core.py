@@ -143,6 +143,21 @@ class Executor:
             if item in row:
                 return True
 
+    def __add__(self, other):
+        """Add row or extend Dataset
+
+        :param other: list, tuple or Dataset object
+        :return: None
+        """
+        if isinstance(other, (list, tuple)):
+            self.data.append(other)
+        elif isinstance(other, tablib.Dataset):
+            for row in other:
+                self.data.append(row)
+        else:
+            raise ExecutorError(f"{other} is not list, tuple or Dataset object")
+
+
     def get_data(self):
         """Get dataset
 
