@@ -92,8 +92,8 @@ class TestExecutor(unittest.TestCase):
         self.data.reset()
 
     def test_count(self):
-        self.assertEqual(len(self.data), 1)
-        self.assertEqual(self.data.count_rows(), 1)
+        self.assertEqual(len(self.data), 2)
+        self.assertEqual(self.data.count_rows(), 2)
         self.data.headers = ["name", "surname", "age"]
         self.assertEqual(self.data.count_columns(), 3)
 
@@ -102,6 +102,12 @@ class TestExecutor(unittest.TestCase):
         self.assertNotEqual(new_data, self.data)
         self.assertIsInstance(new_data, pyreports.Executor)
         self.assertEqual(type(new_data), type(self.data))
+
+    def test_add_row(self):
+        fake_data = self.data.clone()
+        self.assertRaises(pyreports.exception.ExecutorError,self.data.__add__, fake_data)
+        new_data = Dataset(["Matteo", "Guadrini", 35])
+        self.data += new_data
 
 
 class TestReport(unittest.TestCase):
