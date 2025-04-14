@@ -64,7 +64,7 @@ class TestExecutor(unittest.TestCase):
         self.data.data.append(["Arthur", "Dent", 42])
         self.data.data.append(["Ford", "Prefect", 42])
         self.data.filter([42], column="age")
-        self.assertEqual(self.data.get_data()[0], 42)
+        self.assertEqual(self.data.get_data()[0], ("Arthur", "Dent", 42))
         self.data.reset()
 
     def test_map(self):
@@ -105,7 +105,9 @@ class TestExecutor(unittest.TestCase):
 
     def test_add_row(self):
         fake_data = self.data.clone()
-        self.assertRaises(pyreports.exception.ExecutorError,self.data.__add__, fake_data)
+        self.assertRaises(
+            pyreports.exception.ExecutorError, self.data.__add__, fake_data
+        )
         new_data = Dataset(["Matteo", "Guadrini", 35])
         self.data += new_data
 

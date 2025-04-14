@@ -157,7 +157,6 @@ class Executor:
         else:
             raise ExecutorError(f"{other} is not list, tuple or Dataset object")
 
-
     def get_data(self):
         """Get dataset
 
@@ -186,30 +185,28 @@ class Executor:
             flist = []
         ret_data = tablib.Dataset(headers=self.data.headers)
         # Filter data through filter list
-        for row in self:
+        for index, row in enumerate(self):
+            filtered_row = row if not column else (self.select_column(column)[index],)
             for f in flist:
                 if negation:
-                    if f not in row:
+                    if f not in filtered_row:
                         ret_data.append(row)
                         break
                 else:
-                    if f in row:
+                    if f in filtered_row:
                         ret_data.append(row)
                         break
             # Filter data through function (key)
             if key and callable(key):
                 if negation:
-                    if not any([bool(key(field)) for field in row]):
+                    if not any([bool(key(field)) for field in filtered_row]):
                         ret_data.append(row)
                         continue
                 else:
-                    if any([bool(key(field)) for field in row]):
+                    if any([bool(key(field)) for field in filtered_row]):
                         ret_data.append(row)
                         continue
         self.data = ret_data
-        # Single column
-        if column and self.data.headers:
-            self.data = self.select_column(column)
 
     def map(self, key, column=None):
         """Apply function to data
