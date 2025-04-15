@@ -382,6 +382,13 @@ class Report(DataAdapters, DataPrinters):
         else:
             return self.report
 
+    def reset(self):
+        """Reset to original data
+
+        :return: None
+        """
+        self.report = None
+
     def exec(self):
         """Create Executor object to apply filters and map function to input data
 

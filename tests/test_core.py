@@ -152,6 +152,10 @@ class TestReport(unittest.TestCase):
         self.report.export()
         self.assertIsInstance(self.report.output.read(), Dataset)
 
+    def test_reset(self):
+        self.report.reset()
+        self.assertEqual(self.report.report, None)
+
 
 class TestReportDatabase(unittest.TestCase):
     input_data = Dataset(
