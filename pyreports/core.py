@@ -33,7 +33,12 @@ from email import encoders
 from email.mime.base import MIMEBase
 from .datatools import DataAdapters, DataPrinters
 from .io import Manager, WRITABLE_MANAGER
-from .exception import ReportManagerError, ReportDataError, ExecutorError
+from .exception import (
+    ReportManagerError,
+    ReportDataError,
+    ExecutorError,
+    ExecutorDataError,
+)
 
 
 # endregion
@@ -217,18 +222,18 @@ class Executor:
         """
         if callable(key):
             ret_data = tablib.Dataset(headers=self.data.headers)
-            for row in self:
+            for index, row in enumerate(self):
+                filtered_row = (
+                    row if not column else (self.select_column(column)[index],)
+                )
                 # Apply function to data
                 new_row = list()
-                for field in row:
+                for field in filtered_row:
                     new_row.append(key(field))
                 ret_data.append(new_row)
             self.data = ret_data
         else:
-            raise ValueError(f"{key} isn't function object")
-        # Return all data or single column
-        if column and self.data.headers:
-            self.data = self.select_column(column)
+            raise ExecutorDataError(f"{key} isn't function object")
 
     def select_column(self, column):
         """Filter dataset by column
