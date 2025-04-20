@@ -147,6 +147,8 @@ class Executor:
         for row in self.data:
             if item in row:
                 return True
+            return False
+        return False
 
     def __add__(self, other):
         """Add row or extend Dataset
@@ -422,7 +424,7 @@ class Report(DataAdapters, DataPrinters):
         """
         # Process data before export
         self.exec()
-        if self.output is not None:
+        if isinstance(self.output, Manager):
             if self.output.type == "file":
                 self.output.write(self.report)
             elif self.output.type == "sql":
@@ -446,6 +448,10 @@ class Report(DataAdapters, DataPrinters):
                         f"VALUES ({','.join(element for element in row_table)});"
                     )
                 self.output.commit()
+            else:
+                raise ReportManagerError(
+                    f"{self.output} is not a supported Manager object"
+                )
         else:
             print(self)
 
