@@ -50,6 +50,13 @@ class DataObject:
     def data(self, dataset):
         self._data = dataset
 
+    def clone(self):
+        """Clone itself
+
+        :return: Dataset
+        """
+        return DataObject(self.data)
+
 
 class DataAdapters(DataObject):
     """Data adapters class"""
