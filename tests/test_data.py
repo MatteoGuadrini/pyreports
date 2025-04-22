@@ -88,6 +88,12 @@ class TestDataTools(unittest.TestCase):
         self.assertIsInstance(data, pyreports.DataObject)
         self.assertIsInstance(data.data, tablib.Dataset)
 
+    def test_data_object_clone(self):
+        data = pyreports.DataObject(Dataset(*[("Matteo", "Guadrini", 35)]))
+        new_data = data.clone()
+        self.assertIsInstance(new_data, pyreports.DataObject)
+        self.assertIsInstance(new_data.data, tablib.Dataset)
+
     def test_data_adapters(self):
         data = pyreports.DataAdapters(Dataset(*[("Matteo", "Guadrini", 35)]))
         self.assertIsInstance(data, pyreports.DataAdapters)
