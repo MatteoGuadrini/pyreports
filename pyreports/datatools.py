@@ -47,7 +47,7 @@ class DataObject:
         return self._data
 
     @data.setter
-    def data(self, dataset):
+    def data(self, dataset: Dataset):
         self._data = dataset
 
     def clone(self):
@@ -109,7 +109,7 @@ class DataAdapters(DataObject):
 
         :return: None
         """
-        self.data = Dataset(*list(dict.fromkeys(iter(self.data))))
+        self.data.remove_duplicates()
 
     def __iter__(self):
         return (row for row in self.data)
@@ -178,7 +178,7 @@ class DataPrinters(DataObject):
 
 
 # region Functions
-def _select_column(data, column):
+def _select_column(data: Dataset, column):
     """Select Dataset column
 
     :param data: Dataset object
@@ -195,7 +195,7 @@ def _select_column(data, column):
         return data[column]
 
 
-def average(data, column):
+def average(data: Dataset, column):
     """
     Average of list of integers or floats
 
@@ -212,7 +212,7 @@ def average(data, column):
     return float(sum(data) / len(data))
 
 
-def most_common(data, column):
+def most_common(data: Dataset, column):
     """
     The most common element in a column
 
@@ -225,7 +225,7 @@ def most_common(data, column):
     return max(data, key=data.count)
 
 
-def percentage(data, filter_):
+def percentage(data: Dataset, filter_):
     """
     Calculating the percentage according to filter
 
@@ -239,7 +239,7 @@ def percentage(data, filter_):
     return quotient * 100
 
 
-def counter(data, column):
+def counter(data: Dataset, column):
     """
     Count all row value
 
@@ -302,7 +302,7 @@ def merge(*datasets):
         raise DataObjectError("you can merge two or more dataset object")
 
 
-def chunks(data, length):
+def chunks(data: Dataset, length):
     """
     Yield successive n-sized chunks from data
 
@@ -314,13 +314,14 @@ def chunks(data, length):
         yield data[idx : idx + length]
 
 
-def deduplicate(data):
+def deduplicate(data: Dataset):
     """Remove duplicated rows
 
     :param data: Dataset object
     :return: Dataset
     """
-    return Dataset(*list(dict.fromkeys(iter(data))))
+    data.remove_duplicates()
+    return data
 
 
 # endregion
