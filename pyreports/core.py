@@ -396,8 +396,9 @@ class Report(DataAdapters, DataPrinters):
         """
         self.report = None
 
-    def exec(self):
+    def exec(self, column=None):
         """Create Executor object to apply filters and map function to input data
+        :param: column: apply filter only a column (name or index)
 
         :return: None
         """
@@ -409,9 +410,9 @@ class Report(DataAdapters, DataPrinters):
         # Apply filters
         if self.filter:
             if callable(self.filter):
-                ex.filter(key=self.filter, negation=self.negation)
+                ex.filter(key=self.filter, negation=self.negation, column=column)
             else:
-                ex.filter(self.filter, negation=self.negation)
+                ex.filter(self.filter, negation=self.negation, column=column)
         # Count element
         if bool(self.count):
             self.count = len(ex)
