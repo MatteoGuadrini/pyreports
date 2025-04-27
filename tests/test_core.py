@@ -187,6 +187,12 @@ class TestReportDatabase(unittest.TestCase):
         self.assertEqual(self.report.report[0], ("Matteo", "Guadrini", "35"))
         self.assertEqual(self.report.count, 2)
 
+    def test_exec_column(self):
+        self.report.reset()
+        self.report.exec(column="age")
+        self.assertEqual(self.report.report[0], ("Matteo", "Guadrini", "35"))
+        self.assertEqual(self.report.count, 2)
+
     def test_export(self):
         self.report.export()
         self.report.output.execute("SELECT * from test_report")
