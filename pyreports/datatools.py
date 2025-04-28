@@ -57,6 +57,9 @@ class DataObject:
         """
         return DataObject(self.data)
 
+    def column(self, index):
+        _select_column(self.data, column=index)
+
 
 class DataAdapters(DataObject):
     """Data adapters class"""
@@ -185,10 +188,6 @@ def _select_column(data: Dataset, column):
     :param column: column name or index
     :return: list
     """
-    # Check if dataset have a column
-    if not data.headers:
-        raise DataObjectError("dataset object must have the headers")
-    # Select column
     if isinstance(column, int):
         return data.get_col(column)
     else:
