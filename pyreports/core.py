@@ -542,6 +542,22 @@ class Report(DataAdapters, DataPrinters):
                 message.as_string(),
             )
 
+    def clone(self):
+        """Clone this report instance
+
+        :return: Report
+        """
+        return Report(
+            input_data=self.data,
+            title=self.title,
+            filters=self.filter,
+            map_func=self.map,
+            negation=self.negation,
+            column=self.column,
+            count=self.count,
+            output=self.output,
+        )
+
 
 class ReportBook:
     """ReportBook represent a collection of Report's object"""
