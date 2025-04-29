@@ -156,6 +156,11 @@ class TestReport(unittest.TestCase):
         self.report.reset()
         self.assertEqual(self.report.report, None)
 
+    def test_clone(self):
+        new_report = self.report.clone()
+        self.assertNotEqual(new_report, self.report)
+        self.assertIsInstance(new_report, pyreports.Report)
+
 
 class TestReportDatabase(unittest.TestCase):
     input_data = Dataset(
