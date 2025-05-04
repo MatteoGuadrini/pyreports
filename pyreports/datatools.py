@@ -114,6 +114,14 @@ class DataAdapters(DataObject):
         """
         self.data.remove_duplicates()
 
+    def subset(self, *columns):
+        """New dataset with only columns added
+
+        :param columns: select columns of new Dataset
+        :return: Dataset
+        """
+        return self.data.subset(cols=columns)
+
     def __iter__(self):
         return (row for row in self.data)
 
