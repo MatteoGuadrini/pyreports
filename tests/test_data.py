@@ -183,6 +183,22 @@ class TestDataTools(unittest.TestCase):
         # Get column
         self.assertEqual(data["name"], ["Matteo", "Arthur", "Matteo"])
 
+    def test_data_adapters_subset(self):
+        data = pyreports.DataAdapters(
+            Dataset(
+                *[
+                    ("Matteo", "Guadrini", 35),
+                    ("Arthur", "Dent", 42),
+                    ("Matteo", "Guadrini", 35),
+                ],
+                headers=("name", "surname", "age"),
+            )
+        )
+        new_data = data.subset("age")
+        self.assertEqual(new_data[0], (35,))
+        self.assertEqual(new_data[1], (42,))
+        self.assertEqual(new_data[2], (35,))
+
     def test_data_printers(self):
         data = pyreports.DataPrinters(Dataset(*[("Matteo", "Guadrini", 35)]))
         self.assertIsInstance(data, pyreports.DataPrinters)
