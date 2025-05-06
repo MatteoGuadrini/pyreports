@@ -36,6 +36,7 @@ from .datatools import (
     chunks,  # noqa: F401
     merge,  # noqa: F401
     deduplicate,  # noqa: F401
+    subset,  # noqa: F401
     DataObject,  # noqa: F401
     DataAdapters,  # noqa: F401
     DataPrinters,  # noqa: F401

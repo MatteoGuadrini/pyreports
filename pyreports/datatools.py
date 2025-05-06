@@ -331,4 +331,14 @@ def deduplicate(data: Dataset):
     return data
 
 
+def subset(data: Dataset, *columns):
+    """Create a new Dataset with only the given columns
+
+    :param data: Dataset object
+    :param columns: selected columns
+    :return: Dataset
+    """
+    return data.subset(cols=columns)
+
+
 # endregion
