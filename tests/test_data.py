@@ -83,6 +83,20 @@ class TestDataTools(unittest.TestCase):
         )
         self.assertEqual(len(pyreports.deduplicate(data)), 2)
 
+    def test_subset(self):
+        data = Dataset(
+            *[
+                ("Matteo", "Guadrini", 35),
+                ("Arthur", "Dent", 42),
+                ("Matteo", "Guadrini", 35),
+            ],
+            headers=("name", "surname", "age"),
+        )
+        new_data = pyreports.subset(data, "age")
+        self.assertEqual(new_data[0], (35,))
+        self.assertEqual(new_data[1], (42,))
+        self.assertEqual(new_data[2], (35,))
+
     def test_data_object(self):
         data = pyreports.DataObject(Dataset(*[("Matteo", "Guadrini", 35)]))
         self.assertIsInstance(data, pyreports.DataObject)
