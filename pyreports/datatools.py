@@ -68,7 +68,7 @@ class DataAdapters(DataObject):
         """Aggregate in the current Dataset other columns
 
         :param columns: columns added
-        :param fill_value: fill value for empty field if "fill_empty" argument is specified
+        :param fill_value: fill value for empty field
         :return: None
         """
         if not self.data:
@@ -266,7 +266,7 @@ def aggregate(*columns, fill_empty: bool = False, fill_value=None):
 
     :param columns: columns added
     :param fill_empty: fill the empty field of data with "fill_value" argument
-    :param fill_value: fill value for empty field if "fill_empty" argument is specified
+    :param fill_value: fills value for empty field if "fill_empty" argument is specified
     :return: Dataset
     """
     if len(columns) >= 2:
@@ -299,7 +299,7 @@ def merge(*datasets):
     if len(datasets) >= 2:
         new_data = Dataset()
         # Check len of row
-        length_row = len(datasets[0][0])
+        length_row = max([len(dataset[0]) for dataset in datasets])
         for data in datasets:
             if length_row != len(data[0]):
                 raise InvalidDimensions("the row are not the same length")
