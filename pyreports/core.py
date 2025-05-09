@@ -469,7 +469,7 @@ class Report(DataAdapters, DataPrinters):
         _ssl=True,
         headers=None,
     ):
-        """Send saved report to email
+        """Send a saved report to email
 
         :param server: server SMTP
         :param _from: email address 'from:'
@@ -693,7 +693,7 @@ class ReportBook:
         _ssl=True,
         headers=None,
     ):
-        """Send saved report to email
+        """Send a saved report to email
 
         :param server: server SMTP
         :param _from: email address 'from:'
@@ -708,18 +708,21 @@ class ReportBook:
         :return: None
         """
         for report in self:
-            report.send(
-                server,
-                _from,
-                to,
-                cc=cc,
-                bcc=bcc,
-                subject=subject,
-                body=body,
-                auth=auth,
-                _ssl=_ssl,
-                headers=headers,
-            )
+            try:
+                report.send(
+                    server,
+                    _from,
+                    to,
+                    cc=cc,
+                    bcc=bcc,
+                    subject=subject,
+                    body=body,
+                    auth=auth,
+                    _ssl=_ssl,
+                    headers=headers,
+                )
+            except ReportDataError as e:
+                print(f"warning: {e}")
 
 
 # endregion
