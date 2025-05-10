@@ -48,6 +48,8 @@ class DataObject:
 
     @data.setter
     def data(self, dataset: Dataset):
+        if not isinstance(dataset, Dataset):
+            raise DataObjectError(f"{dataset} is not a Dataset object")
         self._data = dataset
 
     def clone(self):
