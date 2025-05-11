@@ -331,7 +331,11 @@ class Report(DataAdapters, DataPrinters):
         else:
             raise ReportManagerError("Only Manager object is allowed for output")
         # Data for report
-        self.report = None
+        self._report = None
+
+    @property
+    def report(self):
+        return self._report
 
     def __repr__(self):
         """Representation of Report object
@@ -394,7 +398,7 @@ class Report(DataAdapters, DataPrinters):
 
         :return: None
         """
-        self.report = None
+        self._report = None
 
     def exec(self, column=None):
         """Create Executor object to apply filters and map function to input data
@@ -416,7 +420,7 @@ class Report(DataAdapters, DataPrinters):
         # Count element
         if bool(self.count):
             self.count = len(ex)
-        self.report = ex.get_data()
+        self._report = ex.get_data()
 
     def export(self):
         """Process and save data on output
