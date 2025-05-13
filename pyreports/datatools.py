@@ -343,4 +343,15 @@ def subset(data: Dataset, *columns):
     return data.subset(cols=columns)
 
 
+def sort(data, column, reverse=False):
+    """Sort a Dataset by a specific column
+
+    :param data: Dataset object
+    :param column: column to sort
+    :param reverse: reversed order
+    :return: Dataset
+    """
+    return data.sort(col=column, reverse=reverse)
+
+
 # endregion
