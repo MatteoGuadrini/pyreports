@@ -227,6 +227,22 @@ class TestDataTools(unittest.TestCase):
         self.assertEqual(new_data[1], (42,))
         self.assertEqual(new_data[2], (35,))
 
+    def test_data_adapters_sort(self):
+        data = pyreports.DataAdapters(
+            Dataset(
+                *[
+                    ("Matteo", "Guadrini", 35),
+                    ("Arthur", "Dent", 42),
+                    ("Matteo", "Guadrini", 35),
+                ],
+                headers=("name", "surname", "age"),
+            )
+        )
+        new_data = data.sort("age")
+        self.assertEqual(new_data[1], ("Matteo", "Guadrini", 35))
+        new_data_reversed = data.sort("age", reverse=True)
+        self.assertEqual(new_data_reversed[0], ("Arthur", "Dent", 42))
+
     def test_data_printers(self):
         data = pyreports.DataPrinters(Dataset(*[("Matteo", "Guadrini", 35)]))
         self.assertIsInstance(data, pyreports.DataPrinters)
