@@ -124,6 +124,15 @@ class DataAdapters(DataObject):
         """
         return self.data.subset(cols=columns)
 
+    def sort(self, column, reverse=False):
+        """Sort a Dataset by a specific column
+
+        :param column: column to sort
+        :param reverse: reversed order
+        :return: Dataset
+        """
+        return self.data.sort(col=column, reverse=reverse)
+
     def __iter__(self):
         return (row for row in self.data)
 
