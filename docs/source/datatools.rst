@@ -23,6 +23,14 @@ DataObject
     data = pyreports.DataObject(tablib.Dataset(*[("Arthur", "Dent", 42)]))
     assert isinstance(data.data, tablib.Dataset) == True
 
+    # Clone data
+    new_data = data.clone()
+    assert isinstance(new_data.data, tablib.Dataset) == True
+
+    # Select column
+    new_data.column("name")
+    new_data.column(0)
+
 
 
 DataAdapters
