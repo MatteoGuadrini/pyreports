@@ -68,6 +68,14 @@ DataAdapters
     data.deduplicate()
     assert len(data.data) == 2
 
+    # Subsets
+    new_data = data.subset("planet", "age")
+    assert len(data.data[0]) == 2
+
+    # Sort
+    new_data = data.sort("age")
+    reverse_data = data.sort("age", reverse=True)
+
     # Get items
     assert data[1] == ("Betelgeuse", "Ford", "Prefect", 42)
 
