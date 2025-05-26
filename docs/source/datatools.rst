@@ -285,3 +285,18 @@ The **subset** function make a new *Dataset* with only selected columns.
 
     # Select only a two columns
     print(len(pyreports.subset(employee1, 'name', 'surname')[0]))     # 2
+Sort
+----
+
+The **sort** function sort the *Dataset* by column, also in reversed mode.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+
+    # Sort and sort reversed
+    print(pyreports.sort(employee1, 'salary'))
+    print(pyreports.sort(employee1, 'salary', reverse=True))
