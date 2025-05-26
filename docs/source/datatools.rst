@@ -269,5 +269,19 @@ The **deduplicate** function remove duplicated rows into *Dataset* objects.
     employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
 
     # Remove duplicated rows (removed the last ('Ford', 'Prefect', 65000))
-    pyreports.deduplicate(employee1)
-    print(len(employee1))     # 2
+    print(len(pyreports.deduplicate(employee1)))     # 2
+
+Subset
+------
+
+The **subset** function make a new *Dataset* with only selected columns.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+
+    # Select only a two columns
+    print(len(pyreports.subset(employee1, 'name', 'surname')[0]))     # 2
