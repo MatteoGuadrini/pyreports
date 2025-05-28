@@ -226,6 +226,9 @@ def main():
         try:
             # Make a report object
             data = get_data(manager, input_.get("params"))
+            # Check if sort is specified
+            if report.get("report").get("sort"):
+                data = pyreports.sort(data, **report.get("report").get("sort"))
             if "map" in report.get("report"):
                 exec(report.get("report").get("map"))
             map_func = globals().get("map_func")
