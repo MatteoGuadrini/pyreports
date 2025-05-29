@@ -229,6 +229,9 @@ def main():
             # Check if sort is specified
             if report.get("report").get("sort"):
                 data = pyreports.sort(data, **report.get("report").get("sort"))
+            # Check if deduplicate is specified
+            if report.get("report").get("deduplicate"):
+                data = pyreports.deduplicate(data)
             if "map" in report.get("report"):
                 exec(report.get("report").get("map"))
             map_func = globals().get("map_func")
