@@ -228,7 +228,9 @@ def main():
             data = get_data(manager, input_.get("params"))
             # Check if sort is specified
             if report.get("report").get("sort"):
-                data = pyreports.sort(data, **report.get("report").get("sort"))
+                column = report.get("report").get("sort").get("column")
+                reverse = report.get("report").get("sort").get("reverse")
+                data = pyreports.sort(data, column, reverse=reverse)
             # Check if deduplicate is specified
             if report.get("report").get("deduplicate"):
                 data = pyreports.deduplicate(data)
