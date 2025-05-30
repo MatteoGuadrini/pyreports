@@ -1,5 +1,25 @@
 # Release notes
 
+## 1.8.0
+May 31, 2025
+
+- Add **add** special method into _Executor_ class
+- Add **type** property on _Manager_ class
+- Add **ExecutorDataError** class
+- Add **reset** method into _Report_ class
+- Add **clone** method into _DataObject_ class
+- Add **clone** method into _Report_ class
+- Add **column** method on _DataObject_ class
+- Add **subset** method on _DataAdapters_ class
+- Add **subset** function
+- Add _try/except_ into **send** method on _ReportBook_ class
+- Add **sort** method into _DataAdapters_ class
+- Add **sort** function
+- Add **sort**, **subset** and **subset** data tools
+- Make _report_ attribute into property on _Report_ class
+- Use _remove_duplicates_ method on **deduplicate** functions
+- Change behavior of _column_ parameter into **filter** function on _Executor_ class
+
 ## 1.7.0
 Apr 19, 2024
 
@@ -13,7 +33,6 @@ Apr 19, 2024
 - Add **chunks** method into _DataAdapters_ class
 - Add **deduplicate** method into _DataAdapters_ class
 - Add **iter** method into _DataAdapters_ class
-- Add **getitem** method into _DataAdapters_ class
 - Add **getitem** method into _DataAdapters_ class
 - Add **repr** and **str** function into _DataPrinters_ class
 - Add **average** method into _DataPrinters_ class
