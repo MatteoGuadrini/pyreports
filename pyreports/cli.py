@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # cli -- pyreports
 #
-#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2025 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 # region imports
 import sys
-import tablib
 import yaml
 import argparse
 import pyreports
@@ -190,7 +189,7 @@ def print_verbose(*messages, verbose=False):
     :return: None
     """
     if verbose:
-        print("info:", *messages)
+        print("debug:", *messages)
 
 
 def main():
@@ -203,7 +202,7 @@ def main():
     reports = config.get("reports", ())
 
     print_verbose(
-        f'found {len(config.get("reports", ()))} report(s)', verbose=args.verbose
+        f"found {len(config.get('reports', ()))} report(s)", verbose=args.verbose
     )
 
     # Build the data and report
@@ -218,7 +217,7 @@ def main():
         # Make a manager object
         input_ = report.get("report").get("input")
         print_verbose(
-            f'make an input manager of type {input_.get("manager")}',
+            f"make an input manager of type {input_.get('manager')}",
             verbose=args.verbose,
         )
         manager = make_manager(input_)
@@ -227,6 +226,19 @@ def main():
         try:
             # Make a report object
             data = get_data(manager, input_.get("params"))
+            # Check if sort is specified
+            if report.get("report").get("sort"):
+                column = report.get("report").get("sort").get("column")
+                reverse = report.get("report").get("sort").get("reverse")
+                data = pyreports.sort(data, column, reverse=reverse)
+            # Check if deduplicate is specified
+            if report.get("report").get("deduplicate"):
+                data = pyreports.deduplicate(data)
+            # Check if subset is specified
+            if report.get("report").get("subset"):
+                data = pyreports.subset(
+                    data, *report.get("report").get("subset").get("columns")
+                )
             if "map" in report.get("report"):
                 exec(report.get("report").get("map"))
             map_func = globals().get("map_func")
@@ -244,14 +256,13 @@ def main():
             )
             print_verbose(f'created report "{report_.title}"', verbose=args.verbose)
         except Exception as err:
-            pyreports.Report(tablib.Dataset())
             exit(f"error: {err}")
         # Check output
         if report_.output:
             # Check if export or send report
             if report.get("report").get("mail"):
                 print_verbose(
-                    f'send report to {report.get("report").get("mail").get("to")}',
+                    f"send report to {report.get('report').get('mail').get('to')}",
                     verbose=args.verbose,
                 )
                 mail_settings = report.get("report").get("mail")

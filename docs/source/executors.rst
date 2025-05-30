@@ -87,8 +87,8 @@ Finally, it is possible to declare the name of a single return column, if not al
     myex.filter(key=big_salary)                                 # Filter data with a salary greater than or equal to 65000
 
     # Filter data by column
-    myex.filter(column='salary')                                # Filter by column: name
-    myex.filter(column=2)                                       # Filter by column: index
+    myex.filter([55000, 65000, 75000], column='salary')         # Filter by column: name
+    myex.filter([55000, 65000, 75000], column=2)                # Filter by column: index
 
     # Filter data by list, callable and column
     myex.filter([55000, 65000, 75000], str.istitle, 'salary')   # Filter for all three methods
@@ -116,7 +116,7 @@ that accepts the name of the column or the number of its index.
     # Let's go! Increase salary today!
     myex.map(salary_increase)
 
-    # Now, return only salary columns
+    # Apply only salary columns
     myex.map(salary_increase, column='salary')
 
 .. warning::

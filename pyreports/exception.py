@@ -23,9 +23,12 @@
 """Contains all custom exception."""
 
 
+# ExecutorException hierarchy
 class ExecutorError(Exception):
     pass
 
+class ExecutorDataError(ExecutorError):
+    pass
 
 # ReportException hierarchy
 class DataObjectError(Exception):

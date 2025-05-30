@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # __init__ -- pyreports
 #
-#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2025 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 """Build complex reports from/to various formats."""
 
-__version__ = "1.7.0"
+__version__ = "1.8.0"
 
 from .io import manager, READABLE_MANAGER, WRITABLE_MANAGER  # noqa: F401
 from .core import Executor, Report, ReportBook  # noqa: F401
@@ -36,6 +36,8 @@ from .datatools import (
     chunks,  # noqa: F401
     merge,  # noqa: F401
     deduplicate,  # noqa: F401
+    subset,  # noqa: F401
+    sort,  # noqa: F401
     DataObject,  # noqa: F401
     DataAdapters,  # noqa: F401
     DataPrinters,  # noqa: F401

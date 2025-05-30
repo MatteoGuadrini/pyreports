@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # core -- pyreports
 #
-#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2025 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -33,7 +33,12 @@ from email import encoders
 from email.mime.base import MIMEBase
 from .datatools import DataAdapters, DataPrinters
 from .io import Manager, WRITABLE_MANAGER
-from .exception import ReportManagerError, ReportDataError, ExecutorError
+from .exception import (
+    ReportManagerError,
+    ReportDataError,
+    ExecutorError,
+    ExecutorDataError,
+)
 
 
 # endregion
@@ -68,9 +73,26 @@ class Executor:
             raise ExecutorError(err_msg)
         # Set header
         if header or header is None:
-            self.headers(header)
+            self.headers = header
         self.origin = tablib.Dataset()
         self.origin.extend(self.data)
+
+    @property
+    def headers(self):
+        """Get header
+
+        :return: None
+        """
+        return self.data.headers
+
+    @headers.setter
+    def headers(self, header):
+        """Set header
+
+        :param header: header of data
+        :return: None
+        """
+        self.data.headers = header
 
     def __len__(self):
         """Count data
@@ -92,6 +114,13 @@ class Executor:
         :return: string
         """
         return str(self.data)
+
+    def __repr__(self):
+        """Representation of Executor object
+
+        :return: string
+        """
+        return f"<Executor object, rows={self.count_rows()}, header={self.data.headers if self.data.headers else None}>"
 
     def __getitem__(self, item):
         """Get row into Dataset object
@@ -118,6 +147,22 @@ class Executor:
         for row in self.data:
             if item in row:
                 return True
+            return False
+        return False
+
+    def __add__(self, other):
+        """Add row or extend Dataset
+
+        :param other: list, tuple or Dataset object
+        :return: None
+        """
+        if isinstance(other, (list, tuple)):
+            self.data.append(other)
+        elif isinstance(other, tablib.Dataset):
+            for row in other:
+                self.data.append(row)
+        else:
+            raise ExecutorError(f"{other} is not list, tuple or Dataset object")
 
     def get_data(self):
         """Get dataset
@@ -134,14 +179,6 @@ class Executor:
         self.data = tablib.Dataset()
         self.data.extend(self.origin)
 
-    def headers(self, header):
-        """Set header
-
-        :param header: header of data
-        :return: None
-        """
-        self.data.headers = header
-
     def filter(self, flist=None, key=None, column=None, negation=False):
         """Filter data through a list of strings (equal operator) and/or function key
 
@@ -155,30 +192,28 @@ class Executor:
             flist = []
         ret_data = tablib.Dataset(headers=self.data.headers)
         # Filter data through filter list
-        for row in self:
+        for index, row in enumerate(self):
+            filtered_row = row if not column else (self.select_column(column)[index],)
             for f in flist:
                 if negation:
-                    if f not in row:
+                    if f not in filtered_row:
                         ret_data.append(row)
                         break
                 else:
-                    if f in row:
+                    if f in filtered_row:
                         ret_data.append(row)
                         break
             # Filter data through function (key)
             if key and callable(key):
                 if negation:
-                    if not any([bool(key(field)) for field in row]):
+                    if not any([bool(key(field)) for field in filtered_row]):
                         ret_data.append(row)
                         continue
                 else:
-                    if any([bool(key(field)) for field in row]):
+                    if any([bool(key(field)) for field in filtered_row]):
                         ret_data.append(row)
                         continue
         self.data = ret_data
-        # Single column
-        if column and self.data.headers:
-            self.data = self.select_column(column)
 
     def map(self, key, column=None):
         """Apply function to data
@@ -189,18 +224,18 @@ class Executor:
         """
         if callable(key):
             ret_data = tablib.Dataset(headers=self.data.headers)
-            for row in self:
+            for index, row in enumerate(self):
+                filtered_row = (
+                    row if not column else (self.select_column(column)[index],)
+                )
                 # Apply function to data
                 new_row = list()
-                for field in row:
+                for field in filtered_row:
                     new_row.append(key(field))
                 ret_data.append(new_row)
             self.data = ret_data
         else:
-            raise ValueError(f"{key} isn't function object")
-        # Return all data or single column
-        if column and self.data.headers:
-            self.data = self.select_column(column)
+            raise ExecutorDataError(f"{key} isn't function object")
 
     def select_column(self, column):
         """Filter dataset by column
@@ -296,7 +331,11 @@ class Report(DataAdapters, DataPrinters):
         else:
             raise ReportManagerError("Only Manager object is allowed for output")
         # Data for report
-        self.report = None
+        self._report = None
+
+    @property
+    def report(self):
+        return self._report
 
     def __repr__(self):
         """Representation of Report object
@@ -354,8 +393,16 @@ class Report(DataAdapters, DataPrinters):
         else:
             return self.report
 
-    def exec(self):
+    def reset(self):
+        """Reset to original data
+
+        :return: None
+        """
+        self._report = None
+
+    def exec(self, column=None):
         """Create Executor object to apply filters and map function to input data
+        :param: column: apply filter only a column (name or index)
 
         :return: None
         """
@@ -367,13 +414,13 @@ class Report(DataAdapters, DataPrinters):
         # Apply filters
         if self.filter:
             if callable(self.filter):
-                ex.filter(key=self.filter, negation=self.negation)
+                ex.filter(key=self.filter, negation=self.negation, column=column)
             else:
-                ex.filter(self.filter, negation=self.negation)
+                ex.filter(self.filter, negation=self.negation, column=column)
         # Count element
         if bool(self.count):
             self.count = len(ex)
-        self.report = ex.get_data()
+        self._report = ex.get_data()
 
     def export(self):
         """Process and save data on output
@@ -382,7 +429,7 @@ class Report(DataAdapters, DataPrinters):
         """
         # Process data before export
         self.exec()
-        if self.output is not None:
+        if isinstance(self.output, Manager):
             if self.output.type == "file":
                 self.output.write(self.report)
             elif self.output.type == "sql":
@@ -406,6 +453,10 @@ class Report(DataAdapters, DataPrinters):
                         f"VALUES ({','.join(element for element in row_table)});"
                     )
                 self.output.commit()
+            else:
+                raise ReportManagerError(
+                    f"{self.output} is not a supported Manager object"
+                )
         else:
             print(self)
 
@@ -422,7 +473,7 @@ class Report(DataAdapters, DataPrinters):
         _ssl=True,
         headers=None,
     ):
-        """Send saved report to email
+        """Send a saved report to email
 
         :param server: server SMTP
         :param _from: email address 'from:'
@@ -494,6 +545,22 @@ class Report(DataAdapters, DataPrinters):
                 [receiver for receiver in (to, cc, bcc) if receiver],
                 message.as_string(),
             )
+
+    def clone(self):
+        """Clone this report instance
+
+        :return: Report
+        """
+        return Report(
+            input_data=self.data,
+            title=self.title,
+            filters=self.filter,
+            map_func=self.map,
+            negation=self.negation,
+            column=self.column,
+            count=self.count,
+            output=self.output,
+        )
 
 
 class ReportBook:
@@ -630,7 +697,7 @@ class ReportBook:
         _ssl=True,
         headers=None,
     ):
-        """Send saved report to email
+        """Send a saved report to email
 
         :param server: server SMTP
         :param _from: email address 'from:'
@@ -645,18 +712,21 @@ class ReportBook:
         :return: None
         """
         for report in self:
-            report.send(
-                server,
-                _from,
-                to,
-                cc=cc,
-                bcc=bcc,
-                subject=subject,
-                body=body,
-                auth=auth,
-                _ssl=_ssl,
-                headers=headers,
-            )
+            try:
+                report.send(
+                    server,
+                    _from,
+                    to,
+                    cc=cc,
+                    bcc=bcc,
+                    subject=subject,
+                    body=body,
+                    auth=auth,
+                    _ssl=_ssl,
+                    headers=headers,
+                )
+            except ReportDataError as e:
+                print(f"warning: {e}")
 
 
 # endregion

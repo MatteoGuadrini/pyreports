@@ -21,11 +21,11 @@ sys.path.insert(0, os.path.abspath("../.."))
 # -- Project information -----------------------------------------------------
 
 project = "pyreports"
-copyright = "2024, Matteo Guadrini"
+copyright = "2025, Matteo Guadrini"
 author = "Matteo Guadrini"
 
 # The full version, including alpha/beta/rc tags
-release = "1.7.0"
+release = "1.8.0"
 
 # -- General configuration ---------------------------------------------------
 
@@ -47,14 +47,13 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+html_theme = "pydata_sphinx_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-html_theme_options = {"logo_only": False}
 html_logo = "_static/pyreports.svg"
 
 master_doc = "index"

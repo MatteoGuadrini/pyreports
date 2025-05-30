@@ -83,10 +83,44 @@ class TestDataTools(unittest.TestCase):
         )
         self.assertEqual(len(pyreports.deduplicate(data)), 2)
 
+    def test_subset(self):
+        data = Dataset(
+            *[
+                ("Matteo", "Guadrini", 35),
+                ("Arthur", "Dent", 42),
+                ("Matteo", "Guadrini", 35),
+            ],
+            headers=("name", "surname", "age"),
+        )
+        new_data = pyreports.subset(data, "age")
+        self.assertEqual(new_data[0], (35,))
+        self.assertEqual(new_data[1], (42,))
+        self.assertEqual(new_data[2], (35,))
+
+    def test_sort(self):
+        data = Dataset(
+            *[
+                ("Matteo", "Guadrini", 35),
+                ("Arthur", "Dent", 42),
+                ("Matteo", "Guadrini", 35),
+            ],
+            headers=("name", "surname", "age"),
+        )
+        new_data = pyreports.sort(data, "age")
+        self.assertEqual(new_data[1], ("Matteo", "Guadrini", 35))
+        new_data_reversed = pyreports.sort(data, "age", reverse=True)
+        self.assertEqual(new_data_reversed[0], ("Arthur", "Dent", 42))
+
     def test_data_object(self):
         data = pyreports.DataObject(Dataset(*[("Matteo", "Guadrini", 35)]))
         self.assertIsInstance(data, pyreports.DataObject)
         self.assertIsInstance(data.data, tablib.Dataset)
+
+    def test_data_object_clone(self):
+        data = pyreports.DataObject(Dataset(*[("Matteo", "Guadrini", 35)]))
+        new_data = data.clone()
+        self.assertIsInstance(new_data, pyreports.DataObject)
+        self.assertIsInstance(new_data.data, tablib.Dataset)
 
     def test_data_adapters(self):
         data = pyreports.DataAdapters(Dataset(*[("Matteo", "Guadrini", 35)]))
@@ -176,6 +210,38 @@ class TestDataTools(unittest.TestCase):
         self.assertEqual(data[1], ("Arthur", "Dent", 42))
         # Get column
         self.assertEqual(data["name"], ["Matteo", "Arthur", "Matteo"])
+
+    def test_data_adapters_subset(self):
+        data = pyreports.DataAdapters(
+            Dataset(
+                *[
+                    ("Matteo", "Guadrini", 35),
+                    ("Arthur", "Dent", 42),
+                    ("Matteo", "Guadrini", 35),
+                ],
+                headers=("name", "surname", "age"),
+            )
+        )
+        new_data = data.subset("age")
+        self.assertEqual(new_data[0], (35,))
+        self.assertEqual(new_data[1], (42,))
+        self.assertEqual(new_data[2], (35,))
+
+    def test_data_adapters_sort(self):
+        data = pyreports.DataAdapters(
+            Dataset(
+                *[
+                    ("Matteo", "Guadrini", 35),
+                    ("Arthur", "Dent", 42),
+                    ("Matteo", "Guadrini", 35),
+                ],
+                headers=("name", "surname", "age"),
+            )
+        )
+        new_data = data.sort("age")
+        self.assertEqual(new_data[1], ("Matteo", "Guadrini", 35))
+        new_data_reversed = data.sort("age", reverse=True)
+        self.assertEqual(new_data_reversed[0], ("Arthur", "Dent", 42))
 
     def test_data_printers(self):
         data = pyreports.DataPrinters(Dataset(*[("Matteo", "Guadrini", 35)]))

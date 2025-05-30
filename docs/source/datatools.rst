@@ -23,6 +23,14 @@ DataObject
     data = pyreports.DataObject(tablib.Dataset(*[("Arthur", "Dent", 42)]))
     assert isinstance(data.data, tablib.Dataset) == True
 
+    # Clone data
+    new_data = data.clone()
+    assert isinstance(new_data.data, tablib.Dataset) == True
+
+    # Select column
+    new_data.column("name")
+    new_data.column(0)
+
 
 
 DataAdapters
@@ -59,6 +67,14 @@ DataAdapters
     # Deduplicate
     data.deduplicate()
     assert len(data.data) == 2
+
+    # Subsets
+    new_data = data.subset("planet", "age")
+    assert len(data.data[0]) == 2
+
+    # Sort
+    new_data = data.sort("age")
+    reverse_data = data.sort("age", reverse=True)
 
     # Get items
     assert data[1] == ("Betelgeuse", "Ford", "Prefect", 42)
@@ -253,5 +269,35 @@ The **deduplicate** function remove duplicated rows into *Dataset* objects.
     employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
 
     # Remove duplicated rows (removed the last ('Ford', 'Prefect', 65000))
-    pyreports.deduplicate(employee1)
-    print(len(employee1))     # 2
+    print(len(pyreports.deduplicate(employee1)))     # 2
+
+Subset
+------
+
+The **subset** function make a new *Dataset* with only selected columns.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+
+    # Select only a two columns
+    print(len(pyreports.subset(employee1, 'name', 'surname')[0]))     # 2
+
+Sort
+----
+
+The **sort** function sort the *Dataset* by column, also in reversed mode.
+
+.. code-block:: python
+
+    import pyreports
+
+    # Build a datasets
+    employee1 = tablib.Dataset([('Arthur', 'Dent', 55000), ('Ford', 'Prefect', 65000), ('Ford', 'Prefect', 65000)], headers=['name', 'surname', 'salary'])
+
+    # Sort and sort reversed
+    print(pyreports.sort(employee1, 'salary'))
+    print(pyreports.sort(employee1, 'salary', reverse=True))

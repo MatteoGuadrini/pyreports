@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # datatools -- pyreports
 #
-#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2025 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -47,8 +47,20 @@ class DataObject:
         return self._data
 
     @data.setter
-    def data(self, dataset):
+    def data(self, dataset: Dataset):
+        if not isinstance(dataset, Dataset):
+            raise DataObjectError(f"{dataset} is not a Dataset object")
         self._data = dataset
+
+    def clone(self):
+        """Clone itself
+
+        :return: Dataset
+        """
+        return DataObject(self.data)
+
+    def column(self, index):
+        _select_column(self.data, column=index)
 
 
 class DataAdapters(DataObject):
@@ -58,7 +70,7 @@ class DataAdapters(DataObject):
         """Aggregate in the current Dataset other columns
 
         :param columns: columns added
-        :param fill_value: fill value for empty field if "fill_empty" argument is specified
+        :param fill_value: fill value for empty field
         :return: None
         """
         if not self.data:
@@ -102,7 +114,24 @@ class DataAdapters(DataObject):
 
         :return: None
         """
-        self.data = Dataset(*list(dict.fromkeys(iter(self.data))))
+        self.data.remove_duplicates()
+
+    def subset(self, *columns):
+        """New dataset with only columns added
+
+        :param columns: select columns of new Dataset
+        :return: Dataset
+        """
+        return self.data.subset(cols=columns)
+
+    def sort(self, column, reverse=False):
+        """Sort a Dataset by a specific column
+
+        :param column: column to sort
+        :param reverse: reversed order
+        :return: Dataset
+        """
+        return self.data.sort(col=column, reverse=reverse)
 
     def __iter__(self):
         return (row for row in self.data)
@@ -171,24 +200,20 @@ class DataPrinters(DataObject):
 
 
 # region Functions
-def _select_column(data, column):
+def _select_column(data: Dataset, column):
     """Select Dataset column
 
     :param data: Dataset object
     :param column: column name or index
     :return: list
     """
-    # Check if dataset have a column
-    if not data.headers:
-        raise DataObjectError("dataset object must have the headers")
-    # Select column
     if isinstance(column, int):
         return data.get_col(column)
     else:
         return data[column]
 
 
-def average(data, column):
+def average(data: Dataset, column):
     """
     Average of list of integers or floats
 
@@ -205,7 +230,7 @@ def average(data, column):
     return float(sum(data) / len(data))
 
 
-def most_common(data, column):
+def most_common(data: Dataset, column):
     """
     The most common element in a column
 
@@ -218,7 +243,7 @@ def most_common(data, column):
     return max(data, key=data.count)
 
 
-def percentage(data, filter_):
+def percentage(data: Dataset, filter_):
     """
     Calculating the percentage according to filter
 
@@ -232,7 +257,7 @@ def percentage(data, filter_):
     return quotient * 100
 
 
-def counter(data, column):
+def counter(data: Dataset, column):
     """
     Count all row value
 
@@ -252,7 +277,7 @@ def aggregate(*columns, fill_empty: bool = False, fill_value=None):
 
     :param columns: columns added
     :param fill_empty: fill the empty field of data with "fill_value" argument
-    :param fill_value: fill value for empty field if "fill_empty" argument is specified
+    :param fill_value: fills value for empty field if "fill_empty" argument is specified
     :return: Dataset
     """
     if len(columns) >= 2:
@@ -285,7 +310,7 @@ def merge(*datasets):
     if len(datasets) >= 2:
         new_data = Dataset()
         # Check len of row
-        length_row = len(datasets[0][0])
+        length_row = max([len(dataset[0]) for dataset in datasets])
         for data in datasets:
             if length_row != len(data[0]):
                 raise InvalidDimensions("the row are not the same length")
@@ -295,7 +320,7 @@ def merge(*datasets):
         raise DataObjectError("you can merge two or more dataset object")
 
 
-def chunks(data, length):
+def chunks(data: Dataset, length):
     """
     Yield successive n-sized chunks from data
 
@@ -307,13 +332,35 @@ def chunks(data, length):
         yield data[idx : idx + length]
 
 
-def deduplicate(data):
+def deduplicate(data: Dataset):
     """Remove duplicated rows
 
     :param data: Dataset object
     :return: Dataset
     """
-    return Dataset(*list(dict.fromkeys(iter(data))))
+    data.remove_duplicates()
+    return data
+
+
+def subset(data: Dataset, *columns):
+    """Create a new Dataset with only the given columns
+
+    :param data: Dataset object
+    :param columns: selected columns
+    :return: Dataset
+    """
+    return data.subset(cols=columns)
+
+
+def sort(data, column, reverse=False):
+    """Sort a Dataset by a specific column
+
+    :param data: Dataset object
+    :param column: column to sort
+    :param reverse: reversed order
+    :return: Dataset
+    """
+    return data.sort(col=column, reverse=reverse)
 
 
 # endregion

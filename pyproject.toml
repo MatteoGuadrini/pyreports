@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyreports"
-version = "1.7.0"
+version = "1.8.0"
 readme = "README.md"
 license = { text = "GNU General Public License v3.0" }
 keywords = ['pyreports', 'reports', 'report', 'csv', 'yaml', 'export',
@@ -14,7 +14,7 @@ maintainers = [
     { name = "Matteo Guadrini", email = "matteo.guadrini@hotmail.it" },
 ]
 description = "pyreports is a python library that allows you to create complex report from various sources."
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -27,7 +27,7 @@ dependencies = ['ldap3', 'mysql-connector-python',
 reports = "pyreports.cli:main"
 
 [project.urls]
-homepage = "https://github.com/MatteoGuadrini/pyreports'"
+homepage = "https://github.com/MatteoGuadrini/pyreports"
 documentation = "https://pyreports.readthedocs.io/en/latest/"
 repository = "https://github.com/MatteoGuadrini/pyreports.git"
 changelog = "https://github.com/MatteoGuadrini/pyreports/blob/master/CHANGES.md"

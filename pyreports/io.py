@@ -5,7 +5,7 @@
 # created by: matteo.guadrini
 # io -- pyreports
 #
-#     Copyright (C) 2024 Matteo Guadrini <matteo.guadrini@hotmail.it>
+#     Copyright (C) 2025 Matteo Guadrini <matteo.guadrini@hotmail.it>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -311,7 +311,7 @@ class DatabaseManager(Manager):
 
         :param connection: Connection based object
         """
-        self.type = "sql"
+        self._type = "sql"
         self.connector = connection
         # Connect database
         self.connector.connect()
@@ -336,6 +336,10 @@ class DatabaseManager(Manager):
             return (e for e in self.connector.cursor)
         else:
             return iter([])
+
+    @property
+    def type(self):
+        return self._type
 
     def reconnect(self):
         """Close and start connection
@@ -443,7 +447,11 @@ class NoSQLManager(Manager, APIManager):
 
     def __init__(self, connection: APIConnection, *args, **kwargs):
         APIManager.__init__(self, connection, *args, **kwargs)
-        self.type = "nosql"
+        self._type = "nosql"
+
+    @property
+    def type(self):
+        return self._type
 
     @staticmethod
     def _response_to_dataset(
@@ -484,7 +492,7 @@ class FileManager(Manager):
 
         :param file: file object
         """
-        self.type = "file"
+        self._type = "file"
         self.data = file
 
     def __repr__(self):
@@ -498,6 +506,10 @@ class FileManager(Manager):
         with open(self.data.file) as file:
             for line in file:
                 yield line
+
+    @property
+    def type(self):
+        return self._type
 
     def write(self, data):
         """Write data on file
@@ -531,7 +543,7 @@ class LdapManager(Manager):
         :param ssl: disable or enable SSL. Default is False.
         :param tls: disable or enable TLS. Default is True.
         """
-        self.type = "ldap"
+        self._type = "ldap"
         # Check ssl connection
         port = 636 if ssl else 389
         self.connector = ldap3.Server(
@@ -560,6 +572,10 @@ class LdapManager(Manager):
         obj_repr += f"server={self.connector.host}, "
         obj_repr += f"ssl={self.connector.ssl}, tls={self.connector.tls}>"
         return obj_repr
+
+    @property
+    def type(self):
+        return self._type
 
     def rebind(self, username, password):
         """Re-bind with specified username and password
@@ -594,23 +610,23 @@ class LdapManager(Manager):
         :param attributes: list of returning LDAP attributes
         :return: Dataset object
         """
+        # Build Dataset
+        data = tablib.Dataset()
+        data.headers = attributes
         if self.bind.search(
             search_base=base_search,
             search_filter=f"{search_filter}",
             attributes=attributes,
             search_scope=ldap3.SUBTREE,
         ):
-            # Build Dataset
-            data = tablib.Dataset()
-            data.headers = attributes
             for result in self.bind.response:
                 if result.get("attributes"):
                     row = list()
                     for index, _ in enumerate(attributes):
                         row.append(result.get("attributes").get(attributes[index]))
                     data.append(row)
-            # Return object
-            return data
+        # Return object
+        return data
 
 
 # endregion
