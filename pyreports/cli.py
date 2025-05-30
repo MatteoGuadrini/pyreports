@@ -232,6 +232,11 @@ def main():
             # Check if deduplicate is specified
             if report.get("report").get("deduplicate"):
                 data = pyreports.deduplicate(data)
+            # Check if subset is specified
+            if report.get("report").get("subset"):
+                data = pyreports.subset(
+                    data, *report.get("report").get("subset").get("columns")
+                )
             if "map" in report.get("report"):
                 exec(report.get("report").get("map"))
             map_func = globals().get("map_func")
