@@ -285,6 +285,7 @@ The **subset** function make a new *Dataset* with only selected columns.
 
     # Select only a two columns
     print(len(pyreports.subset(employee1, 'name', 'surname')[0]))     # 2
+
 Sort
 ----
 

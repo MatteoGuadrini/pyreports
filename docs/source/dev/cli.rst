@@ -182,6 +182,28 @@ other section
 .. note::
    **filters** could accept also a function that accept only one argument and return a ``bool`` value.
 
+data tools
+----------
+
+*report* section has also some datatools.
+
+.. code-block:: yaml
+
+    reports:
+    - report:
+        # My input
+        input:
+          # ...
+        output:
+          # ...
+        sort:
+          column: age
+          reverse: true
+        deduplicate: true
+        subset:
+          - name
+          - surname
+
 mail settings
 -------------
 
