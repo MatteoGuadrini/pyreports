@@ -28,7 +28,7 @@ $ pip install pyreports #from pypi
 
 $ git clone https://github.com/MatteoGuadrini/pyreports.git #from official repo
 $ cd pyreports
-$ python setup.py install
+$ pip install .     # or python setup.py install
 ```
 
 ## Why choose this library?

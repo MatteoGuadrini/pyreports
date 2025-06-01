@@ -1,7 +1,7 @@
 from setuptools import setup
 
 
-__version__ = "1.6.0"
+__version__ = "1.8.0"
 __author__ = "Matteo Guadrini"
 __email__ = "matteo.guadrini@hotmail.it"
 __homepage__ = "https://github.com/MatteoGuadrini/pyreports"
@@ -38,5 +38,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     entry_points={"console_scripts": ["reports = pyreports.cli:main"]},
-    python_requires=">=3.7",
+    python_requires=">=3.8",
 )
