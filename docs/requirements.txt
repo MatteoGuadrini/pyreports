@@ -4,4 +4,4 @@ psycopg2-binary
 tablib
 tablib[all]
 nosqlapi
-sphinx-rtd-theme
+pydata-sphinx-theme
