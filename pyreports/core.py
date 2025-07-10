@@ -32,7 +32,7 @@ from email.mime.multipart import MIMEMultipart
 from email import encoders
 from email.mime.base import MIMEBase
 from .datatools import DataAdapters, DataPrinters
-from .io import Manager, WRITABLE_MANAGER
+from .io import FileManager, Manager, WRITABLE_MANAGER
 from .exception import (
     ReportManagerError,
     ReportDataError,
@@ -487,9 +487,14 @@ class Report(DataAdapters, DataPrinters):
         :param headers: more header value "(header_name, key, value)"
         :return: None
         """
+        # Check output and manager type
         if not self.output:
             raise ReportDataError(
                 "if you want send a mail with a report in attachment, must be specified output"
+            )
+        if not isinstance(self.output, FileManager):
+            raise ReportManagerError(
+                f"{self.output} is not a supported FileManager object"
             )
 
         # Prepare mail header
@@ -513,12 +518,14 @@ class Report(DataAdapters, DataPrinters):
         # Prepare body
         part = MIMEText(body, "html")
         message.attach(part)
+        message.add_header("Content-Type", "multipart/mixed")
 
         # Prepare attachment
         self.export()
         attach_file_name = self.output.data.file
         attach_file = open(attach_file_name, "rb")
-        payload = MIMEBase("application", "octate-stream")
+        mime_parts = self.output.data.mimetype.split("/")
+        payload = MIMEBase(mime_parts[0], mime_parts[1])
         payload.set_payload(attach_file.read())
         encoders.encode_base64(payload)
         payload.add_header(
