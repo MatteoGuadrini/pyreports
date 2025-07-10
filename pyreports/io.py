@@ -81,6 +81,7 @@ class File(ABC):
         :param filename: file path
         """
         self.file = filename
+        self.mimetype = None
 
     @abstractmethod
     def write(self, data):
@@ -103,7 +104,7 @@ class File(ABC):
         return True if self.file else False
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} object, file={self.file}>"
+        return f"<{self.__class__.__name__} object, file={self.file}, mimetype={self.mimetype}>"
 
     def __iter__(self):
         with open(self.file) as file:
@@ -119,6 +120,11 @@ class Manager(ABC):
 
 class TextFile(File):
     """Text file class"""
+
+    def __init__(self, filename):
+        """Text file base object."""
+        super().__init__(filename=filename)
+        self.mimetype = "text/plain"
 
     def write(self, data):
         """Write data on file
@@ -145,6 +151,11 @@ class TextFile(File):
 
 class LogFile(File):
     """Log file class"""
+
+    def __init__(self, filename):
+        """Log file base object."""
+        super().__init__(filename=filename)
+        self.mimetype = "text/plain"
 
     def write(self, data):
         """Write data on file
@@ -178,6 +189,11 @@ class LogFile(File):
 class CsvFile(File):
     """CSV file class"""
 
+    def __init__(self, filename):
+        """CSV file base object."""
+        super().__init__(filename=filename)
+        self.mimetype = "text/csv"
+
     def write(self, data):
         """Write data on csv file
 
@@ -200,6 +216,11 @@ class CsvFile(File):
 
 class JsonFile(File):
     """JSON file class"""
+
+    def __init__(self, filename):
+        """JSON file base object."""
+        super().__init__(filename=filename)
+        self.mimetype = "application/json"
 
     def write(self, data):
         """Write data on json file
@@ -224,6 +245,11 @@ class JsonFile(File):
 class YamlFile(File):
     """YAML file class"""
 
+    def __init__(self, filename):
+        """YAML file base object."""
+        super().__init__(filename=filename)
+        self.mimetype = "text/yaml"
+
     def write(self, data):
         """Write data on yaml file
 
@@ -246,6 +272,11 @@ class YamlFile(File):
 
 class ExcelFile(File):
     """Excel file class"""
+
+    def __init__(self, filename):
+        """Excel file base object."""
+        super().__init__(filename=filename)
+        self.mimetype = "application/vnd.ms-excel"
 
     def write(self, data):
         """Write data on xlsx file
