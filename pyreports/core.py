@@ -47,10 +47,10 @@ from .exception import (
 
 
 class Executor:
-    """Executor receives, processes, transforms and writes data"""
+    """Executor receives, processes, transforms, and writes data"""
 
     def __init__(self, data, header=None):
-        """Create Executor object
+        """Create an Executor object
 
         :param data: everything type of data
         :param header: list header of data
@@ -89,7 +89,7 @@ class Executor:
     def headers(self, header):
         """Set header
 
-        :param header: header of data
+        :param header: the header of data is
         :return: None
         """
         self.data.headers = header
@@ -109,21 +109,21 @@ class Executor:
         return (row for row in self.data)
 
     def __str__(self):
-        """Pretty representation of Executor object
+        """Pretty representation of an Executor object
 
         :return: string
         """
         return str(self.data)
 
     def __repr__(self):
-        """Representation of Executor object
+        """Representation of an Executor object
 
         :return: string
         """
         return f"<Executor object, rows={self.count_rows()}, header={self.data.headers if self.data.headers else None}>"
 
     def __getitem__(self, item):
-        """Get row into Dataset object
+        """Get row into a Dataset object
 
         :param item: row (int)
         :return: row
@@ -131,7 +131,7 @@ class Executor:
         return self.data[item]
 
     def __delitem__(self, key):
-        """Delete row into Dataset object
+        """Delete row into a Dataset object
 
         :param key: row (int)
         :return: None
@@ -139,7 +139,7 @@ class Executor:
         del self.data[key]
 
     def __contains__(self, item):
-        """Check if item is in Dataset Executor object
+        """Check if an item is in a Dataset Executor object
 
         :param item: Any item
         :return: bool
@@ -219,7 +219,7 @@ class Executor:
         """Apply function to data
 
         :param key: function that takes a single argument
-        :param column: select column name or index number
+        :param column: selects a column name or index number
         :return: None
         """
         if callable(key):
@@ -240,7 +240,7 @@ class Executor:
     def select_column(self, column):
         """Filter dataset by column
 
-        :param column: name or index of column
+        :param column: name or index of a column
         :return: Dataset object
         """
         if isinstance(column, int):
@@ -301,10 +301,10 @@ class Report(DataAdapters, DataPrinters):
         count=False,
         output: Manager = None,
     ):
-        """Create Report object
+        """Create a Report object
 
         :param input_data: Dataset object
-        :param title: title of Report object
+        :param title: title of a Report object
         :param filters: list or function for filter data
         :param map_func: function for modifying data
         :param negation: enable negation for filters or map_func
@@ -338,14 +338,14 @@ class Report(DataAdapters, DataPrinters):
         return self._report
 
     def __repr__(self):
-        """Representation of Report object
+        """Representation of a Report object
 
         :return: string
         """
         return f"<Report object, title={self.title if self.title else None}>"
 
     def __str__(self):
-        """Pretty representation of Report object
+        """Pretty representation of the Report object
 
         :return: string
         """
@@ -401,7 +401,7 @@ class Report(DataAdapters, DataPrinters):
         self._report = None
 
     def exec(self, column=None):
-        """Create Executor object to apply filters and map function to input data
+        """Create an Executor object to apply filters and map function to input data
         :param: column: apply filter only a column (name or index)
 
         :return: None
@@ -498,7 +498,7 @@ class Report(DataAdapters, DataPrinters):
             )
 
         # Prepare mail header
-        message = MIMEMultipart("alternative")
+        message = MIMEMultipart("mixed")
         message["Subject"] = self.title if not subject else subject
         message["From"] = _from
         message["To"] = to
@@ -523,10 +523,10 @@ class Report(DataAdapters, DataPrinters):
         # Prepare attachment
         self.export()
         attach_file_name = self.output.data.file
-        attach_file = open(attach_file_name, "rb")
+        attach_file = open(attach_file_name, "rb").read()
         mime_parts = self.output.data.mimetype.split("/")
         payload = MIMEBase(mime_parts[0], mime_parts[1])
-        payload.set_payload(attach_file.read())
+        payload.set_payload(attach_file)
         encoders.encode_base64(payload)
         payload.add_header(
             "Content-Disposition",
@@ -545,11 +545,12 @@ class Report(DataAdapters, DataPrinters):
             protocol = smtplib.SMTP
             kwargs = {}
         with protocol(server, port, **kwargs) as srv:
+            receivers = to.split(",") + (cc.split(",") if cc else []) + (bcc.split(",") if bcc else [])
             if auth:
                 srv.login(*auth)
             srv.sendmail(
                 _from,
-                [receiver for receiver in (to, cc, bcc) if receiver],
+                receivers,
                 message.as_string(),
             )
 
@@ -577,7 +578,7 @@ class ReportBook:
         """Create a ReportBook object
 
         :param reports: Report's object list
-        :param title: title of report book
+        :param title: title of a report book
         """
 
         if reports is None:
@@ -587,7 +588,7 @@ class ReportBook:
         self.title = title
 
     def __add__(self, other):
-        """Add report object
+        """Add a report object
 
         :param other: Report object
         :return: ReportBook
@@ -612,7 +613,7 @@ class ReportBook:
         return len(self.reports)
 
     def __str__(self):
-        """Pretty representation of ReportBook object
+        """Pretty representation of a ReportBook object
 
         :return: string
         """
@@ -621,7 +622,7 @@ class ReportBook:
         return output
 
     def __repr__(self):
-        """Representation of ReportBook object
+        """Representation of a ReportBook object
 
         :return: string
         """
@@ -643,7 +644,7 @@ class ReportBook:
         return self.reports[item]
 
     def __delitem__(self, key):
-        """Delete Report object
+        """Delete a Report object
 
         :param key: Report int index
         :return: None
@@ -652,7 +653,7 @@ class ReportBook:
             del self.reports[key]
 
     def add(self, report: Report):
-        """Add report object
+        """Add a report object
 
         :param report: Report object
         :return: None
@@ -706,7 +707,7 @@ class ReportBook:
     ):
         """Send a saved report to email
 
-        :param server: server SMTP
+        :param server: Server SMTP
         :param _from: email address 'from:'
         :param to: email address 'to:'
         :param cc: email address 'cc:'

@@ -135,6 +135,27 @@ Once the ``exec`` method is called, and then once the data is processed, we can 
     report_only_55k.export()            # Save report on /tmp/salary55k.csv
 
 
+Send
+----
+
+It's possible to send the report throuhgt email with ``send`` method:
+
+.. code-block:: python
+
+    # This method run .exec() method automatically
+    report_only_55k.send(
+        "smtp.example.com",                                     # SMTP server
+        "<FROM BY> me@example.com"                              # From
+        "you@example.com,other@example.com",                    # To
+        cc="they@example.com,we@example.com",                   # Cc
+        bcc="world@example.com",                                # Bcc
+        subject="Beautiful report",                             # if None, title of report object
+        body=generate_body_string(),                            # Body of email (also in HTML)
+        auth=("myuser", "mypass"),                              # tuple of user and password of SMTP server
+        _ssl=True,                                              # SSL enable
+        headers=[("Return-Path", "<otherandme@example.com>")]   # Add header parts
+    )
+
 ReportBook at work
 ******************
 

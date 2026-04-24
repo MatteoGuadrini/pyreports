@@ -22,7 +22,7 @@
 
 """Build complex reports from/to various formats."""
 
-__version__ = "1.8.1"
+__version__ = "1.8.2"
 
 from .io import manager, READABLE_MANAGER, WRITABLE_MANAGER  # noqa: F401
 from .core import Executor, Report, ReportBook  # noqa: F401
