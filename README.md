@@ -5,7 +5,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/2bad30d308414c83836f22f012c98649)](https://www.codacy.com/gh/MatteoGuadrini/pyreports/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MatteoGuadrini/pyreports&amp;utm_campaign=Badge_Grade)
 [![CircleCI](https://circleci.com/gh/MatteoGuadrini/pyreports.svg?style=svg)](https://circleci.com/gh/MatteoGuadrini/pyreports)
 
-_pyreports_ is a python library that allows you to create complex reports from various sources such as databases, 
+_pyreports_ is a Python library that allows you to create complex reports from various sources such as databases, 
 text files, ldap, etc. and perform processing, filters, counters, etc. 
 and then export or write them in various formats or in databases.
 
@@ -21,7 +21,7 @@ $ python -m unittest discover tests
 
 ## Install package
 
-To install package, follow these instructions:
+To install the package, follow these instructions:
 
 ```console
 $ pip install pyreports #from pypi
@@ -37,7 +37,7 @@ _pyreports_ wants to be a library that simplifies the collection of data from mu
 files and directory servers (through LDAP), the processing of them through built-in and customized functions, 
 and the saving in various formats (or, by inserting the data in a database).
 
-## How does it work
+## How does it work?
 
 _pyreports_ uses the [**tablib**](https://tablib.readthedocs.io/en/stable/) library to organize the data into _Dataset_ object.
 
@@ -216,8 +216,13 @@ In the following links there is the [official documentation](https://pyreports.r
 * API: [io](https://pyreports.readthedocs.io/en/latest/dev/io.html), [core](https://pyreports.readthedocs.io/en/latest/dev/core.html)
 * CLI: [cli](https://pyreports.readthedocs.io/en/latest/dev/cli.html)
 
+## Next
+
+1. Add more NoSQL databases (MongoDB, Redis, etc.)
+2. Towards v2
+
 ## Open source
-_pyreports_ is an open source project. Any contribute, It's welcome.
+_pyreports_ is an open source project. Any contribution, It's welcome.
 
 **A great thanks**.
 
@@ -231,7 +236,7 @@ For [Telethon](http://www.telethon.it/)
 
 The Telethon Foundation is a non-profit organization recognized by the Ministry of University and Scientific and Technological Research.
 They were born in 1990 to respond to the appeal of patients suffering from rare diseases.
-Come today, we are organized to dare to listen to them and answers, every day of the year.
+Come today, we are organized to dare to listen to them and answer, every day of the year.
 
 <a href="https://www.telethon.it/sostienici/dona-ora"> <img src="https://www.telethon.it/dev/_nuxt/img/c6d474e.svg" alt="Telethon" title="Telethon" width="200" height="104" /> </a>
 

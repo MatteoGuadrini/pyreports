@@ -16,6 +16,8 @@ May 31, 2025
 - Add **sort** method into _DataAdapters_ class
 - Add **sort** function
 - Add **sort**, **subset** and **subset** data tools
+- Add _mimetype_ attribute to _File_'s classes
+- Add specific _mimetypes_ to **send** method on _Report_ class
 - Make _report_ attribute into property on _Report_ class
 - Use _remove_duplicates_ method on **deduplicate** functions
 - Change behavior of _column_ parameter into **filter** function on _Executor_ class

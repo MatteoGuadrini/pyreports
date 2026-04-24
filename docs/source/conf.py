@@ -25,7 +25,7 @@ copyright = "2025, Matteo Guadrini"
 author = "Matteo Guadrini"
 
 # The full version, including alpha/beta/rc tags
-release = "1.8.1"
+release = "1.8.2"
 
 # -- General configuration ---------------------------------------------------
 

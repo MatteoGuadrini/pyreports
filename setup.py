@@ -1,7 +1,7 @@
 from setuptools import setup
 
 
-__version__ = "1.8.0"
+__version__ = "1.8.2"
 __author__ = "Matteo Guadrini"
 __email__ = "matteo.guadrini@hotmail.it"
 __homepage__ = "https://github.com/MatteoGuadrini/pyreports"
